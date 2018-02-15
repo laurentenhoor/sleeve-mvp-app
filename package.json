@@ -32,7 +32,12 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.8",
-    "typescript": "2.4.2"
+    "@types/meteor": "^1.4.13",
+    "typescript": "2.4.2",
+    "typescript-extends": "^1.0.1"
   },
-  "description": "An Ionic project"
+  "description": "Smart Bottle Sleeve App",
+  "config": {
+    "ionic_webpack": "./webpack.config.js"
+  }
 }
