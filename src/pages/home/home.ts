@@ -3,19 +3,22 @@ import { NavController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
 
+import { AlertController } from 'ionic-angular';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-  
+
   devices: any[] = [];
   statusMessage: string;
 
-  constructor(public navCtrl: NavController, 
-              private toastCtrl: ToastController,
-              private ble: BLE,
-              private ngZone: NgZone) { 
+  constructor(public navCtrl: NavController,
+    private toastCtrl: ToastController,
+    private ble: BLE,
+    private ngZone: NgZone,
+    private alertCtrl: AlertController) {
   }
 
   ionViewDidEnter() {
@@ -23,12 +26,42 @@ export class HomePage {
     this.scan();
   }
 
+  connect(device) {
+    console.log('connect to device')
+
+    this.setStatus(device.id);
+
+    this.ble.connect(device.id).subscribe(
+      peripheral => this.onBleConnected(peripheral),
+      peripheral => this.onBleDisconnected(peripheral)
+    )
+
+  }
+
+  onBleConnected(peripheral) {
+    this.setStatus('BLE CONNECTED')
+    this.alertCtrl.create({
+      title: peripheral.name,
+      subTitle: peripheral.id,
+      buttons: ['Cancel']
+    }).present();
+  }
+
+  onBleDisconnected(peripheral) {
+    this.setStatus('BLE DISCONNECTED');
+    this.alertCtrl.create({
+      title: peripheral.name,
+      subTitle: peripheral.id,
+      buttons: ['Cancel']
+    }).present();
+  }
+
   scan() {
     this.setStatus('Scanning for Bluetooth LE Devices');
     this.devices = [];  // clear list
 
     this.ble.scan([], 5).subscribe(
-      device => this.onDeviceDiscovered(device), 
+      device => this.onDeviceDiscovered(device),
       error => this.scanError(error)
     );
 
