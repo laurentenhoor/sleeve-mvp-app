@@ -13,12 +13,15 @@ export class HomePage {
 
   devices: any[] = [];
   statusMessage: string;
+  connectedDeviceId: string;
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
     private ble: BLE,
     private ngZone: NgZone,
     private alertCtrl: AlertController) {
+
+    this.write('testDeviceId');
   }
 
   ionViewDidEnter() {
@@ -38,22 +41,90 @@ export class HomePage {
 
   }
 
+
+  write(deviceId) {
+
+    console.log('write to deviceId', deviceId)
+
+    let valueJson = {
+      name1: 'Lauren'
+    };
+    console.log('valueJson', valueJson)
+
+    let valueString = JSON.stringify(valueJson);
+    console.log('valueString', valueString);
+    
+    // valueString = "12345678901234567890";
+    // valueString = '{"name":"Lauren"}';
+
+    let valueBytes = this.stringToBytes(valueString)
+    console.log('valueBytes', valueBytes);
+    console.log('valueBytes', new Uint8Array(8).buffer)
+
+    this.toastCtrl.create({
+      message: 'Byte Size: ' + valueBytes.byteLength,
+      position: 'top',
+      duration: 2000
+    }).present();
+
+    this.ble.write(deviceId, '000030f0-0000-1000-8000-00805f9b34fb', '000063e6-0000-1000-8000-00805f9b34fb', valueBytes)
+      .then(data => {
+        this.alertCtrl.create({
+          title: 'Successful write',
+          subTitle: data,
+          buttons: ['Ok']
+        }).present();
+      }).catch(error => {
+        this.alertCtrl.create({
+          title: 'Error while writing',
+          subTitle: 'error message: ' + JSON.stringify(error),
+          buttons: ['Discard']
+        }).present()
+      });
+
+  }
+
+  disconnect(device) {
+    this.ble.disconnect(device.id)
+      .then(succes => {
+        this.connectedDeviceId = null;
+      }, error => {
+        this.alertCtrl.create({
+          title: 'Error in disconnecting',
+          subTitle: error,
+          buttons: ['Discard']
+        }).present();
+      })
+  }
+
+  // ASCII only
+  stringToBytes(string) {
+    var array = new Uint8Array(string.length);
+    for (var i = 0, l = string.length; i < l; i++) {
+      array[i] = string.charCodeAt(i);
+    }
+    return array.buffer;
+  }
+
+  // ASCII only
+  bytesToString(buffer) {
+    return String.fromCharCode.apply(null, new Uint8Array(buffer));
+  }
+
+
   onBleConnected(peripheral) {
     this.setStatus('BLE CONNECTED')
-    this.alertCtrl.create({
-      title: peripheral.name,
-      subTitle: peripheral.id,
-      buttons: ['Cancel']
-    }).present();
+    this.connectedDeviceId = peripheral.id;
+    this.write(peripheral.id)
   }
 
   onBleDisconnected(peripheral) {
     this.setStatus('BLE DISCONNECTED');
-    this.alertCtrl.create({
-      title: peripheral.name,
-      subTitle: peripheral.id,
-      buttons: ['Cancel']
-    }).present();
+    // this.alertCtrl.create({
+    //   title: peripheral.name,
+    //   subTitle: peripheral.id,
+    //   buttons: ['Cancel']
+    // }).present();
   }
 
   scan() {
