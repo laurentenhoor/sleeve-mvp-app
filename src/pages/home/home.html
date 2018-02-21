@@ -1,7 +1,7 @@
-<!-- <ion-header>
+<ion-header>
   <ion-navbar>
     <ion-title>
-      Sleeve BLE Scanner
+      <!-- Philips Avent Sleeve -->
     </ion-title>
     <ion-buttons end>
       <button ion-button (click)="scan()">
@@ -9,27 +9,28 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-</ion-header> -->
+</ion-header>
 
 <ion-content>
 
-    <ion-card>
-        
-      <img src="http://4.bp.blogspot.com/-7eawoY-q6Ag/UBJ-7poYw-I/AAAAAAAAArE/FV3B35GX5kQ/s1600/Cute-Baby-Facebook-Profile-banner.jpg"/>
+  <ion-card>
 
-        <ion-card-header>
-          Two new feeds available on your sleeve!
-        </ion-card-header>
-        
-        <ion-item>
-            
-            <button ion-button icon-left clear item-end>
-              <ion-icon name="sync"></ion-icon>
-              Synchronize
-            </button>
-          </ion-item>
+    <img src="http://4.bp.blogspot.com/-7eawoY-q6Ag/UBJ-7poYw-I/AAAAAAAAArE/FV3B35GX5kQ/s1600/Cute-Baby-Facebook-Profile-banner.jpg"
+    />
 
-      </ion-card>
+    <ion-card-header>
+      Two new feeds available on your sleeve!
+    </ion-card-header>
+
+    <ion-item>
+
+      <button ion-button icon-left clear item-end>
+        <ion-icon name="sync"></ion-icon>
+        Synchronize
+      </button>
+    </ion-item>
+
+  </ion-card>
 
   <ion-list>
     <div *ngFor="let device of devices">
@@ -46,18 +47,28 @@
   </ion-list>
 
   <ion-fab right bottom>
-    <button ion-fab color="light"><ion-icon name="add"></ion-icon></button>
+    <button ion-fab color="light">
+      <ion-icon name="add"></ion-icon>
+    </button>
     <ion-fab-list side="top">
-      <button ion-fab><ion-icon name="logo-facebook"></ion-icon></button>
-      <button ion-fab><ion-icon name="logo-twitter"></ion-icon></button>
-      <button ion-fab><ion-icon name="logo-vimeo"></ion-icon></button>
-      <button ion-fab><ion-icon name="logo-googleplus"></ion-icon></button>
+      <button ion-fab>
+        <ion-icon name="logo-facebook"></ion-icon>
+      </button>
+      <button ion-fab>
+        <ion-icon name="logo-twitter"></ion-icon>
+      </button>
+      <button ion-fab>
+        <ion-icon name="logo-vimeo"></ion-icon>
+      </button>
+      <button ion-fab>
+        <ion-icon name="logo-googleplus"></ion-icon>
+      </button>
     </ion-fab-list>
   </ion-fab>
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar >
+  <ion-toolbar>
     <p>{{ statusMessage }}</p>
   </ion-toolbar>
 </ion-footer>
