@@ -24,7 +24,7 @@ export class HomePage {
     private ngZone: NgZone,
     private alertCtrl: AlertController,
     private http: Http) {
-    this.loadFirmware('../assets/icon/favicon.ico');
+    // this.loadFirmware('../assets/icon/favicon.ico');
   }
 
   loadFirmware(url: string) {
@@ -62,44 +62,6 @@ export class HomePage {
             buttons: ['Ok']
           }).present();
         })
-  }
-
-  presentPrompt() {
-    let alert = this.alertCtrl.create({
-      title: 'Login',
-      inputs: [
-        {
-          name: 'username',
-          placeholder: 'Username'
-        },
-        {
-          name: 'password',
-          placeholder: 'Password',
-          type: 'password'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: data => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: 'Login',
-          handler: data => {
-            if (User.isValid(data.username, data.password)) {
-              // logged in!
-            } else {
-              // invalid login
-              return false;
-            }
-          }
-        }
-      ]
-    });
-    alert.present();
   }
 
   buf2hex(buffer: ArrayBuffer) {

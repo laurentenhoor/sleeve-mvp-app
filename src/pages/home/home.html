@@ -4,7 +4,7 @@
       <!-- Philips Avent Sleeve -->
     </ion-title>
     <ion-buttons end>
-      <button ion-button (click)="scan()">
+      <button ion-button (click)="scan();fakeScan=true;">
         Scan
       </button>
     </ion-buttons>
@@ -13,23 +13,37 @@
 
 <ion-content>
 
-  <ion-card>
-
+  <ion-card *ngIf="fakeScan">
     <img src="http://4.bp.blogspot.com/-7eawoY-q6Ag/UBJ-7poYw-I/AAAAAAAAArE/FV3B35GX5kQ/s1600/Cute-Baby-Facebook-Profile-banner.jpg"
     />
-
     <ion-card-header>
       Two new feeds available on your sleeve!
     </ion-card-header>
 
     <ion-item>
 
-      <button ion-button icon-left clear item-end>
+      <button ion-button icon-left clear item-end (click)="fakeScan=false;fakeFeeds=true;">
         <ion-icon name="sync"></ion-icon>
         Synchronize
       </button>
     </ion-item>
 
+  </ion-card>
+
+  <ion-card *ngIf="fakeFeeds">
+    <ion-item>
+      <ion-icon name="flask" item-left large></ion-icon>
+      <h2>124 ml</h2>
+      <p>Smart Sleeve: Formula </p>
+    </ion-item>
+  </ion-card>
+
+  <ion-card *ngIf="fakeFeeds">
+    <ion-item>
+      <ion-icon name="flask" item-left large></ion-icon>
+      <h2>84 ml</h2>
+      <p>Manual: Breast milk</p>
+    </ion-item>
   </ion-card>
 
   <ion-list>
@@ -52,16 +66,10 @@
     </button>
     <ion-fab-list side="top">
       <button ion-fab>
-        <ion-icon name="logo-facebook"></ion-icon>
+        <ion-icon name="heart"></ion-icon>
       </button>
       <button ion-fab>
-        <ion-icon name="logo-twitter"></ion-icon>
-      </button>
-      <button ion-fab>
-        <ion-icon name="logo-vimeo"></ion-icon>
-      </button>
-      <button ion-fab>
-        <ion-icon name="logo-googleplus"></ion-icon>
+        <ion-icon name="flask"></ion-icon>
       </button>
     </ion-fab-list>
   </ion-fab>
