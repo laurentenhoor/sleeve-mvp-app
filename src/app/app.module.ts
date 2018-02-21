@@ -8,6 +8,8 @@ import { BLE } from '@ionic-native/ble';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { HttpModule } from '@angular/http';
+
 
 @NgModule({
   declarations: [
@@ -16,7 +18,8 @@ import { HomePage } from '../pages/home/home';
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    HttpModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

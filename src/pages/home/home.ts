@@ -5,6 +5,8 @@ import { BLE } from '@ionic-native/ble';
 
 import { AlertController } from 'ionic-angular';
 
+import { Http } from '@angular/http';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
@@ -14,14 +16,94 @@ export class HomePage {
   devices: any[] = [];
   statusMessage: string;
   connectedDeviceId: string;
+  firmware: ArrayBuffer
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
     private ble: BLE,
     private ngZone: NgZone,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    private http: Http) {
+    this.loadFirmware('../assets/icon/favicon.ico');
+  }
 
-    this.write('testDeviceId');
+  loadFirmware(url: string) {
+    this.http.get(url)
+      .subscribe(
+        response => {
+          if (response.ok) {
+            let fileContentString = response['_body'];
+            console.log(fileContentString)
+            if (fileContentString) {
+              this.firmware = this.stringToBytes(fileContentString);
+              console.log(this.firmware)
+              console.log()
+
+              // this.toastCtrl.create({
+              //   message: 'Successfully loaded the firmware',
+              //   position: 'top',
+              //   duration: 2000
+              // }).present();
+
+              this.alertCtrl.create({
+                title: 'Successfull loaded firmware',
+                subTitle: 'First 12 Bytes: '+ this.buf2hex(this.firmware.slice(0, 12)),
+                buttons: ['Ok']
+              }).present();
+              
+
+            }
+          }
+        },
+        error => {
+          this.alertCtrl.create({
+            title: 'Error loading the firmware',
+            subTitle: error,
+            buttons: ['Ok']
+          }).present();
+        })
+  }
+
+  presentPrompt() {
+    let alert = this.alertCtrl.create({
+      title: 'Login',
+      inputs: [
+        {
+          name: 'username',
+          placeholder: 'Username'
+        },
+        {
+          name: 'password',
+          placeholder: 'Password',
+          type: 'password'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Login',
+          handler: data => {
+            if (User.isValid(data.username, data.password)) {
+              // logged in!
+            } else {
+              // invalid login
+              return false;
+            }
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  buf2hex(buffer: ArrayBuffer) {
+    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
   }
 
   ionViewDidEnter() {
@@ -53,13 +135,15 @@ export class HomePage {
 
     let valueString = JSON.stringify(valueJson);
     console.log('valueString', valueString);
-    
+
     // valueString = "12345678901234567890";
     // valueString = '{"name":"Lauren"}';
 
+    console.log(this);
+
     let valueBytes = this.stringToBytes(valueString)
+
     console.log('valueBytes', valueBytes);
-    console.log('valueBytes', new Uint8Array(8).buffer)
 
     this.toastCtrl.create({
       message: 'Byte Size: ' + valueBytes.byteLength,
@@ -67,7 +151,10 @@ export class HomePage {
       duration: 2000
     }).present();
 
-    this.ble.write(deviceId, '000030f0-0000-1000-8000-00805f9b34fb', '000063e6-0000-1000-8000-00805f9b34fb', valueBytes)
+    this.ble.write(deviceId,
+      '000030f0-0000-1000-8000-00805f9b34fb',
+      '000063e6-0000-1000-8000-00805f9b34fb',
+      valueBytes)
       .then(data => {
         this.alertCtrl.create({
           title: 'Successful write',
@@ -83,6 +170,32 @@ export class HomePage {
       });
 
   }
+
+  receivePackage(data) {
+
+  }
+
+  startNotification(deviceId) {
+    this.ble.startNotification(deviceId,
+      '000030f0-0000-1000-8000-00805f9b34fb',
+      '000063e6-0000-1000-8000-00805f9b34fb'
+    ).subscribe(data => {
+      this.receivePackage(data);
+      this.toastCtrl.create({
+        message: 'Data available: ' + data,
+        position: 'top',
+        duration: 2000
+      }).present();
+    }, error => {
+      this.toastCtrl.create({
+        message: 'Data available: ' + error,
+        position: 'top',
+        duration: 2000
+      }).present();
+    })
+
+  }
+
 
   disconnect(device) {
     this.ble.disconnect(device.id)
@@ -120,11 +233,6 @@ export class HomePage {
 
   onBleDisconnected(peripheral) {
     this.setStatus('BLE DISCONNECTED');
-    // this.alertCtrl.create({
-    //   title: peripheral.name,
-    //   subTitle: peripheral.id,
-    //   buttons: ['Cancel']
-    // }).present();
   }
 
   scan() {
