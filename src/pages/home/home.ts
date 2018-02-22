@@ -221,8 +221,8 @@ export class HomePage {
     this.setStatus('Error ' + error);
     let toast = this.toastCtrl.create({
       message: 'Error scanning for Bluetooth low energy devices',
-      position: 'middle',
-      duration: 5000
+      position: 'bottom',
+      duration: 1000
     });
     toast.present();
   }
