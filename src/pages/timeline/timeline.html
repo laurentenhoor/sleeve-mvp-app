@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Feeding Journal
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card *ngIf="fakeScan">
+    <img src="http://4.bp.blogspot.com/-7eawoY-q6Ag/UBJ-7poYw-I/AAAAAAAAArE/FV3B35GX5kQ/s1600/Cute-Baby-Facebook-Profile-banner.jpg"
+    />
+    <ion-card-header>
+      Two new feeds available on your sleeve!
+    </ion-card-header>
+
+    <ion-item>
+
+      <button ion-button icon-left clear item-end (click)="fakeScan=false;fakeFeeds=true;addFakeFeeds();">
+        <ion-icon name="sync"></ion-icon>
+        Synchronize
+      </button>
+    </ion-item>
+
+  </ion-card>
+
+  <ion-card *ngFor="let feed of feeds | async" (click)="openFeedModal(feed)">
+    <ion-item>
+      <ion-icon color="{{ feed.type == 'smart' ? 'secondary' : 'primary' }}" name="water" item-left large></ion-icon>
+      <h2>{{feed.amount | number : '1.0-0' }} ml</h2>
+      <p><ion-icon name="{{ feed.type == 'smart' ? 'bluetooth' : 'hand' }}" item-left large></ion-icon>{{ feed.type == 'smart' ? 'Smart Bottle Tracker' : 'Manual' }}</p>
+    </ion-item>
+  </ion-card>
+
+  <ion-fab right bottom>
+    
+    <button ion-fab color="light">
+      <ion-icon name="add"></ion-icon>
+    </button>
+
+    <ion-fab-list side="top">
+
+      <button ion-fab (click)="addFeed()">
+        <ion-icon name="flask"></ion-icon>
+      </button>
+
+      <button ion-fab>
+        <ion-icon name="heart"></ion-icon>
+      </button>
+
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>

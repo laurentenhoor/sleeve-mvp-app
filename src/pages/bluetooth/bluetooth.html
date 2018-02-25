@@ -1,0 +1,34 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Bluetooth Settings
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button (click)="scan();fakeScan=true;">
+                Scan
+            </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <div *ngFor="let device of devices">
+            <button ion-item (click)="connect(device)">
+                <h2>{{ device.name || 'Unnamed' }}</h2>
+                <p>{{ device.id }}</p>
+                <p>RSSI: {{ device.rssi }}</p>
+            </button>
+            <button *ngIf="connectedDeviceId == device.id" ion-item (click)="disconnect(device)">
+                Disconnect
+            </button>
+
+        </div>
+    </ion-list>
+</ion-content>
+
+<!-- <ion-footer>
+    <ion-toolbar>
+        <p>{{ statusMessage }}</p>
+    </ion-toolbar>
+</ion-footer> -->

@@ -5,16 +5,21 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { BLE } from '@ionic-native/ble';
-
-import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
 import { HttpModule } from '@angular/http';
 
+import { MyApp } from './app.component';
+import { Tabs } from '../pages/tabs/tabs';
+import { Timeline } from '../pages/timeline/timeline';
+import { Bluetooth } from '../pages/bluetooth/bluetooth';
+import { FeedInput } from '../pages/feed-input/feed-input';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    Tabs,
+    Timeline,
+    Bluetooth,
+    FeedInput
   ],
   imports: [
     BrowserModule,
@@ -24,7 +29,10 @@ import { HttpModule } from '@angular/http';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    Tabs,
+    Timeline,
+    Bluetooth,
+    FeedInput
   ],
   providers: [
     StatusBar,

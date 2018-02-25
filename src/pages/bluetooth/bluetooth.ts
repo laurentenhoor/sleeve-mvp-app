@@ -7,24 +7,16 @@ import { AlertController } from 'ionic-angular';
 
 import { Http } from '@angular/http';
 
-import { Observable } from 'rxjs';
-import { MeteorObservable } from 'meteor-rxjs';
-
-import { Feed } from 'api/models';
-import { FeedType } from 'api/models';
-import { Feeds } from 'api/collections';
-
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'bluetooth',
+  templateUrl: 'bluetooth.html'
 })
-export class HomePage implements OnInit {
+export class Bluetooth {
 
   devices: any[] = [];
   statusMessage: string;
   connectedDeviceId: string;
   firmware: ArrayBuffer;
-  feeds;
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
@@ -32,33 +24,6 @@ export class HomePage implements OnInit {
     private ngZone: NgZone,
     private alertCtrl: AlertController,
     private http: Http) {
-  }
-
-  ngOnInit() {
-    MeteorObservable.subscribe('feeds').subscribe(() => {
-      MeteorObservable.autorun().subscribe(() => {
-        this.feeds = this.findFeeds();
-      });
-    });
-  }
-
-  findFeeds() {
-    return Feeds.find().map(feeds => {
-      return feeds;
-    });
-  }
-
-  addFeed() {
-    console.log('add a feed');
-    Feeds.insert({
-      type: FeedType.SMART,
-      amount: 666,
-      weights: [120, 0],
-      errorCode: 0,
-      timestamp: Date.now()
-    }).subscribe(() => {
-    });
-
   }
 
   loadFirmware(url: string) {
@@ -71,20 +36,12 @@ export class HomePage implements OnInit {
             if (fileContentString) {
               this.firmware = this.stringToBytes(fileContentString);
               console.log(this.firmware)
-              console.log()
-
-              // this.toastCtrl.create({
-              //   message: 'Successfully loaded the firmware',
-              //   position: 'top',
-              //   duration: 2000
-              // }).present();
 
               this.alertCtrl.create({
                 title: 'Successfull loaded firmware',
                 subTitle: 'First 12 Bytes: ' + this.buf2hex(this.firmware.slice(0, 12)),
                 buttons: ['Ok']
               }).present();
-
 
             }
           }
@@ -232,7 +189,7 @@ export class HomePage implements OnInit {
   }
 
   scan() {
-    this.setStatus('Scanning for Bluetooth LE Devices');
+    // this.setStatus('Scanning for Bluetooth LE Devices');
     this.devices = [];  // clear list
 
     this.ble.scan([], 5).subscribe(
@@ -240,7 +197,7 @@ export class HomePage implements OnInit {
       error => this.scanError(error)
     );
 
-    setTimeout(this.setStatus.bind(this), 5000, 'Scan complete');
+    // setTimeout(this.setStatus.bind(this), 5000, 'Scan complete');
   }
 
   onDeviceDiscovered(device) {
@@ -253,19 +210,27 @@ export class HomePage implements OnInit {
   // If location permission is denied, you'll end up here
   scanError(error) {
     this.setStatus('Error ' + error);
-    let toast = this.toastCtrl.create({
-      message: 'Error scanning for Bluetooth low energy devices',
-      position: 'bottom',
-      duration: 1000
-    });
-    toast.present();
+    // let toast = this.toastCtrl.create({
+    //   message: 'Error scanning for Bluetooth low energy devices',
+    //   position: 'middle',
+    //   duration: 1000
+    // });
+    // toast.present();
   }
 
   setStatus(message) {
-    console.log(message);
-    this.ngZone.run(() => {
-      this.statusMessage = message;
+
+    let toast = this.toastCtrl.create({
+      message: message,
+      position: 'middle',
+      duration: 1000
     });
+    toast.present();
+
+    console.log(message);
+    // this.ngZone.run(() => {
+    //   this.statusMessage = message;
+    // });
   }
 
 }
