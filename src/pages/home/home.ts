@@ -1,4 +1,4 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
@@ -7,16 +7,24 @@ import { AlertController } from 'ionic-angular';
 
 import { Http } from '@angular/http';
 
+import { Observable } from 'rxjs';
+import { MeteorObservable } from 'meteor-rxjs';
+
+import { Feed } from 'api/models';
+import { FeedType } from 'api/models';
+import { Feeds } from 'api/collections';
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
   devices: any[] = [];
   statusMessage: string;
   connectedDeviceId: string;
-  firmware: ArrayBuffer
+  firmware: ArrayBuffer;
+  feeds;
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
@@ -24,7 +32,33 @@ export class HomePage {
     private ngZone: NgZone,
     private alertCtrl: AlertController,
     private http: Http) {
-    // this.loadFirmware('../assets/icon/favicon.ico');
+  }
+
+  ngOnInit() {
+    MeteorObservable.subscribe('feeds').subscribe(() => {
+      MeteorObservable.autorun().subscribe(() => {
+        this.feeds = this.findFeeds();
+      });
+    });
+  }
+
+  findFeeds() {
+    return Feeds.find().map(feeds => {
+      return feeds;
+    });
+  }
+
+  addFeed() {
+    console.log('add a feed');
+    Feeds.insert({
+      type: FeedType.SMART,
+      amount: 666,
+      weights: [120, 0],
+      errorCode: 0,
+      timestamp: Date.now()
+    }).subscribe(() => {
+    });
+
   }
 
   loadFirmware(url: string) {
@@ -47,10 +81,10 @@ export class HomePage {
 
               this.alertCtrl.create({
                 title: 'Successfull loaded firmware',
-                subTitle: 'First 12 Bytes: '+ this.buf2hex(this.firmware.slice(0, 12)),
+                subTitle: 'First 12 Bytes: ' + this.buf2hex(this.firmware.slice(0, 12)),
                 buttons: ['Ok']
               }).present();
-              
+
 
             }
           }

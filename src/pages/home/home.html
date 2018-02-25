@@ -29,23 +29,15 @@
     </ion-item>
 
   </ion-card>
-
-  <ion-card *ngIf="fakeFeeds">
+  
+  <ion-card *ngFor="let feed of feeds | async">
     <ion-item>
       <ion-icon name="flask" item-left large></ion-icon>
-      <h2>124 ml</h2>
-      <p>Smart Sleeve: Formula </p>
+      <h2>{{feed.amount}}</h2>
+      <p>{{feed.type}}</p>
     </ion-item>
   </ion-card>
-
-  <ion-card *ngIf="fakeFeeds">
-    <ion-item>
-      <ion-icon name="flask" item-left large></ion-icon>
-      <h2>84 ml</h2>
-      <p>Manual: Breast milk</p>
-    </ion-item>
-  </ion-card>
-
+  
   <ion-list>
     <div *ngFor="let device of devices">
       <button ion-item (click)="connect(device)">
@@ -68,7 +60,7 @@
       <button ion-fab>
         <ion-icon name="heart"></ion-icon>
       </button>
-      <button ion-fab>
+      <button ion-fab (click)="addFeed()">
         <ion-icon name="flask"></ion-icon>
       </button>
     </ion-fab-list>
