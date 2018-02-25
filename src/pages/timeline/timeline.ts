@@ -4,7 +4,7 @@ import {
   OnInit
 } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
+import { NavController, Events } from 'ionic-angular';
 
 import {
   ToastController,
@@ -32,17 +32,24 @@ import { FeedInput } from '../feed-input/feed-input'
 export class Timeline implements OnInit {
   feeds;
   fakeScan;
+  public amountOfAvailableFeeds;
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
     private ngZone: NgZone,
     private http: Http,
-    public modalCtrl: ModalController) {
+    public modalCtrl: ModalController,
+    private events: Events) {
 
     setTimeout(() => {
       this.fakeScan = true;
+      this.events.publish('availableFeeds', 2);
     }, 5000);
 
+  }
+
+  getAmountOfAvailableFeeds() {
+    return this.amountOfAvailableFeeds;
   }
 
   formatTimeAgo(timestamp) {
@@ -72,6 +79,7 @@ export class Timeline implements OnInit {
         amount: Math.random() * 210
       }
     }
+    this.events.publish('availableFeeds', 0);
     Feeds.insert(generateFeed());
     Feeds.insert(generateFeed());
 
