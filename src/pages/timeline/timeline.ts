@@ -88,11 +88,10 @@ export class Timeline implements OnInit {
 
   showUnderConstructionAlert() {
     this.toastCtrl.create({
-      message: 'Coming soon!',
+      message: 'Coming Soon!',
       position: 'top',
       duration: 2000
     }).present();
   }
-
 
 }
