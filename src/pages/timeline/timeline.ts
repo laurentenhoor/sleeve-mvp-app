@@ -12,6 +12,7 @@ import {
 } from 'ionic-angular';
 
 import * as _ from "lodash";
+import * as moment from 'moment';
 
 import { Http } from '@angular/http';
 
@@ -42,6 +43,10 @@ export class Timeline implements OnInit {
       this.fakeScan = true;
     }, 5000);
 
+  }
+
+  formatTimeAgo(timestamp) {
+    return moment(timestamp).fromNow();
   }
 
   ngOnInit() {
