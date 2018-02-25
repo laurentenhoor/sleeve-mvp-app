@@ -7,10 +7,8 @@ import {
 import { NavController } from 'ionic-angular';
 
 import {
-  AlertController,
   ToastController,
-  ModalController,
-  NavParams
+  ModalController
 } from 'ionic-angular';
 
 import * as _ from "lodash";
@@ -37,7 +35,6 @@ export class Timeline implements OnInit {
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
     private ngZone: NgZone,
-    private alertCtrl: AlertController,
     private http: Http,
     public modalCtrl: ModalController) {
 
@@ -82,6 +79,14 @@ export class Timeline implements OnInit {
   openFeedModal(feed) {
     let feedInputModal = this.modalCtrl.create(FeedInput, { feed: feed });
     feedInputModal.present();
+  }
+
+  showUnderConstructionAlert() {
+    this.toastCtrl.create({
+      message: 'Coming soon!',
+      position: 'top',
+      duration: 2000
+    }).present();
   }
 
 

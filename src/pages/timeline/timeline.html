@@ -33,7 +33,7 @@
     </ion-item>
   </ion-card>
 
-  <ion-fab right bottom>
+  <ion-fab right bottom #fab>
     
     <button ion-fab color="light">
       <ion-icon name="add"></ion-icon>
@@ -41,11 +41,11 @@
 
     <ion-fab-list side="top">
 
-      <button ion-fab (click)="addFeed()">
+      <button ion-fab (click)="addFeed();fab.close();">
         <ion-icon name="flask"></ion-icon>
       </button>
 
-      <button ion-fab>
+      <button ion-fab (click)="showUnderConstructionAlert();fab.close();">
         <ion-icon name="heart"></ion-icon>
       </button>
 

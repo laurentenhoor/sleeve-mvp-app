@@ -14,26 +14,27 @@
 
 <ion-content text-center>
 
-    <ion-item>
-        <ion-label>
-            <ion-icon name="water" color="{{ updatedFeed.type =='smart' ? 'secondary' : 'primary'}}"></ion-icon> {{ (updatedFeed ? updatedFeed.amount : 125 )| number : '1.0-0' }} ml</ion-label>
-        <ion-range min="0" max="250" step="5" snaps="true" color="primary" [(ngModel)]="updatedFeed.amount"></ion-range>
-    </ion-item>
+
+    <ion-label>
+            <h2><ion-icon name="water" color="{{ updatedFeed.type =='smart' ? 'secondary' : 'primary'}}"></ion-icon> {{ (updatedFeed ? updatedFeed.amount : 125 )| number : '1.0-0' }} ml</h2></ion-label>
+    <ion-range min="0" max="250" step="5" snaps="true" color="primary" [(ngModel)]="updatedFeed.amount"></ion-range>
+
 
     <button ion-button icon-start (click)="saveFeed()">
-            <ion-icon name="checkmark"></ion-icon>
-            Save
-        </button>
+        <ion-icon name="checkmark"></ion-icon>
+        Save
+    </button>
 
     <button ion-button icon-start (click)="dismiss()">
         <ion-icon name="close"></ion-icon>
         Cancel
     </button>
 
-    
+
     <button ion-button icon-start (click)="deleteFeed()" [hidden]="!selectedFeed">
         <ion-icon name="trash"></ion-icon>
         Delete
     </button>
+
 
 </ion-content>
