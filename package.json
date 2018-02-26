@@ -10,7 +10,7 @@
     "lint": "ionic-app-scripts lint",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve",
-    "meteor-client:bundle": "meteor-client bundle -s api --url 192.168.1.33:3000"
+    "meteor-client:bundle": "meteor-client bundle -s api --url 185.137.12.135:4000"
   },
   "dependencies": {
     "@angular-devkit/build-optimizer": "^0.4.2",
