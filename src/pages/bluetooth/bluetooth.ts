@@ -5,7 +5,7 @@ import { BLE } from '@ionic-native/ble';
 
 import { AlertController } from 'ionic-angular';
 
-import { Http } from '@angular/http';
+import { Http, RequestOptions, ResponseContentType } from '@angular/http';
 
 @Component({
   selector: 'bluetooth',
@@ -24,26 +24,27 @@ export class Bluetooth {
     private ngZone: NgZone,
     private alertCtrl: AlertController,
     private http: Http) {
+
+    this.loadFirmware('assets/firmware/dummy.hex')
   }
 
   loadFirmware(url: string) {
-    this.http.get(url)
+
+    var options = new RequestOptions({
+      responseType: ResponseContentType.ArrayBuffer,
+    });
+
+    this.http.get(url, options)
       .subscribe(
         response => {
           if (response.ok) {
-            let fileContentString = response['_body'];
-            console.log(fileContentString)
-            if (fileContentString) {
-              this.firmware = this.stringToBytes(fileContentString);
-              console.log(this.firmware)
-
-              this.alertCtrl.create({
-                title: 'Successfull loaded firmware',
-                subTitle: 'First 12 Bytes: ' + this.buf2hex(this.firmware.slice(0, 12)),
-                buttons: ['Ok']
-              }).present();
-
-            }
+            let fileBytes: ArrayBuffer = response['_body'];
+            
+            this.alertCtrl.create({
+              title: 'Successfull loaded firmware',
+              subTitle: 'First 12 Bytes: ' + this.buf2hex(fileBytes.slice(0, 12)),
+              buttons: ['Ok']
+            }).present();
           }
         },
         error => {
@@ -156,77 +157,77 @@ export class Bluetooth {
         }).present();
       })
 
-    }
-
-    // ASCII only
-    stringToBytes(string) {
-      var array = new Uint8Array(string.length);
-      for (var i = 0, l = string.length; i < l; i++) {
-        array[i] = string.charCodeAt(i);
-      }
-      return array.buffer;
-    }
-
-    // ASCII only
-    bytesToString(buffer) {
-      return String.fromCharCode.apply(null, new Uint8Array(buffer));
-    }
-
-
-    onBleConnected(peripheral) {
-      this.connectedDevice = peripheral;
-      this.setStatus('BLE CONNECTED')
-      this.startNotification(peripheral.id)
-      this.write(peripheral.id)
-    }
-
-    onBleDisconnected(peripheral) {
-      this.setStatus('BLE DISCONNECTED via callback');
-    }
-
-    scan() {
-      // this.setStatus('Scanning for Bluetooth LE Devices');
-      this.devices = [];  // clear list
-
-      this.ble.scan([], 5).subscribe(
-        device => this.onDeviceDiscovered(device),
-        error => this.scanError(error)
-      );
-
-      // setTimeout(this.setStatus.bind(this), 5000, 'Scan complete');
-    }
-
-    onDeviceDiscovered(device) {
-      console.log('Discovered ' + JSON.stringify(device, null, 2));
-      this.ngZone.run(() => {
-        this.devices.push(device);
-      });
-    }
-
-    // If location permission is denied, you'll end up here
-    scanError(error) {
-      this.setStatus('Error ' + error);
-      // let toast = this.toastCtrl.create({
-      //   message: 'Error scanning for Bluetooth low energy devices',
-      //   position: 'middle',
-      //   duration: 1000
-      // });
-      // toast.present();
-    }
-
-    setStatus(message) {
-
-      let toast = this.toastCtrl.create({
-        message: message,
-        position: 'bottom',
-        duration: 1000
-      });
-      toast.present();
-
-      console.log(message);
-      // this.ngZone.run(() => {
-      //   this.statusMessage = message;
-      // });
-    }
-
   }
+
+  // ASCII only
+  stringToBytes(string) {
+    var array = new Uint8Array(string.length);
+    for (var i = 0, l = string.length; i < l; i++) {
+      array[i] = string.charCodeAt(i);
+    }
+    return array.buffer;
+  }
+
+  // ASCII only
+  bytesToString(buffer) {
+    return String.fromCharCode.apply(null, new Uint8Array(buffer));
+  }
+
+
+  onBleConnected(peripheral) {
+    this.connectedDevice = peripheral;
+    this.setStatus('BLE CONNECTED')
+    this.startNotification(peripheral.id)
+    this.write(peripheral.id)
+  }
+
+  onBleDisconnected(peripheral) {
+    this.setStatus('BLE DISCONNECTED via callback');
+  }
+
+  scan() {
+    // this.setStatus('Scanning for Bluetooth LE Devices');
+    this.devices = [];  // clear list
+
+    this.ble.scan([], 5).subscribe(
+      device => this.onDeviceDiscovered(device),
+      error => this.scanError(error)
+    );
+
+    // setTimeout(this.setStatus.bind(this), 5000, 'Scan complete');
+  }
+
+  onDeviceDiscovered(device) {
+    console.log('Discovered ' + JSON.stringify(device, null, 2));
+    this.ngZone.run(() => {
+      this.devices.push(device);
+    });
+  }
+
+  // If location permission is denied, you'll end up here
+  scanError(error) {
+    this.setStatus('Error ' + error);
+    // let toast = this.toastCtrl.create({
+    //   message: 'Error scanning for Bluetooth low energy devices',
+    //   position: 'middle',
+    //   duration: 1000
+    // });
+    // toast.present();
+  }
+
+  setStatus(message) {
+
+    let toast = this.toastCtrl.create({
+      message: message,
+      position: 'bottom',
+      duration: 1000
+    });
+    toast.present();
+
+    console.log(message);
+    // this.ngZone.run(() => {
+    //   this.statusMessage = message;
+    // });
+  }
+
+}
