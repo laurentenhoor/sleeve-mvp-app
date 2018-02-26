@@ -132,7 +132,7 @@ export class Bluetooth {
     }, error => {
       this.toastCtrl.create({
         message: 'Error on receiving: ' + error,
-        position: 'top',
+        position: 'bottom',
         duration: 2000
       }).present();
     })
