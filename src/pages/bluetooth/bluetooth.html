@@ -13,15 +13,22 @@
 
 <ion-content>
     <ion-list>
-        <div *ngFor="let device of devices">
-            <button ion-item (click)="connect(device)">
-                <h2>{{ device.name || 'Unnamed' }}</h2>
-                <p>{{ device.id }}</p>
-                <p>RSSI: {{ device.rssi }}</p>
+        <div *ngIf="connectedDevice">
+            <button ion-item (click)="write(connectedDevice.id)">
+                Resend data
             </button>
-            <button *ngIf="connectedDeviceId == device.id" ion-item (click)="disconnect(device)">
+            <button *ngIf="connectedDevice" ion-item (click)="disconnect(connectedDevice)">
                 Disconnect
             </button>
+        </div>
+        <div *ngIf="!connectedDevice">
+            <div *ngFor="let device of devices">
+                <button ion-item (click)="connect(device)">
+                    <h2>{{ device.name || 'Unnamed' }}</h2>
+                    <p>{{ device.id }}</p>
+                    <p>RSSI: {{ device.rssi }}</p>
+                </button>
+            </div>
 
         </div>
     </ion-list>

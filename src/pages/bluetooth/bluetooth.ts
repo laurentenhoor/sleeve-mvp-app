@@ -15,8 +15,8 @@ export class Bluetooth {
 
   devices: any[] = [];
   statusMessage: string;
-  connectedDeviceId: string;
   firmware: ArrayBuffer;
+  connectedDevice;
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
@@ -67,7 +67,7 @@ export class Bluetooth {
   connect(device) {
     console.log('connect to device')
 
-    this.setStatus(device.id);
+    this.setStatus('Start connecting to ' + device.id);
 
     this.ble.connect(device.id).subscribe(
       peripheral => this.onBleConnected(peripheral),
@@ -98,22 +98,16 @@ export class Bluetooth {
 
     console.log('valueBytes', valueBytes);
 
-    this.toastCtrl.create({
-      message: 'Byte Size: ' + valueBytes.byteLength,
-      position: 'top',
-      duration: 2000
-    }).present();
-
     this.ble.write(deviceId,
       '000030f0-0000-1000-8000-00805f9b34fb',
       '000063e6-0000-1000-8000-00805f9b34fb',
       valueBytes)
       .then(data => {
-        this.alertCtrl.create({
-          title: 'Successful write',
-          subTitle: data,
-          buttons: ['Ok']
-        }).present();
+        // this.alertCtrl.create({
+        //   title: 'Successfully written',
+        //   subTitle: valueString,
+        //   buttons: ['Ok']
+        // }).present();
       }).catch(error => {
         this.alertCtrl.create({
           title: 'Error while writing',
@@ -124,24 +118,20 @@ export class Bluetooth {
 
   }
 
-  receivePackage(data) {
-
-  }
-
   startNotification(deviceId) {
     this.ble.startNotification(deviceId,
       '000030f0-0000-1000-8000-00805f9b34fb',
-      '000063e6-0000-1000-8000-00805f9b34fb'
+      '000063e7-0000-1000-8000-00805F9B34FB'
     ).subscribe(data => {
-      this.receivePackage(data);
-      this.toastCtrl.create({
-        message: 'Data available: ' + data,
-        position: 'top',
-        duration: 2000
+      this.alertCtrl.create({
+        title: 'Successfully received',
+        subTitle: this.bytesToString(data),
+        buttons: ['Discard']
       }).present();
+      // this.disconnect(deviceId)
     }, error => {
       this.toastCtrl.create({
-        message: 'Data available: ' + error,
+        message: 'Error on receiving: ' + error,
         position: 'top',
         duration: 2000
       }).present();
@@ -151,86 +141,92 @@ export class Bluetooth {
 
 
   disconnect(device) {
-    this.ble.disconnect(device.id)
-      .then(succes => {
-        this.connectedDeviceId = null;
-      }, error => {
+
+    this.ble.disconnect(this.connectedDevice.id)
+      .then(data => {
+        this.setStatus('BLE DISCONNECTED');
+        this.connectedDevice = null;
+        this.scan();
+      })
+      .catch(error => {
         this.alertCtrl.create({
           title: 'Error in disconnecting',
           subTitle: error,
           buttons: ['Discard']
         }).present();
       })
-  }
 
-  // ASCII only
-  stringToBytes(string) {
-    var array = new Uint8Array(string.length);
-    for (var i = 0, l = string.length; i < l; i++) {
-      array[i] = string.charCodeAt(i);
     }
-    return array.buffer;
+
+    // ASCII only
+    stringToBytes(string) {
+      var array = new Uint8Array(string.length);
+      for (var i = 0, l = string.length; i < l; i++) {
+        array[i] = string.charCodeAt(i);
+      }
+      return array.buffer;
+    }
+
+    // ASCII only
+    bytesToString(buffer) {
+      return String.fromCharCode.apply(null, new Uint8Array(buffer));
+    }
+
+
+    onBleConnected(peripheral) {
+      this.connectedDevice = peripheral;
+      this.setStatus('BLE CONNECTED')
+      this.startNotification(peripheral.id)
+      this.write(peripheral.id)
+    }
+
+    onBleDisconnected(peripheral) {
+      this.setStatus('BLE DISCONNECTED via callback');
+    }
+
+    scan() {
+      // this.setStatus('Scanning for Bluetooth LE Devices');
+      this.devices = [];  // clear list
+
+      this.ble.scan([], 5).subscribe(
+        device => this.onDeviceDiscovered(device),
+        error => this.scanError(error)
+      );
+
+      // setTimeout(this.setStatus.bind(this), 5000, 'Scan complete');
+    }
+
+    onDeviceDiscovered(device) {
+      console.log('Discovered ' + JSON.stringify(device, null, 2));
+      this.ngZone.run(() => {
+        this.devices.push(device);
+      });
+    }
+
+    // If location permission is denied, you'll end up here
+    scanError(error) {
+      this.setStatus('Error ' + error);
+      // let toast = this.toastCtrl.create({
+      //   message: 'Error scanning for Bluetooth low energy devices',
+      //   position: 'middle',
+      //   duration: 1000
+      // });
+      // toast.present();
+    }
+
+    setStatus(message) {
+
+      let toast = this.toastCtrl.create({
+        message: message,
+        position: 'bottom',
+        duration: 1000
+      });
+      toast.present();
+
+      console.log(message);
+      // this.ngZone.run(() => {
+      //   this.statusMessage = message;
+      // });
+    }
+
   }
-
-  // ASCII only
-  bytesToString(buffer) {
-    return String.fromCharCode.apply(null, new Uint8Array(buffer));
-  }
-
-
-  onBleConnected(peripheral) {
-    this.setStatus('BLE CONNECTED')
-    this.connectedDeviceId = peripheral.id;
-    this.write(peripheral.id)
-  }
-
-  onBleDisconnected(peripheral) {
-    this.setStatus('BLE DISCONNECTED');
-  }
-
-  scan() {
-    // this.setStatus('Scanning for Bluetooth LE Devices');
-    this.devices = [];  // clear list
-
-    this.ble.scan([], 5).subscribe(
-      device => this.onDeviceDiscovered(device),
-      error => this.scanError(error)
-    );
-
-    // setTimeout(this.setStatus.bind(this), 5000, 'Scan complete');
-  }
-
-  onDeviceDiscovered(device) {
-    console.log('Discovered ' + JSON.stringify(device, null, 2));
-    this.ngZone.run(() => {
-      this.devices.push(device);
-    });
-  }
-
-  // If location permission is denied, you'll end up here
-  scanError(error) {
-    this.setStatus('Error ' + error);
-    // let toast = this.toastCtrl.create({
-    //   message: 'Error scanning for Bluetooth low energy devices',
-    //   position: 'middle',
-    //   duration: 1000
-    // });
-    // toast.present();
-  }
-
-  setStatus(message) {
-
-    let toast = this.toastCtrl.create({
-      message: message,
-      position: 'middle',
-      duration: 1000
-    });
-    toast.present();
-
-    console.log(message);
-    // this.ngZone.run(() => {
-    //   this.statusMessage = message;
-    // });
-  }
-
-}
