@@ -6,6 +6,7 @@ import { BLE } from '@ionic-native/ble';
 import { AlertController } from 'ionic-angular';
 
 import { Http, RequestOptions, ResponseContentType } from '@angular/http';
+import { BlePacketParser } from './ble-packet-parser.service';
 
 @Component({
   selector: 'bluetooth',
@@ -23,28 +24,33 @@ export class Bluetooth {
     private ble: BLE,
     private ngZone: NgZone,
     private alertCtrl: AlertController,
-    private http: Http) {
-
-    this.loadFirmware('assets/firmware/dummy.hex')
+    private http: Http,
+    private blePackageParser: BlePacketParser) {
   }
 
-  loadFirmware(url: string) {
+  sendFirmware(deviceId: string) {
+
+    var firmwareUrl = 'assets/firmware/dummy.hex'
 
     var options = new RequestOptions({
       responseType: ResponseContentType.ArrayBuffer,
     });
 
-    this.http.get(url, options)
+    this.http.get(firmwareUrl, options)
       .subscribe(
         response => {
           if (response.ok) {
             let fileBytes: ArrayBuffer = response['_body'];
-            
+
             this.alertCtrl.create({
               title: 'Successfull loaded firmware',
               subTitle: 'First 12 Bytes: ' + this.buf2hex(fileBytes.slice(0, 12)),
               buttons: ['Ok']
             }).present();
+
+            let packages = this.blePackageParser.bufferToPackages(fileBytes);
+            this.writePackages(deviceId, packages);
+
           }
         },
         error => {
@@ -77,6 +83,13 @@ export class Bluetooth {
 
   }
 
+  writePackages(deviceId: string, packages: ArrayBuffer[]) {
+    for (let i = 0; i < packages.length; i++) {
+      this.ble.writeWithoutResponse(deviceId,
+        '000030f0-0000-1000-8000-00805f9b34fb',
+        '000063e6-0000-1000-8000-00805f9b34fb', packages[i])
+    }
+  }
 
   write(deviceId) {
 

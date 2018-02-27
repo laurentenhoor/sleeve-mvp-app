@@ -13,6 +13,8 @@ import { Timeline } from '../pages/timeline/timeline';
 import { Bluetooth } from '../pages/bluetooth/bluetooth';
 import { FeedInput } from '../pages/feed-input/feed-input';
 
+import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
+
 @NgModule({
   declarations: [
     MyApp,
@@ -38,7 +40,8 @@ import { FeedInput } from '../pages/feed-input/feed-input';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    BLE
+    BLE,
+    BlePacketParser
   ]
 })
 export class AppModule {}

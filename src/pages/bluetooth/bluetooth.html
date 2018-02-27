@@ -17,6 +17,9 @@
             <button ion-item (click)="write(connectedDevice.id)">
                 Resend data
             </button>
+            <button ion-item (click)="sendFirmware(connectedDevice.id)">
+                Send firmware
+            </button>
             <button *ngIf="connectedDevice" ion-item (click)="disconnect(connectedDevice)">
                 Disconnect
             </button>
