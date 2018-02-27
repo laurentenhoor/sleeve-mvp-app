@@ -191,7 +191,7 @@ export class Bluetooth {
     this.connectedDevice = peripheral;
     this.setStatus('BLE CONNECTED')
     this.startNotification(peripheral.id)
-    this.write(peripheral.id)
+    // this.write(peripheral.id)
   }
 
   onBleDisconnected(peripheral) {
