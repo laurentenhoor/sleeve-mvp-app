@@ -49,6 +49,7 @@ export class Bluetooth {
             // }).present();
 
             let packages = this.blePackageParser.bufferToPackages(fileBuffer);
+            this.startFwAckNotification(deviceId);
             this.writePackages(deviceId, packages, 0, 0);
 
           }
@@ -123,7 +124,8 @@ export class Bluetooth {
 
   write(deviceId) {
 
-    console.log('write to deviceId', deviceId)
+    console.log('write to deviceId', deviceId);
+    this.startNotification(deviceId);
 
     let valueJson = {
       name1: 'Lauren'
@@ -160,6 +162,26 @@ export class Bluetooth {
         }).present()
       });
 
+  }
+
+  startFwAckNotification(deviceId:string) {
+    this.ble.startNotification(deviceId,
+      '000030F1-0000-1000-8000-00805F9B34FB',
+      '000063E9-0000-1000-8000-00805F9B34FB'
+    ).subscribe(data => {
+      this.alertCtrl.create({
+        title: 'Successfully received firmware',
+        subTitle: this.buf2hex(data),
+        buttons: ['Discard']
+      }).present();
+      // this.disconnect(deviceId)
+    }, error => {
+      this.toastCtrl.create({
+        message: 'Error on receiving firmware: ' + error,
+        position: 'bottom',
+        duration: 2000
+      }).present();
+    })
   }
 
   startNotification(deviceId) {
@@ -204,8 +226,8 @@ export class Bluetooth {
 
   // ASCII only
   stringToBytes(string) {
-    var array = new Uint8Array(string.length);
-    for (var i = 0, l = string.length; i < l; i++) {
+    let array = new Uint8Array(string.length);
+    for (let i = 0, l = string.length; i < l; i++) {
       array[i] = string.charCodeAt(i);
     }
     return array.buffer;
@@ -216,12 +238,11 @@ export class Bluetooth {
     return String.fromCharCode.apply(null, new Uint8Array(buffer));
   }
 
+  
 
   onBleConnected(peripheral) {
     this.connectedDevice = peripheral;
     this.setStatus('BLE CONNECTED')
-    this.startNotification(peripheral.id)
-    // this.write(peripheral.id)
   }
 
   onBleDisconnected(peripheral) {
