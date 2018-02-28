@@ -16,7 +16,7 @@ export class BlePacketParser {
         
         for (let packageCount = 0; packageCount < amountOfPackages; packageCount++) {
             let packageCountDown = amountOfPackages-packageCount-1;
-            console.log('packageCountDown', packageCountDown)
+            // console.log('packageCountDown', packageCountDown)
 
             let byteCount = packageCount * this.BLE_PAYLOAD_SIZE
             let packagePayloadBuffer = payloadBuffer.slice(byteCount, byteCount + this.BLE_PAYLOAD_SIZE)
@@ -41,7 +41,7 @@ export class BlePacketParser {
             packageBytes.set(packageHeaderBytes, 0);
             packageBytes.set(packagePayloadBytes, 4);
 
-            console.log(this.bufferToHex(packageBytes.buffer))
+            // console.log(this.bufferToHex(packageBytes.buffer))
             outputPackages.push(packageBytes.buffer);
 
         }
