@@ -42,12 +42,6 @@ export class Bluetooth {
           if (response.ok) {
             let fileBuffer: ArrayBuffer = response['_body'];
 
-            // this.alertCtrl.create({
-            //   title: 'Successfull loaded firmware',
-            //   subTitle: 'First 12 Bytes: ' + this.buf2hex(fileBuffer.slice(0, 12)),
-            //   buttons: ['Ok']
-            // }).present();
-
             let packages = this.blePackageParser.bufferToPackages(fileBuffer);
             this.startFwAckNotification(deviceId);
             this.writePackages(deviceId, packages, 0, 0);
@@ -84,7 +78,7 @@ export class Bluetooth {
 
   }
 
-  writePackages(deviceId: string, packages: ArrayBuffer[], packageCounter:number, retryCounter:number) {
+  writePackages(deviceId: string, packages: ArrayBuffer[], packageCounter: number, retryCounter: number) {
     // for (let i = 0; i < packages.length; i++) {
     //   console.log('package to send:', i);
     //   this.ble.writeWithoutResponse(deviceId,
@@ -102,14 +96,14 @@ export class Bluetooth {
       '000030F1-0000-1000-8000-00805F9B34FB',
       '000063E8-0000-1000-8000-00805F9B34FB',
       packages[packageCounter]
-      )
+    )
       .then(data => {
-        this.writePackages(deviceId, packages, ++packageCounter, retryCounter=0)
+        this.writePackages(deviceId, packages, ++packageCounter, retryCounter = 0)
       }).catch(error => {
         if (retryCounter >= 9) {
           this.alertCtrl.create({
             title: 'Error while sending firmware.',
-            subTitle: "I retried package"+ packageCounter + " 10 times.",
+            subTitle: "I retried package" + packageCounter + " 10 times.",
             buttons: ['Discard']
           }).present();
           return;
@@ -118,8 +112,8 @@ export class Bluetooth {
       });
   }
 
-  writeLoop(deviceId:string, packageBuffer:ArrayBuffer) {
-    
+  writeLoop(deviceId: string, packageBuffer: ArrayBuffer) {
+
   }
 
   write(deviceId) {
@@ -164,7 +158,7 @@ export class Bluetooth {
 
   }
 
-  startFwAckNotification(deviceId:string) {
+  startFwAckNotification(deviceId: string) {
     this.ble.startNotification(deviceId,
       '000030F1-0000-1000-8000-00805F9B34FB',
       '000063E9-0000-1000-8000-00805F9B34FB'
@@ -238,15 +232,32 @@ export class Bluetooth {
     return String.fromCharCode.apply(null, new Uint8Array(buffer));
   }
 
-  
+  forceBonding(peripheral) {
+    this.ble.read(peripheral.id,
+      peripheral.characteristics[0].service,
+      peripheral.characteristics[0].characteristic).then(
+        // data => console.log(data),
+        // error => console.error(error)
+      )
+
+  }
 
   onBleConnected(peripheral) {
     this.connectedDevice = peripheral;
+    this.forceBonding(peripheral)
     this.setStatus('BLE CONNECTED')
   }
 
   onBleDisconnected(peripheral) {
-    this.setStatus('BLE DISCONNECTED via callback');
+    this.alertCtrl.create({
+      title: 'Error while connecting',
+      subTitle: JSON.stringify(peripheral),
+      buttons: ['Dismiss']
+    }).present();
+
+    console.log(JSON.stringify(peripheral))
+
+    // this.setStatus('BLE DISCONNECTED via callback');
   }
 
   scan() {
