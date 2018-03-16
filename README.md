@@ -8,6 +8,8 @@ This project is about app connecting to the following sleeve firmware: [https://
 ## Version 0.0.4
 *   Bonding from the app works on both iOS and Android.
     * Android needs to read a characteristic to force bonding [https://github.com/don/cordova-plugin-ble-central/issues/127#issuecomment-167808782](https://github.com/don/cordova-plugin-ble-central/issues/127#issuecomment-167808782)
+*   Build Android not working aapt error
+    Solution can be found [https://forum.ionicframework.com/t/build-break-with-aapt-error-message-why/123955/6](https://forum.ionicframework.com/t/build-break-with-aapt-error-message-why/123955/6)
 
 ## Version 0.0.3
 *   Implemented BLE Transport Protocol
