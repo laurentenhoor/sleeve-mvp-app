@@ -5,6 +5,14 @@ Written in Angular and Ionic. Meteor back-end via DDP.
 This project is about app connecting to the following sleeve firmware: [https://github.com/shreyas2415/SBS_Shrey](https://github.com/shreyas2415/SBS_Shrey).
 
 # Changelog
+## Version 0.0.4
+*   Bonding from the app works on both iOS and Android.
+    * Android needs to read a characteristic to force bonding [https://github.com/don/cordova-plugin-ble-central/issues/127#issuecomment-167808782](https://github.com/don/cordova-plugin-ble-central/issues/127#issuecomment-167808782)
+
+## Version 0.0.3
+*   Implemented BLE Transport Protocol
+    *   Successfully sended a dummy firmware file.
+
 ## Version 0.0.2
 *   Improved BLE
     *   Implemented acknowledgement
