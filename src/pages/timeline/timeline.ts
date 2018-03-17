@@ -1,7 +1,8 @@
 import {
   Component,
   NgZone,
-  OnInit
+  OnInit,
+  ApplicationRef
 } from '@angular/core';
 
 import { NavController, Events } from 'ionic-angular';
@@ -33,6 +34,7 @@ export class Timeline implements OnInit {
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
     private ngZone: NgZone,
+    private applicationRef: ApplicationRef,
     private http: Http,
     public modalCtrl: ModalController,
     private events: Events,
@@ -41,7 +43,7 @@ export class Timeline implements OnInit {
 
     setTimeout(() => {
       this.fakeScan = true;
-      this.events.publish('availableFeeds', 2);
+      this.events.publish('availableFeeds', 1);
     }, 2000);
 
     this.feeds = this.feedsService.getFeeds();
@@ -73,8 +75,12 @@ export class Timeline implements OnInit {
     }
     this.events.publish('availableFeeds', 0);
 
-    this.feedsService.createFeed(generateFeed())
-
+    this.feedsService.createFeed(generateFeed(), (result) => {
+      setTimeout(() => {
+        this.applicationRef.tick();
+        }, 100);
+      })
+      
   }
 
   addFeed() {
