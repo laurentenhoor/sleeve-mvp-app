@@ -50,10 +50,9 @@ export class Feeds {
         });
     }
 
-    createFeed(feed, callback) {
+    createFeed(feed) {
         this.localDb.post(feed).then((result)=>{
             console.log('createFeed', JSON.stringify(result));
-            callback(result);
         }).catch((err) => {
             console.error(JSON.stringify(err));
         });

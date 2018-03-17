@@ -75,12 +75,11 @@ export class Timeline implements OnInit {
     }
     this.events.publish('availableFeeds', 0);
 
-    this.feedsService.createFeed(generateFeed(), (result) => {
-      setTimeout(() => {
-        this.applicationRef.tick();
-        }, 100);
-      })
-      
+    this.feedsService.createFeed(generateFeed());
+    setTimeout(() => {
+      this.applicationRef.tick();
+    }, 100);
+
   }
 
   addFeed() {
