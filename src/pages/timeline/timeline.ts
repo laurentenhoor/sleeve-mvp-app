@@ -17,7 +17,9 @@ import * as moment from 'moment';
 import { Http } from '@angular/http';
 
 import { FeedInput } from '../feed-input/feed-input'
-import { Feeds } from '../providers/feeds';
+
+import { Feeds } from '../../providers/feeds';
+import { Sessions } from '../../providers/sessions';
 
 @Component({
   selector: 'timeline',
@@ -34,14 +36,16 @@ export class Timeline implements OnInit {
     private http: Http,
     public modalCtrl: ModalController,
     private events: Events,
-    public feedsService: Feeds) {
+    public feedsService: Feeds,
+    public sessionsService: Sessions) {
 
     setTimeout(() => {
       this.fakeScan = true;
       this.events.publish('availableFeeds', 2);
-    }, 500);
+    }, 2000);
 
-    this.feeds = this.feedsService.getFeeds()
+    this.feeds = this.feedsService.getFeeds();
+
   }
 
   ngOnInit() {
@@ -56,18 +60,21 @@ export class Timeline implements OnInit {
   }
 
   addFakeFeeds() {
+    var self = this;
 
     function generateFeed() {
       return {
         type: 'smart',
         timestamp: Date.now(),
-        amount: Math.random() * 210
+        date: new Date(),
+        amount: Math.random() * 210,
+        sessionId: self.sessionsService.getSessionId()
       }
     }
     this.events.publish('availableFeeds', 0);
-    
+
     this.feedsService.createFeed(generateFeed())
-  
+
   }
 
   addFeed() {

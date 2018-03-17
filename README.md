@@ -1,10 +1,19 @@
 # Smart Bottle Tracker Native Mobile Applications
 Target platforms: iOS and Android.
-Written in Angular and Ionic. CouchDB database with PouchDB offline first persistent database.
+Written in Angular and Ionic. 
+PouchDB offline first persistent database, synchonzed with CouchDB instance on AWS.
 
 This project is about app connecting to the following sleeve firmware: [https://bitbucket.com/sleeve-mvp/sleeve-mvp-firmware](https://bitbucket.com/sleeve-mvp/sleeve-mvp-firmware).
 
 # Changelog
+## Version 0.1.1
+*   Presistent local database (PouchDB).
+*   App session token is generated.
+*   Syncs session and feeds to AWS back-end (automatic one-way PouchDB->CouchDB synchronization).
+*   AWS instance running to sync the data.
+    *   [http://ec2-34-239-163-2.compute-1.amazonaws.com:5984/_utils/](http://ec2-34-239-163-2.compute-1.amazonaws.com:5984/_utils/)
+        *   Username: admin; Password: admin.
+
 ## Version 0.1.0
 *   Back-end infrastructure changed to CouchDB and PouchDB (offline first persistent local database)
     * [https://www.joshmorony.com/offline-syncing-in-ionic-2-with-pouchdb-couchdb/](https://www.joshmorony.com/offline-syncing-in-ionic-2-with-pouchdb-couchdb/)

@@ -2,7 +2,8 @@
 import { Component } from '@angular/core';
 import { NavParams, ViewController } from 'ionic-angular';
 
-import { Feeds } from '../providers/feeds'
+import { Feeds } from '../../providers/feeds'
+import { Sessions } from '../../providers/sessions'
 
 @Component({
     selector: 'feed-input',
@@ -16,6 +17,7 @@ export class FeedInput {
         private params: NavParams,
         public viewCtrl: ViewController,
         public feedsService: Feeds,
+        public sessionsService: Sessions,
     ) {
         this.selectedFeed = params.get('feed')
         if (this.selectedFeed) {
@@ -24,7 +26,9 @@ export class FeedInput {
             this.updatedFeed = {
                 amount: 125,
                 type: 'manual',
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                date: new Date(),
+                sessionId: this.sessionsService.getSessionId()
             }
         }
     }
@@ -38,7 +42,6 @@ export class FeedInput {
         this.dismiss();
     }
 
-
     deleteFeed() {
         this.feedsService.deleteFeed(this.updatedFeed)
         this.dismiss();
@@ -47,5 +50,6 @@ export class FeedInput {
     dismiss() {
         this.viewCtrl.dismiss();
     }
+    
 
 }

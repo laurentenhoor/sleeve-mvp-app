@@ -12,8 +12,11 @@ import { Tabs } from '../pages/tabs/tabs';
 import { Timeline } from '../pages/timeline/timeline';
 import { Bluetooth } from '../pages/bluetooth/bluetooth';
 import { FeedInput } from '../pages/feed-input/feed-input';
-import { Feeds } from '../pages/providers/feeds';
- 
+
+import { Feeds } from '../providers/feeds';
+import { Sessions } from '../providers/sessions';
+
+import { Device } from '@ionic-native/device';
 
 import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
 
@@ -44,7 +47,9 @@ import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     BLE,
     BlePacketParser,
-    Feeds
+    Feeds,
+    Sessions,
+    Device
   ]
 })
 export class AppModule {}
