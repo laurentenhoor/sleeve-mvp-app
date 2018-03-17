@@ -4,6 +4,8 @@ Written in Angular and Ionic. Meteor back-end via DDP.
 
 This project is about app connecting to the following sleeve firmware: [https://github.com/shreyas2415/SBS_Shrey](https://github.com/shreyas2415/SBS_Shrey).
 
+https://www.joshmorony.com/offline-syncing-in-ionic-2-with-pouchdb-couchdb/
+
 # Changelog
 ## Version 0.0.4
 *   Bonding from the app works on both iOS and Android.

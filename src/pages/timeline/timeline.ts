@@ -16,36 +16,35 @@ import * as moment from 'moment';
 
 import { Http } from '@angular/http';
 
-import { Observable } from 'rxjs';
-import { MeteorObservable } from 'meteor-rxjs';
-
-import { Feed } from 'api/models';
-import { FeedType } from 'api/models';
-import { Feeds } from 'api/collections';
-
 import { FeedInput } from '../feed-input/feed-input'
+import { Feeds } from '../providers/feeds';
 
 @Component({
   selector: 'timeline',
   templateUrl: 'timeline.html'
 })
 export class Timeline implements OnInit {
-  feeds;
-  fakeScan;
+  fakeScan: any;
   public amountOfAvailableFeeds;
+  private feeds: any;
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
     private ngZone: NgZone,
     private http: Http,
     public modalCtrl: ModalController,
-    private events: Events) {
+    private events: Events,
+    public feedsService: Feeds) {
 
     setTimeout(() => {
       this.fakeScan = true;
       this.events.publish('availableFeeds', 2);
-    }, 5000);
+    }, 500);
 
+    this.feeds = this.feedsService.getFeeds()
+  }
+
+  ngOnInit() {
   }
 
   getAmountOfAvailableFeeds() {
@@ -56,33 +55,19 @@ export class Timeline implements OnInit {
     return moment(timestamp).fromNow();
   }
 
-  ngOnInit() {
-    MeteorObservable.subscribe('feeds').subscribe(() => {
-      MeteorObservable.autorun().subscribe(() => {
-        this.feeds = this.findFeeds();
-      });
-    });
-  }
-
-  findFeeds() {
-    return Feeds.find().map(feeds => {
-      return _.orderBy(feeds, ['timestamp'], ['desc']);
-    });
-  }
-
   addFakeFeeds() {
 
     function generateFeed() {
       return {
-        type: FeedType.SMART,
+        type: 'smart',
         timestamp: Date.now(),
         amount: Math.random() * 210
       }
     }
     this.events.publish('availableFeeds', 0);
-    Feeds.insert(generateFeed());
-    Feeds.insert(generateFeed());
-
+    
+    this.feedsService.createFeed(generateFeed())
+  
   }
 
   addFeed() {

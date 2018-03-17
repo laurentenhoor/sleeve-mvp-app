@@ -12,6 +12,8 @@ import { Tabs } from '../pages/tabs/tabs';
 import { Timeline } from '../pages/timeline/timeline';
 import { Bluetooth } from '../pages/bluetooth/bluetooth';
 import { FeedInput } from '../pages/feed-input/feed-input';
+import { Feeds } from '../pages/providers/feeds';
+ 
 
 import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
 
@@ -41,7 +43,8 @@ import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     BLE,
-    BlePacketParser
+    BlePacketParser,
+    Feeds
   ]
 })
 export class AppModule {}
