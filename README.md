@@ -1,12 +1,14 @@
 # Smart Bottle Tracker Native Mobile Applications
 Target platforms: iOS and Android.
-Written in Angular and Ionic. Meteor back-end via DDP.
+Written in Angular and Ionic. CouchDB database with PouchDB offline first persistent database.
 
-This project is about app connecting to the following sleeve firmware: [https://github.com/shreyas2415/SBS_Shrey](https://github.com/shreyas2415/SBS_Shrey).
-
-https://www.joshmorony.com/offline-syncing-in-ionic-2-with-pouchdb-couchdb/
+This project is about app connecting to the following sleeve firmware: [https://bitbucket.com/sleeve-mvp/sleeve-mvp-firmware](https://bitbucket.com/sleeve-mvp/sleeve-mvp-firmware).
 
 # Changelog
+## Version 0.1.0
+*   Back-end infrastructure changed to CouchDB and PouchDB (offline first persistent local database)
+    * [https://www.joshmorony.com/offline-syncing-in-ionic-2-with-pouchdb-couchdb/](https://www.joshmorony.com/offline-syncing-in-ionic-2-with-pouchdb-couchdb/)
+
 ## Version 0.0.4
 *   Bonding from the app works on both iOS and Android.
     * Android needs to read a characteristic to force bonding [https://github.com/don/cordova-plugin-ble-central/issues/127#issuecomment-167808782](https://github.com/don/cordova-plugin-ble-central/issues/127#issuecomment-167808782)
