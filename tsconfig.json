@@ -11,28 +11,20 @@
     ],
     "module": "commonjs",
     "moduleResolution": "node",
-    "paths": {
-      "api/*": [
-        "./api/server/*"
-      ]
-    },
+    "paths": {},
     "sourceMap": true,
     "target": "es5",
     "skipLibCheck": true,
     "stripInternal": true,
     "noImplicitAny": false,
     "types": [
-      "@types/meteor"
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "api/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "api/node_modules",
-    "api"
   ],
   "compileOnSave": false,
   "atom": {
