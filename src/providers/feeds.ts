@@ -36,7 +36,6 @@ export class Feeds {
                     // console.log(row)
                     this.data.push(row.doc);
                 });
-
                 resolve(this.data);
 
                 this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
@@ -72,7 +71,7 @@ export class Feeds {
     }
 
     handleChange(change) {
-
+        console.log('jajaja')
         let changedDoc = null;
         let changedIndex = null;
 
@@ -93,7 +92,7 @@ export class Feeds {
             }
             //A document was added
             else {
-                this.data.push(change.doc);
+                this.data.unshift(change.doc);
             }
 
         }
