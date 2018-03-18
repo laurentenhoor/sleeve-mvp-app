@@ -71,7 +71,7 @@ export class Feeds {
     }
 
     handleChange(change) {
-        console.log('jajaja')
+    
         let changedDoc = null;
         let changedIndex = null;
 
