@@ -27,7 +27,7 @@ export class Sessions {
 
     getSessionId() {
         if (this.session) {
-            return this.session._id;
+            return this.session.id;
         }
         return 'unknown session';
     }
