@@ -1,0 +1,37 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            Smart Feeding Kit
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content no-bounce style="text-align:center">
+
+    <img class="sleeve-image" src="assets/imgs/sleeve-white-bg.png" />
+
+    <ion-spinner name="dots"></ion-spinner>
+    <p style="opacity:0.5">Scanning for bottle trackers.</p>
+    <button (click)="openQuickStart()" ion-button>
+        Start installation
+    </button>
+
+</ion-content>
+
+<ion-footer>
+
+    <ion-toolbar>
+
+        <p style="padding:0 4px">No bottle tracker yet?</p>
+
+        <ion-buttons end>
+            <button ion-button icon-left color="royal">
+
+                Learn more
+            </button>
+        </ion-buttons>
+
+    </ion-toolbar>
+
+</ion-footer>

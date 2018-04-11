@@ -4,6 +4,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Tabs } from '../pages/tabs/tabs';
+import { FirstUse } from '../pages/first-use/first-use';
+import { QuickStart } from '../pages/quick-start/quick-start';
 
 import { Sessions } from '../providers/sessions';
 
@@ -11,8 +13,9 @@ import { Sessions } from '../providers/sessions';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = Tabs;
   
+  rootPage: any = FirstUse;
+
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, sessionsService: Sessions) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.

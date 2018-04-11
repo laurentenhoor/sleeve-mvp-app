@@ -13,6 +13,9 @@ import { Timeline } from '../pages/timeline/timeline';
 import { Bluetooth } from '../pages/bluetooth/bluetooth';
 import { FeedInput } from '../pages/feed-input/feed-input';
 
+import { FirstUse } from '../pages/first-use/first-use';
+import { QuickStart } from '../pages/quick-start/quick-start';
+
 import { Feeds } from '../providers/feeds';
 import { Sessions } from '../providers/sessions';
 
@@ -20,13 +23,16 @@ import { Device } from '@ionic-native/device';
 
 import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
 
+
 @NgModule({
   declarations: [
     MyApp,
     Tabs,
     Timeline,
     Bluetooth,
-    FeedInput
+    FeedInput,
+    FirstUse,
+    QuickStart,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +45,9 @@ import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
     Tabs,
     Timeline,
     Bluetooth,
-    FeedInput
+    FeedInput,
+    FirstUse,
+    QuickStart,
   ],
   providers: [
     StatusBar,
@@ -49,7 +57,7 @@ import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
     BlePacketParser,
     Feeds,
     Sessions,
-    Device
+    Device,
   ]
 })
 export class AppModule {}
