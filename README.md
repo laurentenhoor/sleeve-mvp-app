@@ -6,6 +6,9 @@ PouchDB offline first persistent database, synchonzed with CouchDB instance on A
 This project is about app connecting to the following sleeve firmware: [https://bitbucket.com/sleeve-mvp/sleeve-mvp-firmware](https://bitbucket.com/sleeve-mvp/sleeve-mvp-firmware).
 
 # Changelog
+## Version 0.1.2
+*   Added quick start guide wireframe
+
 ## Version 0.1.1
 *   Presistent local database (PouchDB).
 *   App session token is generated.
