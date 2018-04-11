@@ -2,7 +2,11 @@
 import { Component } from '@angular/core';
 import { AlertController, NavController } from 'ionic-angular';
 
-import {QuickStart} from '../quick-start/quick-start'
+import { QuickStart } from '../quick-start/quick-start'
+import { BrowserTab } from '@ionic-native/browser-tab';
+import { Platform } from 'ionic-angular';
+
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 @Component({
     selector: 'first-use',
@@ -12,13 +16,17 @@ export class FirstUse {
 
     constructor(
         private alertCtrl: AlertController,
-        private nav: NavController
+        private nav: NavController,
+        private browserTab: BrowserTab,
+        private inAppBrowser: InAppBrowser,
+        private platform: Platform
     ) {
-        
+
     }
 
     learnMore() {
-        window.open('https://www.youtube.com/watch?v=0l-gAVKMQ5c&feature=youtu.be', '_system');
+        let url = 'https://www.youtube.com/watch?v=0l-gAVKMQ5c&feature=youtu.be';
+        this.inAppBrowser.create(url, '_system')
     }
     quickStart() {
 
@@ -30,7 +38,7 @@ export class FirstUse {
         //     buttons: ['Dismiss']
         //   });
         //   alert.present();
-        
+
     }
 
 

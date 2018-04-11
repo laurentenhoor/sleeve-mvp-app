@@ -23,6 +23,9 @@ import { Device } from '@ionic-native/device';
 
 import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
 
+import { BrowserTab } from '@ionic-native/browser-tab';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+
 
 @NgModule({
   declarations: [
@@ -58,6 +61,8 @@ import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
     Feeds,
     Sessions,
     Device,
+    BrowserTab,
+    InAppBrowser,
   ]
 })
 export class AppModule {}
