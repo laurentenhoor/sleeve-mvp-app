@@ -1,5 +1,8 @@
 
 import { Component } from '@angular/core';
+import { AlertController, NavController } from 'ionic-angular';
+
+import {Tabs} from '../tabs/tabs'
 
 @Component({
     selector: 'quick-start',
@@ -7,8 +10,14 @@ import { Component } from '@angular/core';
 })
 export class QuickStart {
 
-    constructor() {
+    constructor(
+        private nav: NavController
+    ) {
 
+    }
+
+    finishInstallation() {
+        this.nav.setRoot(Tabs)
     }
 
 }
