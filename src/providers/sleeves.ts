@@ -34,11 +34,11 @@ export class Sleeves {
         console.log('discovered', JSON.stringify(device))
         if (device.id == this.deviceId) {
             console.error('found a sleeve!')
-
             // this.ble.stopScan();
-
             this.connect(successCallback);
+            
         }
+        
     }
 
     connect(successCallback) {
