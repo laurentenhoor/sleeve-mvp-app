@@ -8,7 +8,7 @@ import { Platform } from 'ionic-angular';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
-// import { Devices } from '../../providers/devices'
+import { Sleeves } from '../../providers/sleeves'
 
 @Component({
     selector: 'first-use',
@@ -22,29 +22,18 @@ export class FirstUse {
         private browserTab: BrowserTab,
         private inAppBrowser: InAppBrowser,
         private platform: Platform,
+        private devicesServices: Sleeves,
     ) {
 
     }
 
     ionViewDidEnter() {
+        this.devicesServices.initScan(() => this.nav.push(QuickStart));
     }
 
     learnMore() {
         let url = 'https://www.youtube.com/watch?v=0l-gAVKMQ5c&feature=youtu.be';
         this.inAppBrowser.create(url, '_system')
     }
-    quickStart() {
-
-        this.nav.push(QuickStart);
-
-        // let alert = this.alertCtrl.create({
-        //     title: 'Installation',
-        //     subTitle: 'This will start the quick start guide.',
-        //     buttons: ['Dismiss']
-        //   });
-        //   alert.present();
-
-    }
-
 
 }

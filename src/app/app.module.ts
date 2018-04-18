@@ -18,7 +18,7 @@ import { QuickStart } from '../pages/quick-start/quick-start';
 
 import { Feeds } from '../providers/feeds';
 import { Sessions } from '../providers/sessions';
-import { Devices } from '../providers/devices';
+import { Sleeves } from '../providers/sleeves';
 
 import { Device } from '@ionic-native/device';
 
@@ -61,7 +61,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
     BlePacketParser,
     Feeds,
     Sessions,
-    Devices,
+    Sleeves,
     Device,
     BrowserTab,
     InAppBrowser,
