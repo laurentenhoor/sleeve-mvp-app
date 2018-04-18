@@ -14,7 +14,7 @@ import { Sessions } from '../providers/sessions';
 })
 export class MyApp {
   
-  rootPage: any = FirstUse;
+  rootPage: any = Tabs;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, sessionsService: Sessions) {
     platform.ready().then(() => {

@@ -18,6 +18,7 @@ export class Bluetooth {
   statusMessage: string;
   firmware: ArrayBuffer;
   connectedDevice;
+  currentState;
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
@@ -114,6 +115,17 @@ export class Bluetooth {
 
   writeLoop(deviceId: string, packageBuffer: ArrayBuffer) {
 
+  }
+
+  subscribeToState(deviceId) {
+    this.ble.startNotification(deviceId,
+      '000030f3-0000-1000-8000-00805f9b34fb',
+      '000063eC-0000-1000-8000-00805f9b34fb'
+    ).subscribe(data => {
+      console.log(this.bufferToHex(data));
+    }, error => {
+      console.error(error)
+    })
   }
 
   write(deviceId) {
@@ -218,6 +230,10 @@ export class Bluetooth {
 
   }
 
+  bufferToHex(buffer: ArrayBuffer) {
+    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+  }
+
   // ASCII only
   stringToBytes(string) {
     let array = new Uint8Array(string.length);
@@ -236,15 +252,16 @@ export class Bluetooth {
     this.ble.read(peripheral.id,
       peripheral.characteristics[0].service,
       peripheral.characteristics[0].characteristic).then(
-        // data => console.log(data),
-        // error => console.error(error)
+        data => console.log(data),
+        error => console.error(error)
       )
 
   }
 
   onBleConnected(peripheral) {
     this.connectedDevice = peripheral;
-    this.forceBonding(peripheral)
+    this.forceBonding(peripheral);
+    
     this.setStatus('BLE CONNECTED')
   }
 

@@ -8,6 +8,8 @@ import { Platform } from 'ionic-angular';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
+// import { Devices } from '../../providers/devices'
+
 @Component({
     selector: 'first-use',
     templateUrl: 'first-use.html'
@@ -19,9 +21,12 @@ export class FirstUse {
         private nav: NavController,
         private browserTab: BrowserTab,
         private inAppBrowser: InAppBrowser,
-        private platform: Platform
+        private platform: Platform,
     ) {
 
+    }
+
+    ionViewDidEnter() {
     }
 
     learnMore() {

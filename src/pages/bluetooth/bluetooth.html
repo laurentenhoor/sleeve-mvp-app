@@ -23,6 +23,12 @@
             <button *ngIf="connectedDevice" ion-item (click)="disconnect(connectedDevice)">
                 Disconnect
             </button>
+            <button ion-item (click)="subscribeToState(connectedDevice.id)">
+                Subscribe to state
+            </button>
+            <div ion-item>
+                {{ currentState }}
+            </div>
         </div>
         <div *ngIf="!connectedDevice">
             <div *ngFor="let device of devices">
