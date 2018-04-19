@@ -32,7 +32,7 @@ export class Sleeves {
 
     onDeviceDiscovered(device, successCallback) {
         console.log('discovered', JSON.stringify(device))
-        if (device.id == this.deviceId) {
+        if (device.name == 'Shrey_SBS_01') {
             console.error('found a sleeve!')
             // this.ble.stopScan();
             this.connect(successCallback);
@@ -41,9 +41,20 @@ export class Sleeves {
         
     }
 
+    forceBonding(peripheral) {
+        this.ble.read(peripheral.id,
+          peripheral.characteristics[0].service,
+          peripheral.characteristics[0].characteristic).then(
+            data => console.log(data),
+            error => console.error('forceBonding', error)
+          )
+    
+      }
+
     connect(successCallback) {
         this.ble.connect(this.deviceId).subscribe(
             peripheral => {
+                this.forceBonding(peripheral)
                 this.sleeveConnected = true;
                 successCallback();
                 console.error('Successfully connected to a sleeve')
@@ -53,7 +64,7 @@ export class Sleeves {
                 ).subscribe(data => {
                     console.log(data)
                 }, error => {
-                    console.error(error)
+                    console.error('connect', error)
                 })
             },
             peripheral => {
