@@ -4,7 +4,7 @@ import { AlertController, NavController, Slides } from 'ionic-angular';
 
 import { Tabs } from '../tabs/tabs';
 import { BLE } from '@ionic-native/ble';
-// import { Devices } from '../../providers/devices'
+import { Sleeves } from '../../providers/sleeves'
 
 @Component({
     selector: 'quick-start',
@@ -15,21 +15,23 @@ export class QuickStart {
 
     constructor(
         private nav: NavController,
-        private ble: BLE
+        private ble: BLE,
+        private sleevesService: Sleeves
     ) {
 
-        this.ble.startNotification('D7832B16-8B21-4BCB-906C-0B6779BB18D8',
-            '000030f3-0000-1000-8000-00805f9b34fb',
-            '000063eC-0000-1000-8000-00805f9b34fb'
-        ).subscribe(data => {
-            console.log(this.bufferToHex(data));
-            this.slides.slideNext();
-        }, error => {
-            console.error(error);
-        })
     }
 
     ionViewDidEnter() {
+        
+        this.ble.startNotification(this.sleevesService.deviceId,
+            '000030f3-0000-1000-8000-00805f9b34fb',
+            '000063eC-0000-1000-8000-00805f9b34fb'
+          ).subscribe(data => {
+            console.log(this.bufferToHex(data));
+            this.slides.slideNext();
+          }, error => {
+            console.error(error)
+          })  
      
     }
 

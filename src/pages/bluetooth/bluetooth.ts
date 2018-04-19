@@ -260,7 +260,7 @@ export class Bluetooth {
 
   onBleConnected(peripheral) {
     this.connectedDevice = peripheral;
-    this.forceBonding(peripheral);
+    // this.forceBonding(peripheral);
     
     this.setStatus('BLE CONNECTED')
   }

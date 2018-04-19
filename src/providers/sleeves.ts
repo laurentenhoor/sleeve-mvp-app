@@ -8,12 +8,13 @@ export class Sleeves {
     data: any;
     localDb: any;
     devices: any[] = [];
+    deviceName: string;
     deviceId: string;
     sleeveConnected: boolean;
 
     constructor(private ble: BLE) {
         this.localDb = new PouchDB('devices');
-        this.deviceId = 'D7832B16-8B21-4BCB-906C-0B6779BB18D8';
+        this.deviceName = 'Philips Avent SCH820';
         this.sleeveConnected = false;
     }
 
@@ -32,40 +33,35 @@ export class Sleeves {
 
     onDeviceDiscovered(device, successCallback) {
         console.log('discovered', JSON.stringify(device))
-        if (device.name == 'Shrey_SBS_01') {
+        if (device.name == this.deviceName) {
             console.error('found a sleeve!')
             // this.ble.stopScan();
-            this.connect(successCallback);
-            
+            this.deviceId = device.id;
+            this.connect(device.id, successCallback);
         }
-        
     }
 
     forceBonding(peripheral) {
+        console.log('force bonding')
         this.ble.read(peripheral.id,
           peripheral.characteristics[0].service,
           peripheral.characteristics[0].characteristic).then(
-            data => console.log(data),
+            data => {
+                console.log('focebonding', data);
+            },
             error => console.error('forceBonding', error)
           )
     
       }
 
-    connect(successCallback) {
-        this.ble.connect(this.deviceId).subscribe(
+    connect(deviceId, successCallback) {
+        this.ble.connect(deviceId).subscribe(
             peripheral => {
-                this.forceBonding(peripheral)
+                // this.forceBonding(peripheral);
                 this.sleeveConnected = true;
-                successCallback();
-                console.error('Successfully connected to a sleeve')
-                this.ble.startNotification('D7832B16-8B21-4BCB-906C-0B6779BB18D8',
-                    '000030F3-0000-1000-8000-00805F9B34FB',
-                    '000063EC-0000-1000-8000-00805F9B34FB'
-                ).subscribe(data => {
-                    console.log(data)
-                }, error => {
-                    console.error('connect', error)
-                })
+                    successCallback();
+                    console.error('Successfully connected to a sleeve')
+                    
             },
             peripheral => {
                 console.error('disconnected ');
@@ -73,5 +69,9 @@ export class Sleeves {
         )
 
     }
+
+    bufferToHex(buffer: ArrayBuffer) {
+        return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+      }
 
 }
