@@ -4,7 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Tabs } from '../pages/tabs/tabs';
-import { FirstUse } from '../pages/first-use/first-use';
+import { Connecting } from '../pages/connecting/connecting';
 import { QuickStart } from '../pages/quick-start/quick-start';
 
 import { Sessions } from '../providers/sessions';
@@ -13,7 +13,6 @@ import { Sessions } from '../providers/sessions';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  
   rootPage: any = Tabs;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, sessionsService: Sessions) {

@@ -5,9 +5,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { BLE } from '@ionic-native/ble';
-// import { BluetoothLE } from '@ionic-native/bluetooth-le';
-// import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
-
 import { HttpModule } from '@angular/http';
 
 import { MyApp } from './app.component';
@@ -16,7 +13,7 @@ import { Timeline } from '../pages/timeline/timeline';
 import { Bluetooth } from '../pages/bluetooth/bluetooth';
 import { FeedInput } from '../pages/feed-input/feed-input';
 
-import { FirstUse } from '../pages/first-use/first-use';
+import { Connecting } from '../pages/connecting/connecting';
 import { QuickStart } from '../pages/quick-start/quick-start';
 
 import { Feeds } from '../providers/feeds';
@@ -27,8 +24,8 @@ import { Device } from '@ionic-native/device';
 
 import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
 
-import { BrowserTab } from '@ionic-native/browser-tab';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { Devices } from '../pages/devices/devices';
 
 
 @NgModule({
@@ -38,8 +35,9 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
     Timeline,
     Bluetooth,
     FeedInput,
-    FirstUse,
+    Connecting,
     QuickStart,
+    Devices,
   ],
   imports: [
     BrowserModule,
@@ -53,8 +51,9 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
     Timeline,
     Bluetooth,
     FeedInput,
-    FirstUse,
+    Connecting,
     QuickStart,
+    Devices,
   ],
   providers: [
     StatusBar,
@@ -66,7 +65,6 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
     Sessions,
     Sleeves,
     Device,
-    BrowserTab,
     InAppBrowser,
   ]
 })

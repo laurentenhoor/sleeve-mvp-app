@@ -9,10 +9,10 @@ import { QuickStart } from '../quick-start/quick-start';
 import { ModalController } from 'ionic-angular';
 
 @Component({
-    selector: 'first-use',
-    templateUrl: 'first-use.html'
+    selector: 'connecting',
+    templateUrl: 'connecting.html'
 })
-export class FirstUse {
+export class Connecting {
 
     constructor(
         private alertCtrl: AlertController,
@@ -32,11 +32,23 @@ export class FirstUse {
             }, error => {
                 console.error(error);
             })
+
+    }
+
+    demo() {
+        this.nav.pop();
+        this.modalCtrl.create(QuickStart).present();
     }
 
     learnMore() {
         let url = 'https://www.youtube.com/watch?v=0l-gAVKMQ5c&feature=youtu.be';
         this.inAppBrowser.create(url, '_system')
     }
+
+
+    closeModal() {
+        this.nav.pop();
+    }
+
 
 }
