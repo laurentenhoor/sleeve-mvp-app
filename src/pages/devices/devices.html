@@ -12,12 +12,19 @@
 </ion-header>
 
 <ion-content>
-    <ion-card (click)="pair()">
+    <ion-card (click)="pair()" *ngIf="(pairedSleeves | async)?.length == 0">
         <ion-item>
             <ion-icon color="primary" name="alert" item-left large></ion-icon>
             <h2>No paired devices</h2>
             <p>Click to start pairing</p>
         </ion-item>
     </ion-card>
-</ion-content>
 
+    <ion-card *ngFor="let sleeve of pairedSleeves | async" (click)="removeSleeve(sleeve.doc)">
+        <ion-item>
+            <ion-icon color="primary" name="philips-baby-bottle" item-left large></ion-icon>
+            <h2>{{ sleeve.id }}</h2>
+            <p>Click to delete</p>
+        </ion-item>
+    </ion-card>
+</ion-content>

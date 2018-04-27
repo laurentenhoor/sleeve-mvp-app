@@ -12,11 +12,45 @@ export class Sleeves {
     defaultSleeveName: string;
     deviceId: string;
     sleeveConnected: boolean;
-    
+    pairedSleeves: any[];
+
     constructor(private ble: BLE) {
         this.localDb = new PouchDB('sleeves');
         this.defaultSleeveName = 'Philips Avent SCH820';
         this.sleeveConnected = false;
+    }
+
+    removeSleeve(sleeve) {
+        console.log('remove sleeve', sleeve)
+        this.localDb.remove(sleeve)
+    } 
+
+    getPairedSleeves(): Promise<any> {
+        console.log('getPairedSleeves')
+        return new Promise(resolve => {
+            this.localDb.allDocs({
+                include_docs: true,
+                attachments: true
+            }).then(result => {
+                this.pairedSleeves = result.rows;
+                console.log(this.pairedSleeves)
+                resolve(this.pairedSleeves)
+            })
+        });
+    }
+
+    storeSleeve(sleeveId) {
+        console.log('storeSleeve', sleeveId)
+        let self = this;
+        this.pairedSleeves.push(sleeveId)
+        this.localDb.get(sleeveId, function (err, doc) {
+            self.localDb.put({
+                _id: sleeveId,
+                _rev: doc ? doc._rev : null
+            }, function (err, response) {
+                if (err) { return console.log(err); }
+            });
+        });
     }
 
     scanAndConnect(): Observable<string> {
@@ -120,7 +154,8 @@ export class Sleeves {
                 // this.forceBonding(peripheral);
                 this.ble.stopScan();
                 this.sleeveConnected = true;
-                successCallback(deviceId);
+                this.localDb.
+                    successCallback(deviceId);
                 console.error('Successfully connected to sleeve', deviceId)
             },
             peripheral => {
