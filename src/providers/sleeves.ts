@@ -22,7 +22,7 @@ export class Sleeves {
     scanAndConnect(): Observable<string> {
         return Observable.create(observer => {
             this.initScan((connectedSleeve) => {
-                console.log('successcallback inside observable', connectedSleeve)
+                console.log('successCallback inside scanAndConnect', connectedSleeve)
                 observer.next(connectedSleeve);
             })
         })
@@ -30,13 +30,18 @@ export class Sleeves {
 
     state(): Observable<any> {
         return Observable.create(observer => {
+            console.log('subscribeToState', this.deviceId)
+            if (!this.sleeveConnected) {
+                observer.error('no sleeve connected');
+            }
             this.ble.startNotification(this.deviceId,
                 '000030f3-0000-1000-8000-00805f9b34fb',
                 '000063eC-0000-1000-8000-00805f9b34fb'
             ).subscribe(data => {
                 observer.next(this.bufferToHex(data))
             }, error => {
-                console.error('state subscription', error)
+                console.error('state', error)
+                observer.error('receiving state');
             })
         })
     }
@@ -44,6 +49,9 @@ export class Sleeves {
     feedData(): Observable<any> {
         return Observable.create(observer => {
             console.log('subscribeToFeedData', this.deviceId)
+            if (!this.sleeveConnected) {
+                observer.error('no sleeve connected');
+            }
             this.ble.startNotification(this.deviceId,
                 '000030F0-0000-1000-8000-00805F9B34FB',
                 '000063E7-0000-1000-8000-00805F9B34FB'
@@ -52,7 +60,8 @@ export class Sleeves {
                 console.log('received feed data', feedData)
                 observer.next(feedData);
             }, error => {
-                console.error('error while receiving feed', error)
+                console.error('error while receiving feedData', error)
+                observer.error('receiving feedData');
             })
             this.sendDownloadFeedRequest()
         })
@@ -102,7 +111,6 @@ export class Sleeves {
                 },
                 error => console.error('forceBonding', error)
             )
-
     }
 
     connect(deviceId, successCallback) {

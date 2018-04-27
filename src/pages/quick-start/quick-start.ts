@@ -22,12 +22,10 @@ export class QuickStart {
     }
 
     ionViewDidEnter() {
-
         this.sleevesService.state().subscribe(state => {
-            console.log('received state from sleeve', state)
+            console.log('Received state from sleeve:', state)
             this.slides.slideNext();
         })
-     
     }
 
     finishInstallation() {

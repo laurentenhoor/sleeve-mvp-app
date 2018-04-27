@@ -31,13 +31,11 @@ export class FirstUse {
     }
 
     ionViewDidEnter() {
-
         this.sleevesService.scanAndConnect()
             .subscribe(connectedSleeve => {
                 console.log('successfully connected to sleeve', connectedSleeve)
                 this.nav.push(QuickStart);
             })
-
     }
 
     learnMore() {
