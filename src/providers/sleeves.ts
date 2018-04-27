@@ -2,24 +2,76 @@ import { Injectable } from '@angular/core';
 import PouchDB from 'pouchdb';
 
 import { BLE } from '@ionic-native/ble';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class Sleeves {
     data: any;
     localDb: any;
     devices: any[] = [];
-    deviceName: string;
+    defaultSleeveName: string;
     deviceId: string;
     sleeveConnected: boolean;
 
     constructor(private ble: BLE) {
-        this.localDb = new PouchDB('devices');
-        this.deviceName = 'Philips Avent SCH820';
+        this.localDb = new PouchDB('sleeves');
+        this.defaultSleeveName = 'Philips Avent SCH820';
         this.sleeveConnected = false;
+    }
+
+    scanAndConnect(): Observable<string> {
+        return Observable.create(observer => {
+            this.initScan((connectedSleeve) => {
+                console.log('successcallback inside observable', connectedSleeve)
+                observer.next(connectedSleeve);
+            })
+        })
+    }
+
+    state(): Observable<any> {
+        return Observable.create(observer => {
+            this.ble.startNotification(this.deviceId,
+                '000030f3-0000-1000-8000-00805f9b34fb',
+                '000063eC-0000-1000-8000-00805f9b34fb'
+            ).subscribe(data => {
+                observer.next(this.bufferToHex(data))
+            }, error => {
+                console.error('state subscription', error)
+            })
+        })
+    }
+
+    feedData(): Observable<any> {
+        return Observable.create(observer => {
+            console.log('subscribeToFeedData', this.deviceId)
+            this.ble.startNotification(this.deviceId,
+                '000030F0-0000-1000-8000-00805F9B34FB',
+                '000063E7-0000-1000-8000-00805F9B34FB'
+            ).subscribe(data => {
+                let feedData = this.bytesToString(data);
+                console.log('received feed data', feedData)
+                observer.next(feedData);
+            }, error => {
+                console.error('error while receiving feed', error)
+            })
+            this.sendDownloadFeedRequest()
+        })
     }
 
     isConnected() {
         return this.sleeveConnected;
+    }
+
+    sendDownloadFeedRequest() {
+        this.ble.write(this.deviceId,
+            '000030F0-0000-1000-8000-00805F9B34FB',
+            '000063E7-0000-1000-8000-00805F9B34FB',
+            this.stringToBytes('shrey')
+        ).then(data => {
+            console.log('successfully written the feed-download-request')
+        }).catch(error => {
+            console.error('error during writing the feed-download-request')
+        })
     }
 
     initScan(successCallback) {
@@ -32,10 +84,9 @@ export class Sleeves {
     }
 
     onDeviceDiscovered(device, successCallback) {
-        console.log('discovered', JSON.stringify(device))
-        if (device.name == this.deviceName) {
-            console.error('found a sleeve!')
-            // this.ble.stopScan();
+        // console.log('discovered', JSON.stringify(device))
+        if (device.name == this.defaultSleeveName) {
+            console.log('Found a bottle sleeve', device.id)
             this.deviceId = device.id;
             this.connect(device.id, successCallback);
         }
@@ -44,27 +95,28 @@ export class Sleeves {
     forceBonding(peripheral) {
         console.log('force bonding')
         this.ble.read(peripheral.id,
-          peripheral.characteristics[0].service,
-          peripheral.characteristics[0].characteristic).then(
-            data => {
-                console.log('focebonding', data);
-            },
-            error => console.error('forceBonding', error)
-          )
-    
-      }
+            peripheral.characteristics[0].service,
+            peripheral.characteristics[0].characteristic).then(
+                data => {
+                    console.log('focebonding', data);
+                },
+                error => console.error('forceBonding', error)
+            )
+
+    }
 
     connect(deviceId, successCallback) {
         this.ble.connect(deviceId).subscribe(
             peripheral => {
                 // this.forceBonding(peripheral);
+                this.ble.stopScan();
                 this.sleeveConnected = true;
-                    successCallback();
-                    console.error('Successfully connected to a sleeve')
-                    
+                successCallback(deviceId);
+                console.error('Successfully connected to sleeve', deviceId)
             },
             peripheral => {
-                console.error('disconnected ');
+                this.sleeveConnected = false;
+                console.error('disconnected from sleeve', deviceId);
             }
         )
 
@@ -72,6 +124,20 @@ export class Sleeves {
 
     bufferToHex(buffer: ArrayBuffer) {
         return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
-      }
+    }
+
+    // ASCII only
+    stringToBytes(string) {
+        let array = new Uint8Array(string.length);
+        for (let i = 0, l = string.length; i < l; i++) {
+            array[i] = string.charCodeAt(i);
+        }
+        return array.buffer;
+    }
+
+    // ASCII only
+    bytesToString(buffer) {
+        return String.fromCharCode.apply(null, new Uint8Array(buffer));
+    }
 
 }

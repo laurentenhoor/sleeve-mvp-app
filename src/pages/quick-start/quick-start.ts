@@ -22,25 +22,16 @@ export class QuickStart {
     }
 
     ionViewDidEnter() {
-        
-        this.ble.startNotification(this.sleevesService.deviceId,
-            '000030f3-0000-1000-8000-00805f9b34fb',
-            '000063eC-0000-1000-8000-00805f9b34fb'
-          ).subscribe(data => {
-            console.log(this.bufferToHex(data));
+
+        this.sleevesService.state().subscribe(state => {
+            console.log('received state from sleeve', state)
             this.slides.slideNext();
-          }, error => {
-            console.error(error)
-          })  
+        })
      
     }
 
     finishInstallation() {
         this.nav.setRoot(Tabs)
-    }
-
-    bufferToHex(buffer: ArrayBuffer) {
-        return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
     }
 
 }

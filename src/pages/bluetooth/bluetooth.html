@@ -17,17 +17,23 @@
             <button ion-item (click)="write(connectedDevice.id)">
                 Resend data
             </button>
+            <button ion-item (click)="sendDownloadFeedRequest(connectedDevice.id)">
+                Request feed
+            </button>
             <button ion-item (click)="sendFirmware(connectedDevice.id)">
                 Send firmware
             </button>
             <button *ngIf="connectedDevice" ion-item (click)="disconnect(connectedDevice)">
                 Disconnect
             </button>
-            <button ion-item (click)="subscribeToState(connectedDevice.id)">
+            <!-- <button ion-item (click)="subscribeToState(connectedDevice.id)">
                 Subscribe to state
-            </button>
+            </button> -->
             <div ion-item>
-                {{ currentState }}
+                Current state: {{ currentState }}
+            </div>
+            <div ion-item>
+                Latest feed: {{ latestFeed }}
             </div>
         </div>
         <div *ngIf="!connectedDevice">

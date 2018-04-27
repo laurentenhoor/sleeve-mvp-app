@@ -19,6 +19,7 @@ export class Bluetooth {
   firmware: ArrayBuffer;
   connectedDevice;
   currentState;
+  latestFeed;
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
@@ -80,13 +81,6 @@ export class Bluetooth {
   }
 
   writePackages(deviceId: string, packages: ArrayBuffer[], packageCounter: number, retryCounter: number) {
-    // for (let i = 0; i < packages.length; i++) {
-    //   console.log('package to send:', i);
-    //   this.ble.writeWithoutResponse(deviceId,
-    //     '000030F1-0000-1000-8000-00805F9B34FB',
-    //     '000063E8-0000-1000-8000-00805F9B34FB', packages[i])
-    // }
-
     if (packageCounter >= packages.length) {
       return;
     }
@@ -118,15 +112,21 @@ export class Bluetooth {
   }
 
   subscribeToState(deviceId) {
+
     this.ble.startNotification(deviceId,
       '000030f3-0000-1000-8000-00805f9b34fb',
       '000063eC-0000-1000-8000-00805f9b34fb'
     ).subscribe(data => {
-      console.log(this.bufferToHex(data));
+      let state = this.bufferToHex(data);
+      console.log(state);
+      this.currentState = state;
     }, error => {
-      console.error(error)
+      console.error('subscribeToState', error)
     })
+
+ 
   }
+
 
   write(deviceId) {
 
@@ -214,6 +214,7 @@ export class Bluetooth {
 
   disconnect(device) {
 
+    console.log('DISCONNECT',this.connectedDevice.id )
     this.ble.disconnect(this.connectedDevice.id)
       .then(data => {
         this.setStatus('BLE DISCONNECTED');
@@ -253,15 +254,64 @@ export class Bluetooth {
       peripheral.characteristics[0].service,
       peripheral.characteristics[0].characteristic).then(
         data => console.log(data),
-        error => console.error(error)
+        error => console.error('forceBonding', error)
       )
+
+  }
+
+
+  sendDownloadFeedRequest(deviceId) {
+    this.ble.write(deviceId,
+      '000030F0-0000-1000-8000-00805F9B34FB',
+      '000063E7-0000-1000-8000-00805F9B34FB',
+      this.stringToBytes('shrey')
+    )
+      .then(data => {
+        console.log('successfully written the feed-download-request')
+      })
+      .catch(error => {
+        console.error('error during writing the feed-download-request')
+      })
+  }
+
+  
+  subscribeToFeedData(peripheral) {
+    console.log('subscribeToFeedData', peripheral.id)
+    this.ble.startNotification(peripheral.id,
+      '000030F0-0000-1000-8000-00805F9B34FB',
+      '000063E7-0000-1000-8000-00805F9B34FB'
+    ).subscribe(data => {
+
+      let feedData = this.bytesToString(data);
+      this.latestFeed = feedData;
+
+      console.log('received feed data', feedData)
+
+      this.toastCtrl.create({
+        message: 'Received feed: ' + feedData,
+        position: 'bottom',
+        duration: 500
+      }).present();
+      // this.disconnect(deviceId)
+    }, error => {
+      console.error('error while receiving feed', error)
+      this.toastCtrl.create({
+        message: 'Error on receiving: ' + error,
+        position: 'bottom',
+        duration: 2000
+      }).present();
+    })
+
+    this.sendDownloadFeedRequest(peripheral.id)
 
   }
 
   onBleConnected(peripheral) {
     this.connectedDevice = peripheral;
     // this.forceBonding(peripheral);
-    
+    this.subscribeToState(peripheral.id)
+    this.subscribeToFeedData(peripheral);
+
     this.setStatus('BLE CONNECTED')
   }
 

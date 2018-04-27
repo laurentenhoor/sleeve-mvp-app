@@ -5,6 +5,9 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { BLE } from '@ionic-native/ble';
+// import { BluetoothLE } from '@ionic-native/bluetooth-le';
+// import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
+
 import { HttpModule } from '@angular/http';
 
 import { MyApp } from './app.component';

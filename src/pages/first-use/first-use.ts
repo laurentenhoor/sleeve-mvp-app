@@ -10,6 +10,9 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 import { Sleeves } from '../../providers/sleeves'
 
+// import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
+// import { BluetoothLE } from '@ionic-native/bluetooth-le';
+
 @Component({
     selector: 'first-use',
     templateUrl: 'first-use.html'
@@ -22,13 +25,19 @@ export class FirstUse {
         private browserTab: BrowserTab,
         private inAppBrowser: InAppBrowser,
         private platform: Platform,
-        private devicesServices: Sleeves,
+        private sleevesService: Sleeves
     ) {
 
     }
 
     ionViewDidEnter() {
-        this.devicesServices.initScan(() => this.nav.push(QuickStart));
+
+        this.sleevesService.scanAndConnect()
+            .subscribe(connectedSleeve => {
+                console.log('successfully connected to sleeve', connectedSleeve)
+                this.nav.push(QuickStart);
+            })
+
     }
 
     learnMore() {
