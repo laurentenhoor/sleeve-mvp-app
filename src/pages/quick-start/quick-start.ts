@@ -25,7 +25,13 @@ export class QuickStart {
         this.sleevesService.state().subscribe(state => {
             console.log('Received state from sleeve:', state)
             this.slides.slideNext();
+        }, error => {
+            console.error('no states available', error)
         })
+    }
+
+    closeModal() {
+        this.nav.pop();
     }
 
     finishInstallation() {

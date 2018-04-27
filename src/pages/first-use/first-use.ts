@@ -3,8 +3,10 @@ import { Component } from '@angular/core';
 import { AlertController, NavController } from 'ionic-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
-import { Sleeves } from '../../providers/sleeves'
-import { QuickStart } from '../quick-start/quick-start'
+import { Sleeves } from '../../providers/sleeves';
+import { QuickStart } from '../quick-start/quick-start';
+
+import { ModalController } from 'ionic-angular';
 
 @Component({
     selector: 'first-use',
@@ -16,7 +18,8 @@ export class FirstUse {
         private alertCtrl: AlertController,
         private nav: NavController,
         private inAppBrowser: InAppBrowser,
-        private sleevesService: Sleeves
+        private sleevesService: Sleeves,
+        public modalCtrl: ModalController
     ) {
 
     }
@@ -25,7 +28,9 @@ export class FirstUse {
         this.sleevesService.scanAndConnect()
             .subscribe(connectedSleeve => {
                 console.log('Successfully connected to sleeve', connectedSleeve)
-                this.nav.push(QuickStart);
+                this.modalCtrl.create(QuickStart).present();
+            }, error => {
+                console.error(error);
             })
     }
 
