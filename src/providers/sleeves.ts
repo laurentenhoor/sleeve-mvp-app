@@ -93,7 +93,7 @@ export class Sleeves {
     }
 
     onDeviceDiscovered(device, successCallback) {
-        // console.log('discovered', JSON.stringify(device))
+        console.log('discovered', JSON.stringify(device))
         if (device.name == this.defaultSleeveName) {
             console.log('Found a bottle sleeve', device.id)
             this.deviceId = device.id;

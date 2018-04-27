@@ -28,11 +28,11 @@ export class Connecting {
         this.sleevesService.scanAndConnect()
             .subscribe(connectedSleeve => {
                 console.log('Successfully connected to sleeve', connectedSleeve)
+                this.nav.pop();
                 this.modalCtrl.create(QuickStart).present();
             }, error => {
                 console.error(error);
             })
-
     }
 
     demo() {
