@@ -20,6 +20,7 @@ export class Sleeves {
     }
 
     scanAndConnect(): Observable<string> {
+        console.log('scanAndConnect()')
         return Observable.create(observer => {
             this.initScan((connectedSleeve) => {
                 console.log('successCallback inside scanAndConnect', connectedSleeve)
