@@ -1,17 +1,10 @@
 
 import { Component } from '@angular/core';
 import { AlertController, NavController } from 'ionic-angular';
-
-import { QuickStart } from '../quick-start/quick-start'
-import { BrowserTab } from '@ionic-native/browser-tab';
-import { Platform } from 'ionic-angular';
-
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 import { Sleeves } from '../../providers/sleeves'
-
-// import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
-// import { BluetoothLE } from '@ionic-native/bluetooth-le';
+import { QuickStart } from '../quick-start/quick-start'
 
 @Component({
     selector: 'first-use',
@@ -22,9 +15,7 @@ export class FirstUse {
     constructor(
         private alertCtrl: AlertController,
         private nav: NavController,
-        private browserTab: BrowserTab,
         private inAppBrowser: InAppBrowser,
-        private platform: Platform,
         private sleevesService: Sleeves
     ) {
 
@@ -33,7 +24,7 @@ export class FirstUse {
     ionViewDidEnter() {
         this.sleevesService.scanAndConnect()
             .subscribe(connectedSleeve => {
-                console.log('successfully connected to sleeve', connectedSleeve)
+                console.log('Successfully connected to sleeve', connectedSleeve)
                 this.nav.push(QuickStart);
             })
     }

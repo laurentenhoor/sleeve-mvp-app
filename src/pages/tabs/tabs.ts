@@ -21,7 +21,6 @@ export class Tabs {
     this.tab2 = Bluetooth;
     this.tab3 = FirstUse;
 
-    
     events.subscribe('availableFeeds', (amount) => {
       this.amountOfAvailableFeeds = amount;
     });

@@ -12,7 +12,7 @@ export class Sleeves {
     defaultSleeveName: string;
     deviceId: string;
     sleeveConnected: boolean;
-
+    
     constructor(private ble: BLE) {
         this.localDb = new PouchDB('sleeves');
         this.defaultSleeveName = 'Philips Avent SCH820';
