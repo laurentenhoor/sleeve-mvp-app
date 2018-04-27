@@ -2,7 +2,6 @@
 import { ViewChild, Component} from '@angular/core';
 import { AlertController, NavController, Slides } from 'ionic-angular';
 
-import { Tabs } from '../tabs/tabs';
 import { BLE } from '@ionic-native/ble';
 import { Sleeves } from '../../providers/sleeves'
 
@@ -35,7 +34,7 @@ export class QuickStart {
     }
 
     finishInstallation() {
-        this.nav.setRoot(Tabs)
+        this.nav.pop();
     }
 
 }

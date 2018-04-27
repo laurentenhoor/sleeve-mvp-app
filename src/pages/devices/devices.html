@@ -3,9 +3,21 @@
         <ion-title>
             Devices
         </ion-title>
+        <ion-buttons end>
+            <button (click)="pair()" ion-button icon-left color="royal">
+                Pair
+            </button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-    <button ion-button full outline (click)="pair()">Pair a device</button>
+    <ion-card (click)="pair()">
+        <ion-item>
+            <ion-icon color="primary" name="alert" item-left large></ion-icon>
+            <h2>No paired devices</h2>
+            <p>Click to start pairing</p>
+        </ion-item>
+    </ion-card>
 </ion-content>
+

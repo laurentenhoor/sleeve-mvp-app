@@ -41,7 +41,7 @@ export class Sleeves {
             ).subscribe(data => {
                 observer.next(this.bufferToHex(data))
             }, error => {
-                console.error('state', error)
+                console.error('state', error);
                 observer.error('receiving state');
             })
         })
