@@ -22,7 +22,7 @@
 
     <ion-card *ngFor="let sleeve of pairedSleeves | async" (click)="removeSleeve(sleeve)">
         <ion-item>
-            <ion-icon color="primary" name="philips-baby-bottle" item-left large></ion-icon>
+            <ion-icon color="primary" name="bluetooth" item-left large></ion-icon>
             <h2>Smart Bottle Tracker</h2>
             <p style="font-size:1rem">{{ sleeve._id }}</p>
             <p style="opacity:0.4">Tap to unpair</p>

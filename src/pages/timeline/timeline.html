@@ -5,13 +5,21 @@
     </ion-title>
     <ion-buttons end>
       <button (click)="synchronizeFeeds()" ion-button icon-left color="royal">
-          Sync
+        Sync
       </button>
-  </ion-buttons>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
+
+  <ion-card (click)="addFeed()" *ngIf="(feeds | async)?.length == 0">
+    <ion-item>
+      <ion-icon color="primary" name="alert" item-left large></ion-icon>
+      <h2>No tracked feeds</h2>
+      <p>Click to add a feed</p>
+    </ion-item>
+  </ion-card>
 
   <ion-card *ngIf="fakeScan">
     <img src="assets/imgs/cute-baby-banner.jpg" />
@@ -30,7 +38,7 @@
 
   <ion-card *ngFor="let feed of feeds | async" (click)="openFeedModal(feed)">
     <ion-item>
-      <ion-icon color="{{ feed.type == 'smart' ? 'secondary' : 'primary' }}" name="water" item-left large></ion-icon>
+      <ion-icon color="{{ feed.type == 'smart' ? 'secondary' : 'primary' }}" name="philips-baby-bottle" item-left large></ion-icon>
       <h2>{{ feed.amount | number : '1.0-0' }} ml</h2>
       <h3>{{ formatTimeAgo(feed.timestamp) }}</h3>
       <p>

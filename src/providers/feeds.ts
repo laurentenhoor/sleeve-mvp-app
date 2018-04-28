@@ -9,7 +9,7 @@ export class Feeds {
 
     constructor(zone: NgZone) {
 
-        this.localDb = new PouchDB('feeds');        
+        this.localDb = new PouchDB('feeds');
         this.remoteDb = 'http://ec2-34-239-163-2.compute-1.amazonaws.com:5984/feeds';
 
         this.localDb.replicate.to(this.remoteDb, {
@@ -17,12 +17,11 @@ export class Feeds {
             retry: true,
             continuous: true,
         });
-
     }
 
-    getFeeds() {
+    getFeeds(): Promise<Object[]> {
         if (this.data) {
-            return Promise.resolve(this.data);
+            return new Promise(resolve=> {resolve(this.data)});
         }
 
         return new Promise(resolve => {
@@ -50,7 +49,7 @@ export class Feeds {
     }
 
     createFeed(feed) {
-        this.localDb.post(feed).then((result)=>{
+        this.localDb.post(feed).then((result) => {
             console.log('createFeed', JSON.stringify(result));
         }).catch((err) => {
             console.error(JSON.stringify(err));
@@ -72,7 +71,7 @@ export class Feeds {
     }
 
     handleChange(change) {
-    
+
         let changedDoc = null;
         let changedIndex = null;
 

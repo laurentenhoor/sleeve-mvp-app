@@ -36,9 +36,9 @@ export class Connecting {
     }
 
     demo() {
+        this.sleevesService.storeSleeve(this.generateUuid());
         this.nav.pop();
         this.modalCtrl.create(QuickStart).present();
-        this.sleevesService.storeSleeve(this.generateUuid());
     }
 
     generateUuid() {
@@ -52,8 +52,7 @@ export class Connecting {
         let url = 'https://www.youtube.com/watch?v=0l-gAVKMQ5c&feature=youtu.be';
         this.inAppBrowser.create(url, '_system')
     }
-
-
+    
     closeModal() {
         this.nav.pop();
     }

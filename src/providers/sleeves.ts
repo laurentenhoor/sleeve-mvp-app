@@ -15,10 +15,11 @@ export class Sleeves {
     deviceId: string;
     sleeveConnected: boolean;
     pairedSleeves: any[];
-    
 
-    constructor(private ble: BLE,
-        public modalCtrl: ModalController) {
+    constructor(
+        private ble: BLE,
+        public modalCtrl: ModalController
+    ) {
         this.localDb = new PouchDB('sleeves');
         this.defaultSleeveName = 'Philips Avent SCH820';
         this.sleeveConnected = false;
@@ -30,7 +31,11 @@ export class Sleeves {
     }
 
     getPairedSleeves(): Promise<any> {
-        console.log('getPairedSleeves')
+        if (this.pairedSleeves) {
+            return new Promise(resolve => {
+                resolve(this.pairedSleeves)
+            })
+        }
         return new Promise(resolve => {
             this.localDb.allDocs({
                 include_docs: true,
@@ -86,6 +91,7 @@ export class Sleeves {
 
     scanAndConnect(): Observable<string> {
         console.log('scanAndConnect()')
+        this.ble.stopScan();
         return Observable.create(observer => {
             this.initScan((connectedSleeve) => {
                 console.log('successCallback inside scanAndConnect', connectedSleeve)
@@ -111,10 +117,11 @@ export class Sleeves {
             })
         })
     }
-    
+
 
     synchronizeFeeds() {
         let self = this;
+        this.ble.stopScan();
         if (this.sleeveConnected) {
             console.log('a sleeve is already connected')
             return self.feedData()
@@ -122,17 +129,17 @@ export class Sleeves {
             return new Promise((resolve, reject) => {
                 self.getPairedSleeves().then(list => {
                     let uuids = list.map(item => { return item._id })
-                    console.log('paired uuids to scan', uuids)                    
-                    if (!uuids || uuids.length==0) {
+                    console.log('paired uuids to scan', uuids)
+                    if (!uuids || uuids.length == 0) {
                         return reject('no paired devices')
                     }
-                    self.ble.scan([], 3)
+                    self.ble.scan(uuids, 3)
                         .subscribe(peripheral => {
                             self.connect(peripheral.id, (deviceId) => {
                                 self.feedData().then(feedData => {
                                     resolve(feedData)
                                 })
-                            })  
+                            })
                         }, scanError => {
                             reject('unable to scan: ' + scanError)
                         })

@@ -20,9 +20,7 @@ export class Devices {
         private sleevesService: Sleeves,
         public modalCtrl: ModalController
     ) {
-        
-        this.pairedSleeves = this.sleevesService.getPairedSleeves()
-        
+        this.pairedSleeves = this.sleevesService.getPairedSleeves();
     }
 
     ionViewDidEnter() {

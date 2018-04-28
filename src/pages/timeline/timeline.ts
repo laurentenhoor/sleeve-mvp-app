@@ -1,24 +1,12 @@
-import {
-  Component,
-  NgZone,
-  OnInit,
-  ApplicationRef
-} from '@angular/core';
-
+import { Component, NgZone, OnInit, ApplicationRef } from '@angular/core';
 import { NavController, Events } from 'ionic-angular';
-
-import {
-  ToastController,
-  ModalController
-} from 'ionic-angular';
+import { ToastController, ModalController, LoadingController } from 'ionic-angular';
+import { Http } from '@angular/http';
 
 import * as _ from "lodash";
 import * as moment from 'moment';
 
-import { Http } from '@angular/http';
-
 import { FeedInput } from '../feed-input/feed-input'
-
 import { Feeds } from '../../providers/feeds';
 import { Sessions } from '../../providers/sessions';
 import { Sleeves } from '../../providers/sleeves';
@@ -33,7 +21,8 @@ export class Timeline implements OnInit {
   public amountOfAvailableFeeds;
   private feeds: any;
 
-  constructor(public navCtrl: NavController,
+  constructor(
+    public navCtrl: NavController,
     private toastCtrl: ToastController,
     private ngZone: NgZone,
     private applicationRef: ApplicationRef,
@@ -42,34 +31,55 @@ export class Timeline implements OnInit {
     private events: Events,
     public feedsService: Feeds,
     public sessionsService: Sessions,
-    public sleevesService: Sleeves) {
+    public sleevesService: Sleeves,
+    public loadingCtrl: LoadingController
+  ) {
 
     // setTimeout(() => {
     //   this.fakeScan = true;
     //   this.events.publish('availableFeeds', 1);
     // }, 2000);
-    this.feedsService.getFeeds().then(data => {
-      if (data.length == 0) { // if no feeds are available yet - first use
+
+    this.feeds = this.feedsService.getFeeds();
+
+    this.feeds.then(feeds => {
+      if (feeds.length == 0) {
         this.modalCtrl.create(Connecting).present();
       }
     })
-    this.feeds = this.feedsService.getFeeds();
-
   }
 
   synchronizeFeeds() {
-    this.sleevesService.synchronizeFeeds().then(feedData => {
-      console.log('received feeds', feedData)
-    }).catch(error => {
-      console.error(error)
-      if (error == "no paired devices") {
+    this.sleevesService.getPairedSleeves().then(pairedSleeves => {
+      if (pairedSleeves.length == 0) {
         this.modalCtrl.create(Connecting).present();
       } else {
-        this.addFakeFeeds()
+        this.presentLoading()
+        this.sleevesService.synchronizeFeeds().then(feedData => {
+          console.log('feedData:', feedData)
+        }).catch(error => {
+          console.error(error);
+        })
       }
     })
   }
 
+
+  presentLoading() {
+    let loading = this.loadingCtrl.create({
+      spinner: 'dots',
+      content: 'Synchronizing...'
+    });
+
+    loading.present();
+
+    setTimeout(() => {
+      loading.dismiss();
+    }, 2000);
+  }
+
+  ionViewDidLoad() {
+  }
   ngOnInit() {
   }
 
