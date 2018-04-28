@@ -111,6 +111,7 @@ export class Sleeves {
             })
         })
     }
+    
 
     synchronizeFeeds() {
         let self = this;
@@ -125,13 +126,13 @@ export class Sleeves {
                     if (!uuids || uuids.length==0) {
                         return reject('no paired devices')
                     }
-                    self.ble.scan(uuids, 3)
+                    self.ble.scan([], 3)
                         .subscribe(peripheral => {
                             self.connect(peripheral.id, (deviceId) => {
                                 self.feedData().then(feedData => {
                                     resolve(feedData)
                                 })
-                            })
+                            })  
                         }, scanError => {
                             reject('unable to scan: ' + scanError)
                         })

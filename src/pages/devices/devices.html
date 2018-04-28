@@ -16,15 +16,17 @@
         <ion-item>
             <ion-icon color="primary" name="alert" item-left large></ion-icon>
             <h2>No paired devices</h2>
-            <p>Click to start pairing</p>
+            <p >Click to start pairing</p>
         </ion-item>
     </ion-card>
 
     <ion-card *ngFor="let sleeve of pairedSleeves | async" (click)="removeSleeve(sleeve)">
         <ion-item>
             <ion-icon color="primary" name="philips-baby-bottle" item-left large></ion-icon>
-            <h2>{{ sleeve._id }}</h2>
-            <p>Click to unpair</p>
+            <h2>Smart Bottle Tracker</h2>
+            <p style="font-size:1rem">{{ sleeve._id }}</p>
+            <p style="opacity:0.4">Tap to unpair</p>
+            
         </ion-item>
     </ion-card>
 </ion-content>
