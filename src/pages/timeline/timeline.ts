@@ -59,11 +59,10 @@ export class Timeline implements OnInit {
     })
   }
 
-
   presentLoading() {
     let loading = this.loadingCtrl.create({
       spinner: 'dots',
-      content: 'Synchronizing...'
+      content: 'Synchronizing'
     });
 
     loading.present();
