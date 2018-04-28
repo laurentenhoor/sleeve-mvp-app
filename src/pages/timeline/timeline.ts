@@ -41,14 +41,18 @@ export class Timeline implements OnInit {
     public modalCtrl: ModalController,
     private events: Events,
     public feedsService: Feeds,
-    public sessionsService: Sessions, 
+    public sessionsService: Sessions,
     public sleevesService: Sleeves) {
 
     // setTimeout(() => {
     //   this.fakeScan = true;
     //   this.events.publish('availableFeeds', 1);
     // }, 2000);
-
+    this.feedsService.getFeeds().then(data => {
+      if (data.length == 0) { // if no feeds are available yet - first use
+        this.modalCtrl.create(Connecting).present();
+      }
+    })
     this.feeds = this.feedsService.getFeeds();
 
   }
