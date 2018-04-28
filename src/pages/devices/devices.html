@@ -15,8 +15,8 @@
     <ion-card (click)="pair()" *ngIf="(pairedSleeves | async)?.length == 0">
         <ion-item>
             <ion-icon color="primary" name="alert" item-left large></ion-icon>
-            <h2>No paired devices</h2>
-            <p >Click to start pairing</p>
+            <h2>No devices paired yet</h2>
+            <p >Tap to start pairing</p>
         </ion-item>
     </ion-card>
 
