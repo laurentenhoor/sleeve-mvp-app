@@ -1,24 +1,20 @@
 import { Injectable } from '@angular/core';
-import PouchDB from 'pouchdb';
 import { ModalController } from 'ionic-angular';
-
 import { BLE } from '@ionic-native/ble';
+
+import PouchDB from 'pouchdb';
 import { Observable } from 'rxjs/Observable';
-import { Connecting } from '../pages/connecting/connecting';
 
 @Injectable()
 export class Sleeves {
-    data: any;
     localDb: any;
-    devices: any[] = [];
     defaultSleeveName: string;
     deviceId: string;
     sleeveConnected: boolean;
     pairedSleeves: any[];
 
     constructor(
-        private ble: BLE,
-        public modalCtrl: ModalController
+        private ble: BLE
     ) {
         this.localDb = new PouchDB('sleeves');
         this.defaultSleeveName = 'Philips Avent SCH820';
@@ -30,7 +26,7 @@ export class Sleeves {
         this.localDb.remove(sleeve)
     }
 
-    getPairedSleeves(): Promise<any> {
+    getPairedSleeves(): Promise<any[]> {
         if (this.pairedSleeves) {
             return new Promise(resolve => {
                 resolve(this.pairedSleeves)
@@ -118,7 +114,6 @@ export class Sleeves {
         })
     }
 
-
     synchronizeFeeds() {
         let self = this;
         this.ble.stopScan();
@@ -169,10 +164,6 @@ export class Sleeves {
         })
     }
 
-    isConnected() {
-        return this.sleeveConnected;
-    }
-
     sendDownloadFeedRequest() {
         this.ble.write(this.deviceId,
             '000030F0-0000-1000-8000-00805F9B34FB',
@@ -186,8 +177,6 @@ export class Sleeves {
     }
 
     initScan(successCallback) {
-        this.devices = [];  // clear list
-
         this.ble.startScan([]).subscribe(
             device => this.onDeviceDiscovered(device, successCallback),
             error => console.error('scan error', error)
