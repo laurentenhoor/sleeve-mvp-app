@@ -38,7 +38,7 @@ export class Connecting {
     demo() {
         this.nav.pop();
         this.modalCtrl.create(QuickStart).present();
-        this.sleevesService.storeSleeve('laurenSleeve');
+        this.sleevesService.storeSleeve('demo-sleeve-'+Math.round(Math.random()*100));
     }
 
     learnMore() {

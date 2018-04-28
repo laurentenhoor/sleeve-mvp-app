@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import PouchDB from 'pouchdb';
 
 @Injectable()
@@ -7,7 +7,7 @@ export class Feeds {
     localDb: any;
     remoteDb: any;
 
-    constructor() {
+    constructor(zone: NgZone) {
 
         this.localDb = new PouchDB('feeds');        
         this.remoteDb = 'http://ec2-34-239-163-2.compute-1.amazonaws.com:5984/feeds';
@@ -68,6 +68,7 @@ export class Feeds {
         this.localDb.remove(feed).catch((err) => {
             console.error(err);
         });
+        this.getFeeds();
     }
 
     handleChange(change) {

@@ -20,11 +20,11 @@
         </ion-item>
     </ion-card>
 
-    <ion-card *ngFor="let sleeve of pairedSleeves | async" (click)="removeSleeve(sleeve.doc)">
+    <ion-card *ngFor="let sleeve of pairedSleeves | async" (click)="removeSleeve(sleeve)">
         <ion-item>
             <ion-icon color="primary" name="philips-baby-bottle" item-left large></ion-icon>
-            <h2>{{ sleeve.id }}</h2>
-            <p>Click to delete</p>
+            <h2>{{ sleeve._id }}</h2>
+            <p>Click to unpair</p>
         </ion-item>
     </ion-card>
 </ion-content>

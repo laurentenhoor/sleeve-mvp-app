@@ -20,10 +20,10 @@ export class Sleeves {
         this.sleeveConnected = false;
     }
 
-    removeSleeve(sleeve) {
+    removeSleeve(sleeve): void {
         console.log('remove sleeve', sleeve)
         this.localDb.remove(sleeve)
-    } 
+    }
 
     getPairedSleeves(): Promise<any> {
         console.log('getPairedSleeves')
@@ -32,17 +32,47 @@ export class Sleeves {
                 include_docs: true,
                 attachments: true
             }).then(result => {
-                this.pairedSleeves = result.rows;
-                console.log(this.pairedSleeves)
+                this.pairedSleeves = result.rows.map((row) => {return row.doc});
                 resolve(this.pairedSleeves)
+                this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
+                    this.handleChange(change);
+                });
             })
         });
     }
 
-    storeSleeve(sleeveId) {
+    handleChange(change) {
+    
+        let changedDoc = null;
+        let changedIndex = null;
+
+        this.pairedSleeves.forEach((doc, index) => {
+            if (doc._id === change.id) {
+                changedDoc = doc;
+                changedIndex = index;
+            }
+        });
+        //A document was deleted
+        if (change.deleted) {
+            this.pairedSleeves.splice(changedIndex, 1);
+        }
+        else {
+            //A document was updated
+            if (changedDoc) {
+                this.pairedSleeves[changedIndex] = change.doc;
+            }
+            //A document was added
+            else {
+                this.pairedSleeves.unshift(change.doc);
+            }
+
+        }
+
+    }
+
+    storeSleeve(sleeveId): void {
         console.log('storeSleeve', sleeveId)
         let self = this;
-        this.pairedSleeves.push(sleeveId)
         this.localDb.get(sleeveId, function (err, doc) {
             self.localDb.put({
                 _id: sleeveId,

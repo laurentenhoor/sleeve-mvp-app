@@ -31,7 +31,28 @@ export class Devices {
     }
 
     removeSleeve(sleeve) {
-        this.sleevesService.removeSleeve(sleeve);
+        let alert = this.alertCtrl.create({
+            title: 'Unpair device',
+            message: 'Do you want to unpair ' + sleeve._id + '?',
+            buttons: [
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                        console.log('Cancel clicked');
+                    }
+                },
+                {
+                    text: 'Unpair',
+                    handler: () => {
+                        console.log('Unpair clicked');
+                        this.sleevesService.removeSleeve(sleeve)
+                    }
+                }
+            ]
+        });
+        alert.present();
+
     }
 
 }
