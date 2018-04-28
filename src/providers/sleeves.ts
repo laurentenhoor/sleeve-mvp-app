@@ -111,11 +111,11 @@ export class Sleeves {
         })
     }
 
-    feedData(): Observable<any> {
-        return Observable.create(observer => {
+    feedData(): Promise<any> {
+        return new Promise((resolve, reject) => {
             console.log('subscribeToFeedData', this.deviceId)
             if (!this.sleeveConnected) {
-                observer.error('no sleeve connected');
+                reject('no sleeve connected');
             }
             this.ble.startNotification(this.deviceId,
                 '000030F0-0000-1000-8000-00805F9B34FB',
@@ -123,10 +123,10 @@ export class Sleeves {
             ).subscribe(data => {
                 let feedData = this.bytesToString(data);
                 console.log('received feed data', feedData)
-                observer.next(feedData);
+                resolve(feedData);
             }, error => {
                 console.error('error while receiving feedData', error)
-                observer.error('receiving feedData');
+                reject('receiving feedData');
             })
             this.sendDownloadFeedRequest()
         })
@@ -184,8 +184,7 @@ export class Sleeves {
                 // this.forceBonding(peripheral);
                 this.ble.stopScan();
                 this.sleeveConnected = true;
-                this.localDb.
-                    successCallback(deviceId);
+                successCallback(deviceId);
                 console.error('Successfully connected to sleeve', deviceId)
             },
             peripheral => {

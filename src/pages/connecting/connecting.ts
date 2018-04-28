@@ -27,7 +27,7 @@ export class Connecting {
     ionViewDidEnter() {
         this.sleevesService.scanAndConnect()
             .subscribe(connectedSleeve => {
-                console.log('Successfully connected to sleeve', connectedSleeve)
+                console.log('Successfully connected to a sleeve', connectedSleeve)
                 this.nav.pop();
                 this.modalCtrl.create(QuickStart).present();
             }, error => {
