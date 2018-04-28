@@ -32,7 +32,7 @@ export class Sleeves {
                 include_docs: true,
                 attachments: true
             }).then(result => {
-                this.pairedSleeves = result.rows.map((row) => {return row.doc});
+                this.pairedSleeves = result.rows.map((row) => { return row.doc });
                 resolve(this.pairedSleeves)
                 this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
                     this.handleChange(change);
@@ -42,7 +42,6 @@ export class Sleeves {
     }
 
     handleChange(change) {
-    
         let changedDoc = null;
         let changedIndex = null;
 
@@ -65,9 +64,7 @@ export class Sleeves {
             else {
                 this.pairedSleeves.unshift(change.doc);
             }
-
         }
-
     }
 
     storeSleeve(sleeveId): void {
@@ -111,11 +108,36 @@ export class Sleeves {
         })
     }
 
+    synchronizeFeeds() {
+        let self = this;
+        if (this.sleeveConnected) {
+            console.log('a sleeve is already connected')
+            return self.feedData()
+        } else {
+            return new Promise((resolve, reject) => {
+                self.getPairedSleeves().then(list => {
+                    let uuids = list.map(item => { return item._id })
+                    console.log('paired uuids to scan', uuids)
+                    self.ble.scan(uuids, 10)
+                        .subscribe(peripheral => {
+                            self.connect(peripheral.id, (deviceId) => {
+                                self.feedData().then(feedData => {
+                                    resolve(feedData)
+                                })
+                            })
+                        }, scanError => {
+                            reject('unable to scan: ' + scanError)
+                        })
+                })
+            })
+        }
+    }
+
     feedData(): Promise<any> {
         return new Promise((resolve, reject) => {
             console.log('subscribeToFeedData', this.deviceId)
             if (!this.sleeveConnected) {
-                reject('no sleeve connected');
+                reject('unable to subscribeToFeedData: no sleeve connected');
             }
             this.ble.startNotification(this.deviceId,
                 '000030F0-0000-1000-8000-00805F9B34FB',
@@ -126,7 +148,7 @@ export class Sleeves {
                 resolve(feedData);
             }, error => {
                 console.error('error while receiving feedData', error)
-                reject('receiving feedData');
+                reject('unable to receive feedData');
             })
             this.sendDownloadFeedRequest()
         })

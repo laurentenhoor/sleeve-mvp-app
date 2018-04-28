@@ -20,7 +20,13 @@ export class Devices {
         private sleevesService: Sleeves,
         public modalCtrl: ModalController
     ) {
+        
         this.pairedSleeves = this.sleevesService.getPairedSleeves()
+        this.sleevesService.synchronizeFeeds().then(feedData => {
+            console.log('received feeds', feedData)
+        }).catch(error=> {
+            console.error(error)
+        })
     }
 
     ionViewDidEnter() {
