@@ -24,6 +24,7 @@ export class Devices {
     }
 
     ionViewDidEnter() {
+        
     }
 
     pair() {

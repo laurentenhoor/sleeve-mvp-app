@@ -39,14 +39,9 @@ export class Timeline implements OnInit {
     //   this.fakeScan = true;
     //   this.events.publish('availableFeeds', 1);
     // }, 2000);
-
     this.feeds = this.feedsService.getFeeds();
+    this.synchronizeFeeds();
 
-    this.feeds.then(feeds => {
-      if (feeds.length == 0) {
-        this.modalCtrl.create(Connecting).present();
-      }
-    })
   }
 
   synchronizeFeeds() {
