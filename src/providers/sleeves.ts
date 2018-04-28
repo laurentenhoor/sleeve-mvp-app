@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import PouchDB from 'pouchdb';
+import { ModalController } from 'ionic-angular';
 
 import { BLE } from '@ionic-native/ble';
 import { Observable } from 'rxjs/Observable';
+import { Connecting } from '../pages/connecting/connecting';
 
 @Injectable()
 export class Sleeves {
@@ -13,8 +15,10 @@ export class Sleeves {
     deviceId: string;
     sleeveConnected: boolean;
     pairedSleeves: any[];
+    
 
-    constructor(private ble: BLE) {
+    constructor(private ble: BLE,
+        public modalCtrl: ModalController) {
         this.localDb = new PouchDB('sleeves');
         this.defaultSleeveName = 'Philips Avent SCH820';
         this.sleeveConnected = false;
@@ -117,8 +121,11 @@ export class Sleeves {
             return new Promise((resolve, reject) => {
                 self.getPairedSleeves().then(list => {
                     let uuids = list.map(item => { return item._id })
-                    console.log('paired uuids to scan', uuids)
-                    self.ble.scan(uuids, 10)
+                    console.log('paired uuids to scan', uuids)                    
+                    if (!uuids || uuids.length==0) {
+                        return reject('no paired devices')
+                    }
+                    self.ble.scan(uuids, 3)
                         .subscribe(peripheral => {
                             self.connect(peripheral.id, (deviceId) => {
                                 self.feedData().then(feedData => {

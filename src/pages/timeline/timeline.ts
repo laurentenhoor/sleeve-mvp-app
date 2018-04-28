@@ -21,6 +21,8 @@ import { FeedInput } from '../feed-input/feed-input'
 
 import { Feeds } from '../../providers/feeds';
 import { Sessions } from '../../providers/sessions';
+import { Sleeves } from '../../providers/sleeves';
+import { Connecting } from '../connecting/connecting';
 
 @Component({
   selector: 'timeline',
@@ -39,15 +41,29 @@ export class Timeline implements OnInit {
     public modalCtrl: ModalController,
     private events: Events,
     public feedsService: Feeds,
-    public sessionsService: Sessions) {
+    public sessionsService: Sessions, 
+    public sleevesService: Sleeves) {
 
-    setTimeout(() => {
-      this.fakeScan = true;
-      this.events.publish('availableFeeds', 1);
-    }, 2000);
+    // setTimeout(() => {
+    //   this.fakeScan = true;
+    //   this.events.publish('availableFeeds', 1);
+    // }, 2000);
 
     this.feeds = this.feedsService.getFeeds();
 
+  }
+
+  synchronizeFeeds() {
+    this.sleevesService.synchronizeFeeds().then(feedData => {
+      console.log('received feeds', feedData)
+    }).catch(error => {
+      console.error(error)
+      if (error == "no paired devices") {
+        this.modalCtrl.create(Connecting).present();
+      } else {
+        this.addFakeFeeds()
+      }
+    })
   }
 
   ngOnInit() {

@@ -1,8 +1,13 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Feeding Journal
+      Timeline
     </ion-title>
+    <ion-buttons end>
+      <button (click)="synchronizeFeeds()" ion-button icon-left color="royal">
+          Sync
+      </button>
+  </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -15,7 +20,6 @@
     </ion-card-header>
 
     <ion-item>
-
       <button ion-button icon-left clear item-end (click)="fakeScan=false;fakeFeeds=true;addFakeFeeds();">
         <ion-icon name="sync"></ion-icon>
         Synchronize
@@ -46,8 +50,8 @@
         <ion-icon name="philips-baby-bottle"></ion-icon>
       </button>
 
-      <button ion-fab (click)="showUnderConstructionAlert();fab.close();">
-        <ion-icon name="heart"></ion-icon>
+      <button ion-fab (click)="synchronizeFeeds();fab.close();">
+        <ion-icon name="sync"></ion-icon>
       </button>
 
     </ion-fab-list>
