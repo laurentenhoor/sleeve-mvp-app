@@ -331,7 +331,7 @@ export class Bluetooth {
     // this.setStatus('Scanning for Bluetooth LE Devices');
     this.devices = [];  // clear list
 
-    this.ble.scan([], 5).subscribe(
+    this.ble.scan([], 30).subscribe(
       device => this.onDeviceDiscovered(device),
       error => this.scanError(error)
     );

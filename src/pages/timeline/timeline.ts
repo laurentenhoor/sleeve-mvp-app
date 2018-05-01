@@ -40,11 +40,19 @@ export class Timeline implements OnInit {
     //   this.events.publish('availableFeeds', 1);
     // }, 2000);
     this.feeds = this.feedsService.getFeeds();
-    this.synchronizeFeeds();
+    // this.synchronizeFeeds();
+    this.sleevesService.disconnectAll();
 
   }
 
   synchronizeFeeds() {
+
+    // this.sleevesService.connect('D93B40F4-C938-4070-B03E-22AADD33A00B', () => {
+    //   this.sleevesService.fixedFeedData().then(feedData => {
+    //     console.log('feedData', feedData)
+    //   }, error => console.log(error)).catch(error => console.error(error));
+    // })
+
     this.sleevesService.getPairedSleeves().then(pairedSleeves => {
       if (pairedSleeves.length == 0) {
         this.modalCtrl.create(Connecting).present();
@@ -55,6 +63,8 @@ export class Timeline implements OnInit {
         }).catch(error => {
           console.error(error);
         })
+
+
       }
     })
   }
@@ -108,6 +118,9 @@ export class Timeline implements OnInit {
 
   addFeed() {
     this.openFeedModal(null)
+    // this.sleevesService.disconnectAll();
+    // this.sleevesService.sendDownloadFeedRequest();
+    // this.sleevesService.feedData().then(data=>{console.log(data)})
   }
 
   openFeedModal(feed) {

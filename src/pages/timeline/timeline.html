@@ -40,6 +40,7 @@
     <ion-item>
       <ion-icon color="{{ feed.type == 'smart' ? 'secondary' : 'primary' }}" name="philips-baby-bottle" item-left large></ion-icon>
       <h2>{{ feed.amount | number : '1.0-0' }} ml</h2>
+      <h2 *ngIf="feed.type == 'smart'">{{ feed.duration | number : '1.0-0' }} sec</h2>
       <h3>{{ formatTimeAgo(feed.timestamp) }}</h3>
       <p>
         <ion-icon name="{{ feed.type == 'smart' ? 'bluetooth' : 'hand' }}" item-left large></ion-icon>{{ feed.type == 'smart' ? 'Smart Bottle Tracker' : 'Manual' }}</p>

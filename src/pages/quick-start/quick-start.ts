@@ -4,6 +4,7 @@ import { AlertController, NavController, Slides } from 'ionic-angular';
 
 import { BLE } from '@ionic-native/ble';
 import { Sleeves } from '../../providers/sleeves'
+import { Tabs } from '../tabs/tabs'
 
 @Component({
     selector: 'quick-start',
@@ -27,9 +28,14 @@ export class QuickStart {
         }, error => {
             console.error('no states available', error)
         })
+        this.sleevesService.feedData().then(feedData=>{
+            console.log('feeddata from QSG')
+            this.nav.setRoot(Tabs);
+        })
     }
 
     closeModal() {
+        this.sleevesService.disconnectAll();
         this.nav.pop();
     }
 

@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import PouchDB from 'pouchdb';
+import { Sessions } from './sessions';
 
 @Injectable()
 export class Feeds {
@@ -7,7 +8,10 @@ export class Feeds {
     localDb: any;
     remoteDb: any;
 
-    constructor(zone: NgZone) {
+    constructor(
+        private zone: NgZone,
+        private sessionsService:Sessions
+    ) {
 
         this.localDb = new PouchDB('feeds');
         this.remoteDb = 'http://ec2-34-239-163-2.compute-1.amazonaws.com:5984/feeds';
@@ -54,6 +58,27 @@ export class Feeds {
         }).catch((err) => {
             console.error(JSON.stringify(err));
         });
+    }
+
+    createFeedFromSleeve(sleeveFeed) {
+        sleeveFeed = JSON.parse(sleeveFeed);
+        let amount = 0;
+        let duration = 0;
+        if (sleeveFeed.m && sleeveFeed.m.w) {
+            amount = sleeveFeed.m.w[0][1] - sleeveFeed.m.w[1][1]
+        }
+        if (sleeveFeed.m && sleeveFeed.m.i) {
+            duration = sleeveFeed.m.i.reduce(function(acc, val) { return acc + val; });
+        }
+        let feed = {
+            type: 'smart',
+            timestamp: Date.now(),
+            date: new Date(),
+            amount: amount,
+            duration: duration,
+            sessionId: this.sessionsService.getSessionId()
+        }
+        this.createFeed(feed);
     }
 
     updateFeed(feed) {

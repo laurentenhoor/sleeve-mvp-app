@@ -28,6 +28,7 @@ export class Connecting {
         this.sleevesService.scanAndConnect()
             .subscribe(connectedSleeve => {
                 console.log('Successfully connected to a sleeve', connectedSleeve)
+                this.sleevesService.storeSleeve(connectedSleeve);
                 this.nav.pop();
                 this.modalCtrl.create(QuickStart).present();
             }, error => {
