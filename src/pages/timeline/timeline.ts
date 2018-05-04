@@ -20,6 +20,7 @@ export class Timeline implements OnInit {
   fakeScan: any;
   public amountOfAvailableFeeds;
   private feeds: any;
+  private synchronizing: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -32,7 +33,7 @@ export class Timeline implements OnInit {
     public feedsService: Feeds,
     public sessionsService: Sessions,
     public sleevesService: Sleeves,
-    public loadingCtrl: LoadingController
+    public loadingCtrl: LoadingController,
   ) {
 
     // setTimeout(() => {
@@ -40,9 +41,14 @@ export class Timeline implements OnInit {
     //   this.events.publish('availableFeeds', 1);
     // }, 2000);
     this.feeds = this.feedsService.getFeeds();
-    // this.synchronizeFeeds();
+    this.synchronizeFeeds();
     this.sleevesService.disconnectAll();
 
+  }
+
+  stopScanning() {
+    console.log('stopScanning;')
+    this.sleevesService.stopScanning();
   }
 
   synchronizeFeeds() {
@@ -57,13 +63,12 @@ export class Timeline implements OnInit {
       if (pairedSleeves.length == 0) {
         this.modalCtrl.create(Connecting).present();
       } else {
-        this.presentLoading()
+        // this.presentLoading()
         this.sleevesService.synchronizeFeeds().then(feedData => {
           console.log('feedData:', feedData)
         }).catch(error => {
           console.error(error);
         })
-
 
       }
     })

@@ -4,8 +4,11 @@
       Timeline
     </ion-title>
     <ion-buttons end>
-      <button (click)="synchronizeFeeds()" ion-button icon-left color="royal">
+      <button *ngIf="!sleevesService.isScanning" (click)="synchronizeFeeds();" ion-button icon-left color="royal">
         Sync
+      </button>
+      <button (click)="stopScanning();" *ngIf="sleevesService.isScanning" ion-button>
+        <ion-spinner name="dots"></ion-spinner>
       </button>
     </ion-buttons>
   </ion-navbar>

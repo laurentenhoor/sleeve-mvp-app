@@ -8,18 +8,19 @@ import { Feeds } from './feeds';
 
 @Injectable()
 export class Sleeves {
-    localDb: any;
-    defaultSleeveName: string;
-    connectedDeviceId: string;
-    sleeveConnected: boolean;
-    pairedSleeves: any[];
+    private localDb: any;
+    private defaultSleeveName: string = 'Philips Avent SCH820';
+    private connectedDeviceId: string;
+    private sleeveConnected: boolean;
+    private pairedSleeves: any[];
+    public isScanning: boolean = false;
 
     constructor(
         private ble: BLE,
         private feedsSeverice: Feeds,
     ) {
         this.localDb = new PouchDB('sleeves');
-        this.defaultSleeveName = 'Philips Avent SCH820';
+        this.defaultSleeveName
         this.sleeveConnected = false;
         this.getPairedSleeves().then(pairedSleeves => this.pairedSleeves = pairedSleeves);
     }
@@ -27,6 +28,17 @@ export class Sleeves {
     removeSleeve(sleeve): void {
         console.log('remove sleeve', sleeve)
         this.localDb.remove(sleeve)
+    }
+
+    isBluetoothEnabled():Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.ble.isEnabled().then(() => {
+                resolve();
+            }).catch(()=>{
+                reject();
+            })
+        })
+
     }
 
     disconnectAll() {
@@ -102,6 +114,7 @@ export class Sleeves {
         });
     }
 
+
     scanAndConnect(): Observable<string> {
         console.log('scanAndConnect()')
         this.ble.stopScan();
@@ -115,6 +128,8 @@ export class Sleeves {
                 }, () => {
                     console.log('Forced a bonding by reading!')
                     observer.next(connectedSleeve.id);
+                }).catch(error => {
+                    console.error('forcebonding error', error)
                 });
             })
         })
@@ -145,6 +160,12 @@ export class Sleeves {
         })
     }
 
+    stopScanning() {
+        this.isScanning = false;
+        this.ble.stopScan();
+        this.disconnectAll();
+    }
+
     synchronizeFeeds() {
         let self = this;
         this.ble.stopScan();
@@ -161,8 +182,14 @@ export class Sleeves {
                     if (!uuids || uuids.length == 0) {
                         return reject('no paired devices')
                     }
-                    // console.log('scanning for following ids', uuids)
-                    self.ble.scan([], 30)
+                    console.log('scanning for following ids', uuids)
+                    this.isScanning = true;
+                    let timeout = 30;
+                    setTimeout(() => {
+                        this.isScanning = false
+                        console.log('scanning timeout')
+                    }, timeout * 1000)
+                    self.ble.scan([], timeout)
                         .subscribe(peripheral => {
                             // console.log('found a sleeve to synchronize feeds from!', peripheral._id)
                             uuids.forEach((uuid) => {
@@ -201,11 +228,11 @@ export class Sleeves {
                 console.log('received feed data', feedData)
                 this.feedsSeverice.createFeedFromSleeve(feedData);
                 resolve(feedData);
-                // this.disconnectAll();
+                this.disconnectAll();
             }, error => {
                 console.error('error while receiving feedData', error)
                 reject('unable to receive feedData');
-                // this.disconnectAll();
+                this.disconnectAll();
             })
             this.sendDownloadFeedRequest();
         })
@@ -224,6 +251,8 @@ export class Sleeves {
     }
 
     initScan(successCallback) {
+        this.ble.stopScan();
+        this.isScanning = true;
         this.ble.startScan([]).subscribe(
             device => this.onDeviceDiscovered(device, successCallback),
             error => console.error('scan error', error)
@@ -232,7 +261,8 @@ export class Sleeves {
 
     onDeviceDiscovered(device, successCallback) {
         console.log('discovered', JSON.stringify(device))
-        if (device.name == this.defaultSleeveName) {
+        if (device.name == this.defaultSleeveName && device.id == 'D7832B16-8B21-4BCB-906C-0B6779BB18D8') {
+            this.ble.stopScan();
             console.log('Found a bottle sleeve', device.id)
             this.connect(device.id, successCallback);
         }
@@ -241,25 +271,30 @@ export class Sleeves {
     forceBonding(peripheral) {
         console.log('force bonding')
         return new Promise((resolve, reject) => {
-            this.ble.read(peripheral.id,
-                peripheral.characteristics[0].service,
-                peripheral.characteristics[0].characteristic).then(
-                    data => {
-                        console.log('focebonding', data);
-                        resolve();
-                    },
-                    error => {
-                        console.error('forceBonding', error)
-                        reject();
-                    }
-                )
+            let serviceUuid = peripheral && peripheral.characteristics && peripheral.characteristics[0] && peripheral.characteristics[0].service ? peripheral.characteristics[0].service : false;
+            let characteristicUuid = serviceUuid && peripheral.characteristics[0].characteristic ? peripheral.characteristics[0].characteristic : false;
+            if (!serviceUuid || !characteristicUuid) {
+                reject('no correct uuids found to execute force bonding');
+            }
+            this.ble.read(peripheral.id, serviceUuid, characteristicUuid).then(
+                data => {
+                    console.log('forcebonding', data);
+                    resolve();
+                },
+                error => {
+                    console.error('forceBonding', error)
+                    reject();
+                }
+            ).catch(error => {
+                console.error('forcebonding error', error)
+                reject(error)
+            })
         })
     }
 
     connect(deviceId, successCallback) {
         this.ble.connect(deviceId).subscribe(
             peripheral => {
-
                 this.ble.stopScan();
                 this.sleeveConnected = true;
                 this.connectedDeviceId = deviceId;
