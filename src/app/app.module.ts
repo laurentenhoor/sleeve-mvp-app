@@ -26,6 +26,15 @@ import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
 
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { Devices } from '../pages/devices/devices';
+import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
+import { RemoveCap } from '../pages/quick-start-guide/remove-cap/remove-cap';
+import { InsertBottle } from '../pages/quick-start-guide/insert-bottle/insert-bottle';
+import { PressButtonStart } from '../pages/quick-start-guide/press-button-start/press-button-start';
+import { WeighingStart } from '../pages/quick-start-guide/weighing-start/weighing-start';
+import { Feeding } from '../pages/quick-start-guide/feeding/feeding';
+import { Wiggle } from '../pages/quick-start-guide/wiggle/wiggle';
+import { WeighingEnd } from '../pages/quick-start-guide/weighing-end/weighing-end';
+import { PressButtonEnd } from '../pages/quick-start-guide/press-button-end/press-button-end';
 
 
 @NgModule({
@@ -38,6 +47,15 @@ import { Devices } from '../pages/devices/devices';
     Connecting,
     QuickStart,
     Devices,
+    QuickStartGuide,
+    RemoveCap,
+    InsertBottle,
+    PressButtonStart,
+    WeighingStart,
+    Feeding,
+    Wiggle,
+    PressButtonEnd,
+    WeighingEnd,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +72,15 @@ import { Devices } from '../pages/devices/devices';
     Connecting,
     QuickStart,
     Devices,
+    QuickStartGuide,
+    RemoveCap,
+    InsertBottle,
+    PressButtonStart,
+    WeighingStart,
+    Feeding,
+    Wiggle,
+    PressButtonEnd,
+    WeighingEnd,
   ],
   providers: [
     StatusBar,

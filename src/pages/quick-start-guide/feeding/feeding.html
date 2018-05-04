@@ -1,0 +1,31 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Quick Start Guide
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding style="text-align: center;">
+
+    <img (click)="feedDetected();" class="qsg-gif" src="assets/imgs/shark-milk.gif" />
+
+    <h4 ion-text>Start feeding</h4>
+    <p>
+        Hold the bottle with the Smart Bottle Sleeve attached in feeding position. After 5 seconds your feed will be detected.
+    </p>
+    <p>
+        The lights will be off while you’re tracking the baby’s feeding.
+    </p>
+</ion-content>
+
+<ion-footer padding>
+    <button color="{{ !feedIsDetected ? 'light' : 'secondary'}}" ion-button block icon-start>
+        <ion-icon *ngIf="!feedIsDetected">
+            <ion-spinner name="dots"></ion-spinner>
+        </ion-icon>
+        <ion-icon *ngIf="feedIsDetected" style="color:white;font-weight: bold" name="checkmark">
+        </ion-icon>
+        {{ !feedIsDetected ? 'Waiting for feeding' : 'Feed detected' }}
+    </button>
+</ion-footer>

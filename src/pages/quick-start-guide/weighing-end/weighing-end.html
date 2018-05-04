@@ -1,0 +1,29 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Quick Start Guide
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding style="text-align: center;">
+
+    <img (click)="weighingSuccessful();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen 5.1_Measure start volume.gif" />
+
+    <h4 ion-text>Measure the volume</h4>
+    <p>
+        Place the tracker on a flat and hard surface to measure the start volume. The light turns green when the measurement
+        is successful.
+    </p>
+</ion-content>
+
+<ion-footer padding>
+    <button color="{{ !weighingDone ? 'light' : 'secondary'}}" ion-button block icon-start>
+        <ion-icon *ngIf="!weighingDone">
+            <ion-spinner name="dots"></ion-spinner>
+        </ion-icon>
+        <ion-icon *ngIf="weighingDone" style="color:white;font-weight: bold" name="checkmark">
+        </ion-icon>
+        {{ !weighingDone ? 'Waiting for start volume' : 'Start volume measured' }}
+    </button>
+</ion-footer>

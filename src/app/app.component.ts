@@ -6,14 +6,17 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Tabs } from '../pages/tabs/tabs';
 import { Connecting } from '../pages/connecting/connecting';
 import { QuickStart } from '../pages/quick-start/quick-start';
+import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
 
 import { Sessions } from '../providers/sessions';
+import { Feeding } from '../pages/quick-start-guide/feeding/feeding';
+import { Wiggle } from '../pages/quick-start-guide/wiggle/wiggle';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = Tabs;
+  rootPage: any = Wiggle;
 
   constructor(
     platform: Platform,

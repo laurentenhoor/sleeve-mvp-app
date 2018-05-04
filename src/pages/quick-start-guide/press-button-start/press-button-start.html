@@ -1,0 +1,28 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Quick Start Guide
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding style="text-align: center;">
+
+    <img (click)="buttonPress();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen 4.1_4.2_Press button.gif" />
+
+    <h4 ion-text>Press the button</h4>
+    <p>
+        The blinking white light indicates that the tracker is ready to measure the feed’s start volume.
+    </p>
+</ion-content>
+
+<ion-footer padding>
+    <button color="{{ !buttonPressed ? 'light' : 'secondary'}}" ion-button block icon-start>
+        <ion-icon *ngIf="!buttonPressed">
+            <ion-spinner name="dots"></ion-spinner>
+        </ion-icon>
+        <ion-icon *ngIf="buttonPressed" style="color:white;font-weight: bold" name="checkmark">
+        </ion-icon>
+        {{ !buttonPressed ? 'Waiting for button press' : 'Button pressed' }}
+    </button>
+</ion-footer>
