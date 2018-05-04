@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Sleeves } from '../../../providers/sleeves';
+import { Feeding } from '../feeding/feeding';
 
 @Component({
   selector: 'weighing-start',
@@ -34,7 +35,7 @@ export class WeighingStart {
   }
 
   nextStep() {
-    // this.navCtrl.push();
+    this.navCtrl.push(Feeding);
   }
 
 }

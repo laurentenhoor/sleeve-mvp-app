@@ -16,7 +16,7 @@ import { Wiggle } from '../pages/quick-start-guide/wiggle/wiggle';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = Wiggle;
+  rootPage: any = QuickStartGuide;
 
   constructor(
     platform: Platform,
