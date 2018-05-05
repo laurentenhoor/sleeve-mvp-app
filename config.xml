@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.philips.sleeve" version="0.1.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Sleeve</name>
     <description>The Smart Feeding Kit.</description>
     <author email="lauren.ten.hoor@philips.com" href="http://www.philips.com/">Lauren ten Hoor</author>

@@ -20,6 +20,7 @@ export class Bluetooth {
   connectedDevice;
   currentState;
   latestFeed;
+  dataBuffer:string="";
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
@@ -124,7 +125,7 @@ export class Bluetooth {
       console.error('subscribeToState', error)
     })
 
- 
+
   }
 
 
@@ -190,17 +191,31 @@ export class Bluetooth {
     })
   }
 
+  handleData(data: ArrayBuffer) {
+    let part: string = this.bytesToString(data);
+    console.log('new data chunk', part)
+    try {
+      this.dataBuffer = this.dataBuffer + part;
+      console.log('new databuffer', this.dataBuffer)
+      JSON.parse(this.dataBuffer);
+      this.alertCtrl.create({
+        title: 'Successfully received',
+        subTitle: this.dataBuffer,
+        buttons: ['Discard']
+      }).present();
+      this.dataBuffer = "";
+    } catch (error) {
+      console.error(error)
+      return;
+    }
+  }
+
   startNotification(deviceId) {
     this.ble.startNotification(deviceId,
       '000030f0-0000-1000-8000-00805f9b34fb',
       '000063e7-0000-1000-8000-00805F9B34FB'
     ).subscribe(data => {
-      this.alertCtrl.create({
-        title: 'Successfully received',
-        subTitle: this.bytesToString(data),
-        buttons: ['Discard']
-      }).present();
-      // this.disconnect(deviceId)
+      this.handleData(data);
     }, error => {
       this.toastCtrl.create({
         message: 'Error on receiving: ' + error,
@@ -208,13 +223,11 @@ export class Bluetooth {
         duration: 2000
       }).present();
     })
-
   }
-
 
   disconnect(device) {
 
-    console.log('DISCONNECT',this.connectedDevice.id )
+    console.log('DISCONNECT', this.connectedDevice.id)
     this.ble.disconnect(this.connectedDevice.id)
       .then(data => {
         this.setStatus('BLE DISCONNECTED');
@@ -274,7 +287,7 @@ export class Bluetooth {
       })
   }
 
-  
+
   subscribeToFeedData(peripheral) {
     console.log('subscribeToFeedData', peripheral.id)
     this.ble.startNotification(peripheral.id,
@@ -309,8 +322,8 @@ export class Bluetooth {
   onBleConnected(peripheral) {
     this.connectedDevice = peripheral;
     // this.forceBonding(peripheral);
-    this.subscribeToState(peripheral.id)
-    this.subscribeToFeedData(peripheral);
+    // this.subscribeToState(peripheral.id)
+    // this.subscribeToFeedData(peripheral);
 
     this.setStatus('BLE CONNECTED')
   }
