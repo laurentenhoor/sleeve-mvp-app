@@ -6,18 +6,21 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding style="text-align: center;">
+<ion-content class="qsg" padding no-bounce class="vertical-align-content">
 
-    <img (click)="buttonPress();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen 8.1_Finish Feeding.gif" />
+    <div style="text-align:center;width:100%;">
+        <img (click)="buttonPress();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen 8.1_Finish Feeding.gif" />
 
-    <h4 ion-text>Finish the feed<br>by pressing the button</h4>
-    <p>
-        Press the button shortly to finish the feed. The blinking white light indicates the Smart Bottle Sleeve is ready to measure
-        the feed’s end volume.
-    </p>
+        <h1 ion-text>Finish a feed
+            <br>by pressing the button</h1>
+        <p>
+            Press the button shortly to finish the feed. The blinking white light indicates the Smart Bottle Sleeve is ready to measure
+            the feed’s end volume.
+        </p>
+    </div>
 </ion-content>
 
-<ion-footer padding>
+<ion-footer class="qsg" padding>
     <button color="{{ !buttonPressed ? 'light' : 'secondary'}}" ion-button block icon-start>
         <ion-icon *ngIf="!buttonPressed">
             <ion-spinner name="dots"></ion-spinner>

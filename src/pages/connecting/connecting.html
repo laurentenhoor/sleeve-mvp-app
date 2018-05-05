@@ -13,20 +13,18 @@
 </ion-header>
 
 
-<ion-content no-bounce style="text-align:center">
+<ion-content no-bounce class="vertical-align-content">
+    <div style="text-align:center;width:100%;">
+        <img (click)="demo()" class="sleeve-image" src="assets/imgs/sleeve-white-bg.png" />
 
-    
-    <img (click)="demo()" class="sleeve-image" src="assets/imgs/sleeve-white-bg.png" />
-
-    <ion-spinner name="dots"></ion-spinner>
-    <p style="opacity:0.5">Scanning for bottle trackers</p>
-    <p style="opacity:0.2">Tap on the bottle to simulate pairing</p>
-    <!-- <button (click)="quickStart()" ion-button>
+        <ion-spinner name="dots"></ion-spinner>
+        <h1>Scanning for<br>bottle trackers</h1>
+        <!-- <button (click)="quickStart()" ion-button>
         Start installation
     </button> -->
 
-    <button (click)="checkBluetooth();" ion-button round>Check Bluetooth</button>
-
+        <!-- <button (click)="checkBluetooth();" ion-button round>Check Bluetooth</button> -->
+    </div>
 </ion-content>
 
 <ion-footer>

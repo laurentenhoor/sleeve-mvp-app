@@ -31,7 +31,7 @@ export class WeighingStart {
     setTimeout(() => {
       this.nextStep();
       this.weighingDone = false;
-    }, 2000)
+    }, 500)
   }
 
   nextStep() {

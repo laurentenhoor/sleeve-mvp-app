@@ -33,3 +33,10 @@ ion-icon {
 .range-tick {
   display:none;
 }
+
+.vertical-align-content > *
+{
+     display: flex!important;
+     align-content: center!important;
+     align-items: center!important;
+}

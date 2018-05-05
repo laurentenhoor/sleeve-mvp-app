@@ -32,7 +32,7 @@ export class PressButtonEnd {
       this.nextStep();
       this.buttonPressed = false;
       
-    }, 2000)
+    }, 500)
   }
 
   nextStep() {

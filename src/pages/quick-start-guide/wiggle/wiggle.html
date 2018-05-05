@@ -6,16 +6,17 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding style="text-align: center;">
+<ion-content class="qsg" padding no-bounce class="vertical-align-content">
 
-    <img (click)="wiggleDetected();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen 7.1_7.2_Wiggle and Wiggle Detected.gif" />
+    <div style="text-align:center;width:100%;">
+        <img (click)="wiggleDetected();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen 7.1_7.2_Wiggle and Wiggle Detected.gif"
+        />
+        <h1 ion-text>Is the device recording?</h1>
+        <p>
+            To ensure long battery life, the lights are turned off as much as possible. Wiggle the device to check if the device is recording.
+        </p>
+    </div>
 
-    <h4 ion-text>Is the device recording?</h4>
-    <p>
-        To ensure long battery life, the lights are turned off as much as possible.
-        Wiggle the device to check if the device is recording.
-    </p>
-    
 </ion-content>
 
 <ion-footer padding>

@@ -6,17 +6,19 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding style="text-align: center;">
+<ion-content class="qsg" padding no-bounce class="vertical-align-content">
+    <div style="text-align:center;width:100%;">
+        <img (click)="buttonPress();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen 4.1_4.2_Press button.gif" />
 
-    <img (click)="buttonPress();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen 4.1_4.2_Press button.gif" />
+        <h1 ion-text>Press the button</h1>
+        <p>
+            The blinking white light indicates that the tracker is ready to measure the feed’s start volume.
+        </p>
 
-    <h4 ion-text>Press the button</h4>
-    <p>
-        The blinking white light indicates that the tracker is ready to measure the feed’s start volume.
-    </p>
+    </div>
 </ion-content>
 
-<ion-footer padding>
+<ion-footer class="qsg" padding>
     <button color="{{ !buttonPressed ? 'light' : 'secondary'}}" ion-button block icon-start>
         <ion-icon *ngIf="!buttonPressed">
             <ion-spinner name="dots"></ion-spinner>

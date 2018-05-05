@@ -6,20 +6,23 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding style="text-align: center;">
+<ion-content class="qsg" padding no-bounce class="vertical-align-content">
 
-    <img (click)="feedDetected();" class="qsg-gif" src="assets/imgs/shark-milk.gif" />
+    <div style="text-align:center;width:100%;">
+        <img (click)="feedDetected();" class="qsg-gif" src="assets/imgs/shark-milk.gif" />
 
-    <h4 ion-text>Start feeding</h4>
-    <p>
-        Hold the bottle with the Smart Bottle Sleeve attached in feeding position. After 5 seconds your feed will be detected.
-    </p>
-    <p>
-        The lights will be off while you’re tracking the baby’s feeding.
-    </p>
+        <h1 ion-text>Start feeding</h1>
+        <p>
+            Hold the bottle with the Smart Bottle Sleeve attached in feeding position. <b>After 5 seconds a feed will be detected.</b>
+        </p>
+        <p>
+            The lights will be off while you’re tracking the baby’s feeding.
+        </p>
+    </div>
+
 </ion-content>
 
-<ion-footer padding>
+<ion-footer class="qsg" padding>
     <button color="{{ !feedIsDetected ? 'light' : 'secondary'}}" ion-button block icon-start>
         <ion-icon *ngIf="!feedIsDetected">
             <ion-spinner name="dots"></ion-spinner>

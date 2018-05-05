@@ -6,15 +6,16 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding style="text-align: center;">
+<ion-content padding no-bounce class="vertical-align-content">
 
-    <img (click)="weighingSuccessful();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen 5.1_Measure start volume.gif" />
+    <div style="text-align:center;width:100%;">
+        <img (click)="weighingSuccessful();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen 5.1_Measure start volume.gif" />
 
-    <h4 ion-text>Measure the volume</h4>
-    <p>
-        Place the tracker on a flat and hard surface to measure the start volume. The light turns green when the measurement
-        is successful.
-    </p>
+        <h1 ion-text>Measure the volume</h1>
+        <p>
+            Place the tracker on a flat and hard surface to measure the start volume. The light turns green when the measurement is successful.
+        </p>
+    </div>
 </ion-content>
 
 <ion-footer padding>

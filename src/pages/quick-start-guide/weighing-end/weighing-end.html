@@ -6,18 +6,19 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content padding style="text-align: center;">
+<ion-content class="qsg" padding no-bounce class="vertical-align-content">
 
-    <img (click)="weighingSuccessful();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen-8.2_8.3_Finish-Feeding.gif" />
+    <div style="text-align:center;width:100%;">
+        <img (click)="weighingSuccessful();" class="qsg-gif" src="assets/imgs/qsg/QSG_Screen-8.2_8.3_Finish-Feeding.gif" />
 
-    <h4 ion-text>Measure the volume</h4>
-    <p>
-        The purple light indicates that the end volume of the feed was measured succesfully, and the feeding is finished.
-
-    </p>
+        <h1 ion-text>Measure the volume</h1>
+        <p>
+            The purple light indicates that the end volume of the feed was measured succesfully, and the feeding is finished.
+        </p>
+    </div>
 </ion-content>
 
-<ion-footer padding>
+<ion-footer class="qsg" padding>
     <button color="{{ !weighingDone ? 'light' : 'secondary'}}" ion-button block icon-start>
         <ion-icon *ngIf="!weighingDone">
             <ion-spinner name="dots"></ion-spinner>

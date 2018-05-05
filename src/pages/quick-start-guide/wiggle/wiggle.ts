@@ -31,7 +31,7 @@ export class Wiggle {
     setTimeout(() => {
       this.nextStep();
       this.wiggleIsDetected = false;
-    }, 2000)
+    }, 500)
   }
 
   nextStep() {

@@ -7,16 +7,19 @@
 </ion-header>
 
 
-<ion-content padding style="text-align: center;">
-    <img class="qsg-gif" src="assets/imgs/qsg/QSG_Screen-3.0_Insert-Bottle.gif" />
+<ion-content class="qsg" padding no-bounce class="vertical-align-content">
 
-    <h4 ion-text>Insert the bottle</h4>
-    <p>
-        After preparing your baby’s bottle, insert the bottle in the bottle tracker.
-    </p>
+    <div style="text-align:center;width:100%;">
+        <img class="qsg-gif" src="assets/imgs/qsg/QSG_Screen-3.0_Insert-Bottle.gif" />
+
+        <h1 ion-text>Insert the bottle</h1>
+        <p>
+            After preparing your baby’s bottle, insert the bottle in the bottle tracker.
+        </p>
+    </div>
 
 </ion-content>
 
-<ion-footer padding>
+<ion-footer class="qsg" padding>
     <button (click)="nextStep();" ion-button block>Next Step</button>
 </ion-footer>
