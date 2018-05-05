@@ -41,7 +41,7 @@ export class Timeline implements OnInit {
     //   this.events.publish('availableFeeds', 1);
     // }, 2000);
     this.feeds = this.feedsService.getFeeds();
-    this.synchronizeFeeds();
+    // this.synchronizeFeeds();
     this.sleevesService.disconnectAll();
 
   }
