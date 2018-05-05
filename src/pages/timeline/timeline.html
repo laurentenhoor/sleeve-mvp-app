@@ -50,23 +50,27 @@
     </ion-item>
   </ion-card>
 
-  <ion-fab right bottom #fab (click)="addFeed();">
+  <ion-fab right bottom #fab>
 
     <button ion-fab color="primary">
       <ion-icon name="add"></ion-icon>
     </button>
-
-    <!-- <ion-fab-list side="top">
+    
+    <ion-fab-list side="top">
 
       <button ion-fab (click)="addFeed();fab.close();">
         <ion-icon name="philips-baby-bottle"></ion-icon>
       </button>
 
-      <button ion-fab (click)="synchronizeFeeds();fab.close();">
-        <ion-icon name="sync"></ion-icon>
-      </button>
+      <button ion-fab (click)="openSettings();fab.close();">
+          <ion-icon name="settings"></ion-icon>
+        </button>
 
-    </ion-fab-list> -->
+      <!-- <button ion-fab (click)="synchronizeFeeds();fab.close();">
+        <ion-icon name="sync"></ion-icon>
+      </button> -->
+
+    </ion-fab-list>
   </ion-fab>
 
 </ion-content>

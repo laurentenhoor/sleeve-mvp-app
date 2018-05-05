@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Sleeves } from '../../../providers/sleeves';
 import { PressButtonEnd } from '../press-button-end/press-button-end';
@@ -12,11 +12,13 @@ export class Wiggle {
 
   constructor(
     public navCtrl: NavController,
-    public sleevesService: Sleeves
+    public sleevesService: Sleeves,
+    public ngZone: NgZone
   ) {
     try {
       this.sleevesService.state().subscribe(state => {
-        if (state === '0400') {
+        console.log('state received', state);
+        if (state === '0000') {
           this.wiggleDetected();
         }
       })
@@ -27,7 +29,9 @@ export class Wiggle {
   }
 
   wiggleDetected() {
-    this.wiggleIsDetected = true;
+    this.ngZone.run(() => {
+      this.wiggleIsDetected = true;
+    });
     setTimeout(() => {
       this.nextStep();
       this.wiggleIsDetected = false;

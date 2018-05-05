@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Sleeves } from '../../../providers/sleeves';
 import { WeighingStart } from '../weighing-start/weighing-start';
@@ -13,11 +13,13 @@ export class PressButtonStart {
 
   constructor(
     public navCtrl: NavController,
-    public sleevesService: Sleeves
+    public sleevesService: Sleeves,
+    public ngZone: NgZone
   ) {
     try {
       this.sleevesService.state().subscribe(state => {
-        if (state === '0000') {
+        console.log('state received', state)
+        if (state === '0300') {
           this.buttonPress();
         }
       })
@@ -27,11 +29,13 @@ export class PressButtonStart {
   }
 
   buttonPress() {
-    this.buttonPressed = true;
+    this.ngZone.run(()=>{
+      this.buttonPressed = true;
+    })
+    
     setTimeout(() => {
       this.nextStep();
       this.buttonPressed = false;
-      
     }, 500)
   }
 

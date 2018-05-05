@@ -17,7 +17,7 @@ import { RemoveCap } from '../pages/quick-start-guide/remove-cap/remove-cap';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = QuickStartGuide;
+  rootPage: any = Tabs;
 
   constructor(
     platform: Platform,

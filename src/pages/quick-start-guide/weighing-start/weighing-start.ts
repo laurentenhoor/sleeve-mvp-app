@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Sleeves } from '../../../providers/sleeves';
 import { Feeding } from '../feeding/feeding';
@@ -12,10 +12,12 @@ export class WeighingStart {
 
   constructor(
     public navCtrl: NavController,
-    public sleevesService: Sleeves
+    public sleevesService: Sleeves,
+    public ngZone: NgZone
   ) {
     try {
       this.sleevesService.state().subscribe(state => {
+        console.log('state received', state);
         if (state === '0000') {
           this.weighingSuccessful();
         }
@@ -27,7 +29,9 @@ export class WeighingStart {
   }
 
   weighingSuccessful() {
-    this.weighingDone = true;
+    this.ngZone.run(()=>{
+      this.weighingDone = true;
+    })
     setTimeout(() => {
       this.nextStep();
       this.weighingDone = false;

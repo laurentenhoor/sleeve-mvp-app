@@ -7,6 +7,7 @@ import { Sleeves } from '../../providers/sleeves';
 import { QuickStart } from '../quick-start/quick-start';
 
 import { ModalController } from 'ionic-angular';
+import { QuickStartGuide } from '../quick-start-guide/quick-start-guide';
 
 @Component({
     selector: 'connecting',
@@ -30,7 +31,7 @@ export class Connecting {
                 console.log('Successfully connected to a sleeve', connectedSleeve)
                 this.sleevesService.storeSleeve(connectedSleeve);
                 this.nav.pop();
-                this.modalCtrl.create(QuickStart).present();
+                this.modalCtrl.create(QuickStartGuide).present();
             }, error => {
                 console.error(error);
             })
@@ -38,8 +39,8 @@ export class Connecting {
 
     demo() {
         // this.sleevesService.storeSleeve(this.generateUuid());
-        // this.nav.pop();
-        // this.modalCtrl.create(QuickStart).present();
+        this.nav.pop();
+        this.modalCtrl.create(QuickStartGuide).present();
     }
 
 

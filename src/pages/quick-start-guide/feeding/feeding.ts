@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Sleeves } from '../../../providers/sleeves';
 import { Wiggle } from '../wiggle/wiggle';
@@ -12,7 +12,8 @@ export class Feeding {
 
   constructor(
     public navCtrl: NavController,
-    public sleevesService: Sleeves
+    public sleevesService: Sleeves,
+    public ngZone: NgZone
   ) {
     try {
       this.sleevesService.state().subscribe(state => {
@@ -27,7 +28,9 @@ export class Feeding {
   }
 
   feedDetected() {
-    this.feedIsDetected = true;
+    this.ngZone.run(()=>{
+      this.feedIsDetected = true;
+    });
     setTimeout(() => {
       this.nextStep();
       this.feedIsDetected = false;

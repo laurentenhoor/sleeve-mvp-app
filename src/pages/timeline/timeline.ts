@@ -11,6 +11,7 @@ import { Feeds } from '../../providers/feeds';
 import { Sessions } from '../../providers/sessions';
 import { Sleeves } from '../../providers/sleeves';
 import { Connecting } from '../connecting/connecting';
+import { Bluetooth } from '../bluetooth/bluetooth';
 
 @Component({
   selector: 'timeline',
@@ -41,8 +42,8 @@ export class Timeline implements OnInit {
     //   this.events.publish('availableFeeds', 1);
     // }, 2000);
     this.feeds = this.feedsService.getFeeds();
-    // this.synchronizeFeeds();
-    this.sleevesService.disconnectAll();
+    this.synchronizeFeeds();
+    // this.sleevesService.disconnectAll();
 
   }
 
@@ -72,6 +73,10 @@ export class Timeline implements OnInit {
 
       }
     })
+  }
+
+  openSettings(){
+    this.navCtrl.push(Bluetooth)
   }
 
   presentLoading() {
