@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ViewController, App } from 'ionic-angular';
 import { InsertBottle } from '../insert-bottle/insert-bottle';
 
 @Component({
@@ -9,7 +9,7 @@ import { InsertBottle } from '../insert-bottle/insert-bottle';
 export class RemoveCap {
   
   constructor(
-    public navCtrl: NavController,
+    public navCtrl: NavController
   ) {
 
   }

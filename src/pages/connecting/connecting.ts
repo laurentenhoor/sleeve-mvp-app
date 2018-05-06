@@ -1,6 +1,6 @@
 
 import { Component } from '@angular/core';
-import { AlertController, NavController } from 'ionic-angular';
+import { AlertController, NavController, App } from 'ionic-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 import { Sleeves } from '../../providers/sleeves';
@@ -20,7 +20,8 @@ export class Connecting {
         private nav: NavController,
         private inAppBrowser: InAppBrowser,
         private sleevesService: Sleeves,
-        public modalCtrl: ModalController
+        public modalCtrl: ModalController,
+        public appCtrl: App
     ) {
 
     }
@@ -40,7 +41,8 @@ export class Connecting {
     demo() {
         // this.sleevesService.storeSleeve(this.generateUuid());
         this.nav.pop();
-        this.modalCtrl.create(QuickStartGuide).present();
+        this.appCtrl.getRootNav().push(QuickStartGuide);
+        // this.modalCtrl.create(QuickStartGuide).present();
     }
 
 

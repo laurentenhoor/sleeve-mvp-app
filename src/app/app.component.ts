@@ -9,9 +9,6 @@ import { QuickStart } from '../pages/quick-start/quick-start';
 import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
 
 import { Sessions } from '../providers/sessions';
-import { Feeding } from '../pages/quick-start-guide/feeding/feeding';
-import { Wiggle } from '../pages/quick-start-guide/wiggle/wiggle';
-import { RemoveCap } from '../pages/quick-start-guide/remove-cap/remove-cap';
 
 @Component({
   templateUrl: 'app.html'
@@ -31,8 +28,8 @@ export class MyApp {
       if (platform.is('cordova')) {
         statusBar.styleDefault();
         splashScreen.hide();
+  
       }
-
       sessionsService.setSession();
 
     });

@@ -36,11 +36,6 @@ export class Timeline implements OnInit {
     public sleevesService: Sleeves,
     public loadingCtrl: LoadingController,
   ) {
-
-    // setTimeout(() => {
-    //   this.fakeScan = true;
-    //   this.events.publish('availableFeeds', 1);
-    // }, 2000);
     this.feeds = this.feedsService.getFeeds();
     this.synchronizeFeeds();
     // this.sleevesService.disconnectAll();
@@ -54,11 +49,6 @@ export class Timeline implements OnInit {
 
   synchronizeFeeds() {
 
-    // this.sleevesService.connect('D93B40F4-C938-4070-B03E-22AADD33A00B', () => {
-    //   this.sleevesService.fixedFeedData().then(feedData => {
-    //     console.log('feedData', feedData)
-    //   }, error => console.log(error)).catch(error => console.error(error));
-    // })
 
     this.sleevesService.getPairedSleeves().then(pairedSleeves => {
       if (pairedSleeves.length == 0) {
@@ -105,45 +95,13 @@ export class Timeline implements OnInit {
     return moment(timestamp).fromNow();
   }
 
-  addFakeFeeds() {
-    var self = this;
-
-    function generateFeed() {
-      return {
-        type: 'smart',
-        timestamp: Date.now(),
-        date: new Date(),
-        amount: Math.random() * 210,
-        sessionId: self.sessionsService.getSessionId()
-      }
-    }
-    this.events.publish('availableFeeds', 0);
-
-    this.feedsService.createFeed(generateFeed());
-    setTimeout(() => {
-      this.applicationRef.tick();
-    }, 100);
-
-  }
-
   addFeed() {
     this.openFeedModal(null)
-    // this.sleevesService.disconnectAll();
-    // this.sleevesService.sendDownloadFeedRequest();
-    // this.sleevesService.feedData().then(data=>{console.log(data)})
   }
 
   openFeedModal(feed) {
     let feedInputModal = this.modalCtrl.create(FeedInput, { feed: feed });
     feedInputModal.present();
-  }
-
-  showUnderConstructionAlert() {
-    this.toastCtrl.create({
-      message: 'Coming Soon!',
-      position: 'top',
-      duration: 2000
-    }).present();
   }
 
 }

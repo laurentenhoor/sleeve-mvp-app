@@ -143,7 +143,9 @@ export class Sleeves {
             console.log('subscribeToState', this.connectedDeviceId)
             if (!this.sleeveConnected) {
                 observer.error('no sleeve connected');
+                return;
             }
+            console.error('here i am going to die!')
             this.ble.startNotification(this.connectedDeviceId,
                 '000030f3-0000-1000-8000-00805f9b34fb',
                 '000063eC-0000-1000-8000-00805f9b34fb'
