@@ -11,7 +11,7 @@
     <div style="text-align:center;width:100%;">
         <img (click)="feedDetected();" class="qsg-gif" src="assets/imgs/shark-milk.gif" />
 
-        <h1 ion-text>Start feeding</h1>
+        <h1 ion-text>Feeding</h1>
         <p>
             Hold the bottle in feeding position.<br>
             <b>After 5 seconds a feed will be detected.</b>
@@ -30,6 +30,6 @@
         </ion-icon>
         <ion-icon *ngIf="feedIsDetected" style="color:white;font-weight: bold" name="checkmark">
         </ion-icon>
-        {{ !feedIsDetected ? 'Waiting for feeding' : 'Feed detected' }}
+        {{ !feedIsDetected ? 'Waiting for Feeding' : 'Feed Detected' }}
     </button>
 </ion-footer>

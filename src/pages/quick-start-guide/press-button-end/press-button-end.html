@@ -12,7 +12,7 @@
         <img (click)="buttonPress();" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 8.1_Finish Feeding.gif" />
 
         <h1 ion-text>Finish a feed
-            <br>by pressing the button</h1>
+            <br>by Pressing the Button</h1>
         <p>
             Press the button shortly to finish the feed. The blinking white light indicates the Smart Bottle Sleeve is ready to measure
             the feed’s end volume.
@@ -27,6 +27,6 @@
         </ion-icon>
         <ion-icon *ngIf="buttonPressed" style="color:white;font-weight: bold" name="checkmark">
         </ion-icon>
-        {{ !buttonPressed ? 'Waiting for button press' : 'Button pressed' }}
+        {{ !buttonPressed ? 'Waiting for Button Press' : 'Button Pressed' }}
     </button>
 </ion-footer>

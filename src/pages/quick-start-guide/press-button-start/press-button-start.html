@@ -10,7 +10,7 @@
     <div style="text-align:center;width:100%;">
         <img (click)="buttonPress();" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 4.1_4.2_Press button.gif" />
 
-        <h1 ion-text>Press the button</h1>
+        <h1 ion-text>Press the Button</h1>
         <p>
             The blinking white light indicates that the tracker is ready to measure the feed’s start volume.
         </p>
@@ -25,6 +25,6 @@
         </ion-icon>
         <ion-icon *ngIf="buttonPressed" style="color:white;font-weight: bold" name="checkmark">
         </ion-icon>
-        {{ !buttonPressed ? 'Waiting for button press' : 'Button pressed' }}
+        {{ !buttonPressed ? 'Waiting for Button Press' : 'Button Pressed' }}
     </button>
 </ion-footer>

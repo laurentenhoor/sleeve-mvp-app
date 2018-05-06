@@ -11,7 +11,7 @@
     <div style="text-align:center;width:100%;">
         <img (click)="weighingSuccessful();" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen-8.2_8.3_Finish-Feeding.gif" />
 
-        <h1 ion-text>Measure the volume</h1>
+        <h1 ion-text>Measure the Volume</h1>
         <p>
             The purple light indicates that the end volume of the feed was measured succesfully, and the feeding is finished.
         </p>
@@ -25,6 +25,6 @@
         </ion-icon>
         <ion-icon *ngIf="weighingDone" style="color:white;font-weight: bold" name="checkmark">
         </ion-icon>
-        {{ !weighingDone ? 'Waiting for end volume' : 'End volume measured' }}
+        {{ !weighingDone ? 'Waiting for End Volume' : 'End Volume Measured' }}
     </button>
 </ion-footer>
