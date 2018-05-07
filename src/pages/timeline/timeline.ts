@@ -39,7 +39,6 @@ export class Timeline implements OnInit {
     this.feeds = this.feedsService.getFeeds();
     this.synchronizeFeeds();
     // this.sleevesService.disconnectAll();
-
   }
 
   stopScanning() {

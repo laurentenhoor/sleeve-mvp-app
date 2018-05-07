@@ -20,7 +20,7 @@ export class Bluetooth {
   connectedDevice;
   currentState;
   latestFeed;
-  dataBuffer:string="";
+  dataBuffer: string = "";
 
   constructor(public navCtrl: NavController,
     private toastCtrl: ToastController,
@@ -152,8 +152,12 @@ export class Bluetooth {
     console.log('valueBytes', valueBytes);
 
     this.ble.write(deviceId,
-      '000030f0-0000-1000-8000-00805f9b34fb',
-      '000063e6-0000-1000-8000-00805f9b34fb',
+      // '000030f0-0000-1000-8000-00805f9b34fb',
+      // '000063e6-0000-1000-8000-00805f9b34fb',
+      '000030F0-0000-1000-8000-00805F9B34FB',
+      '000063E6-0000-1000-8000-00805F9B34FB',
+      // '30F0',
+      // '63E6',
       valueBytes)
       .then(data => {
         // this.alertCtrl.create({
@@ -263,6 +267,9 @@ export class Bluetooth {
   }
 
   forceBonding(peripheral) {
+
+    console.log('peripheral connected:', JSON.stringify(peripheral));
+
     this.ble.read(peripheral.id,
       peripheral.characteristics[0].service,
       peripheral.characteristics[0].characteristic).then(
@@ -277,6 +284,8 @@ export class Bluetooth {
     this.ble.write(deviceId,
       '000030F0-0000-1000-8000-00805F9B34FB',
       '000063E7-0000-1000-8000-00805F9B34FB',
+      // '30F0',
+      // '63E7,'
       this.stringToBytes('shrey')
     )
       .then(data => {
@@ -321,7 +330,7 @@ export class Bluetooth {
 
   onBleConnected(peripheral) {
     this.connectedDevice = peripheral;
-    // this.forceBonding(peripheral);
+    this.forceBonding(peripheral);
     // this.subscribeToState(peripheral.id)
     // this.subscribeToFeedData(peripheral);
 

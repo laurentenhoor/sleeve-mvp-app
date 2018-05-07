@@ -18,7 +18,7 @@ export class WeighingStart {
     try {
       this.sleevesService.state().subscribe(state => {
         console.log('state received', state);
-        if (state === '0000') {
+        if (state === '0900') {
           this.weighingSuccessful();
         }
       })

@@ -10,7 +10,6 @@ export class BlePacketParser {
 
     bufferToPackages(payloadBuffer: ArrayBuffer) {
         var outputPackages: ArrayBuffer[] = [];
-        console.log(outputPackages)
 
         var amountOfPackages = Math.ceil(payloadBuffer.byteLength / this.BLE_PAYLOAD_SIZE)
         

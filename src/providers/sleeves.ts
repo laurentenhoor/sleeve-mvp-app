@@ -274,7 +274,7 @@ export class Sleeves {
 
     onDeviceDiscovered(device, successCallback) {
         console.log('discovered', JSON.stringify(device))
-        if (device.name == this.defaultSleeveName) {
+        if (device.name == this.defaultSleeveName && device.id != '6710B20A-EE92-44C1-B9B9-684D7B6E1F5D') {
             this.ble.stopScan();
             console.log('Found a bottle sleeve', device.id)
             this.connect(device.id, successCallback);

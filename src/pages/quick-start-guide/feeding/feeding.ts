@@ -17,6 +17,7 @@ export class Feeding {
   ) {
     try {
       this.sleevesService.state().subscribe(state => {
+        console.log('received state', state);
         if (state === '0400') {
           this.feedDetected();
         }
