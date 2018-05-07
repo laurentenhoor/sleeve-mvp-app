@@ -135,9 +135,6 @@ export class Sleeves {
         })
     }
 
-
-    
-
     state(): Observable<any> {
         return Observable.create(observer => {
             console.log('subscribeToState', this.connectedDeviceId)
@@ -145,27 +142,13 @@ export class Sleeves {
                 observer.error('no sleeve connected');
                 return;
             }
-            console.error('here i am going to die!')
             this.ble.startNotification(this.connectedDeviceId,
                 '000030f3-0000-1000-8000-00805f9b34fb',
                 '000063eC-0000-1000-8000-00805f9b34fb'
             ).subscribe(data => {
                 let value = this.bufferToHex(data);
                 console.log('state value hex: ', value)
-                console.log('state value in int:', new Uint8Array(data).values())
-                console.log('state value string', this.bytesToString(data).toString())
-                console.log('state value raw:', data)
                 observer.next(value)
-
-                new Uint8Array(data).forEach((a, b)=>{
-                    console.log(a, b);
-                })
-                
-                if (value == '0500') {
-                    // console.log('disconnect at a specific state')
-                    // this.disconnectAll();
-                }
-
             }, error => {
                 console.error('state', error);
                 observer.error('receiving state');
