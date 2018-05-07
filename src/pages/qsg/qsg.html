@@ -31,8 +31,8 @@
             <h2>{{item.title}}</h2>
             <p>{{item.description}}</p>
 
-            <div *ngIf="qsgStep == item.index" item-end (click)="qsgStep=qsgStep+1">
-                <button *ngIf="!item.automatic" ion-button clear>
+            <div *ngIf="qsgStep == item.index" item-end>
+                <button *ngIf="!item.automatic" (click)="nextStep();" ion-button clear>
                     Done
                 </button>
                 <ion-spinner *ngIf="item.automatic" name="dots"></ion-spinner>

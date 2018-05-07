@@ -32,20 +32,21 @@ export class Connecting {
             .subscribe(connectedSleeve => {
                 console.log('Successfully connected to a sleeve', connectedSleeve)
                 this.sleevesService.storeSleeve(connectedSleeve);
-                this.nav.pop();
-                this.modalCtrl.create(QuickStartGuide).present();
+                this.openQsg();
             }, error => {
                 console.error(error);
             })
     }
 
-    demo() {
-        // this.sleevesService.storeSleeve(this.generateUuid());
+    openQsg() {
         this.nav.pop();
         this.appCtrl.getRootNav().push(Qsg);
-        // this.modalCtrl.create(QuickStartGuide).present();
+        // this.modalCtrl.create(Qsg).present();
     }
 
+    demo() {
+        // this.openQsg();
+    }
 
     checkBluetooth() {
         this.sleevesService.isBluetoothEnabled()
