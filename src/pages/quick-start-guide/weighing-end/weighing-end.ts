@@ -20,7 +20,7 @@ export class WeighingEnd {
         console.log('state received', state);
         if (state === '0900') {
           this.weighingSuccessful();
-        }
+        } 
       })
     } catch (error) {
       console.error(error)

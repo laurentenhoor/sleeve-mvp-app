@@ -18,7 +18,7 @@ export class Wiggle {
     try {
       this.sleevesService.state().subscribe(state => {
         console.log('state received', state);
-        if (state === '0000') {
+        if (state === '0b00') {
           this.wiggleDetected();
         }
       })

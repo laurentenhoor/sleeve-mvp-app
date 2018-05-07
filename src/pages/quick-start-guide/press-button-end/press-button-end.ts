@@ -19,7 +19,7 @@ export class PressButtonEnd {
     try {
       this.sleevesService.state().subscribe(state => {
         console.log('state received', state);
-        if (state === '0600') {
+        if (state === '0c00') {
           this.buttonPress();
         }
       })

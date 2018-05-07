@@ -17,7 +17,7 @@ export class Sleeves {
 
     constructor(
         private ble: BLE,
-        private feedsSeverice: Feeds,
+        private feedsService: Feeds,
     ) {
         this.localDb = new PouchDB('sleeves');
         this.defaultSleeveName
@@ -239,7 +239,7 @@ export class Sleeves {
             ).subscribe(data => {
                 let feedData = this.bytesToString(data);
                 console.log('received feed data', feedData)
-                this.feedsSeverice.createFeedFromSleeve(feedData);
+                this.feedsService.createFeedFromSleeve(feedData);
                 resolve(feedData);
                 this.disconnectAll();
             }, error => {

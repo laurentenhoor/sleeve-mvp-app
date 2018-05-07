@@ -47,8 +47,6 @@ export class Timeline implements OnInit {
   }
 
   synchronizeFeeds() {
-
-
     this.sleevesService.getPairedSleeves().then(pairedSleeves => {
       if (pairedSleeves.length == 0) {
         this.modalCtrl.create(Connecting).present();
@@ -59,7 +57,6 @@ export class Timeline implements OnInit {
         }).catch(error => {
           console.error(error);
         })
-
       }
     })
   }
