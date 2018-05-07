@@ -19,19 +19,25 @@
             {{ category.category }}
         </ion-item-divider>
 
-        <ion-item *ngFor="let item of category.items" [ngClass]="{'disabled' : qsgStep != item.index}">
+        <ion-item *ngFor="let item of category.items" [ngClass]="{'disabled' : qsgStep != item.index, 
+                                                                'green':item.index==2 && qsgStep>2, 
+                                                                'purple':item.index==4 && qsgStep>4}">
+
             <ion-icon *ngIf="qsgStep > item.index" item-start name="checkmark"></ion-icon>
             <ion-thumbnail *ngIf="qsgStep == item.index" item-start>
                 <img src="{{item.image}}">
             </ion-thumbnail>
+
             <h2>{{item.title}}</h2>
             <p>{{item.description}}</p>
+
             <div *ngIf="qsgStep == item.index" item-end (click)="qsgStep=qsgStep+1">
                 <button *ngIf="!item.automatic" ion-button clear>
                     Done
                 </button>
                 <ion-spinner *ngIf="item.automatic" name="dots"></ion-spinner>
             </div>
+
         </ion-item>
 
     </ion-item-group>

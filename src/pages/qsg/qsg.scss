@@ -1,3 +1,19 @@
 .disabled {
-    opacity:0.4;
+    opacity: 0.4;
+}
+
+.green {
+    background-color: lightgreen;
+    opacity: 1 !important;
+    * {
+        color: white !important;
+    }
+}
+
+.purple {
+    background-color: purple;
+    opacity: 1 !important;
+    * {
+        color: white !important;
+    }
 }

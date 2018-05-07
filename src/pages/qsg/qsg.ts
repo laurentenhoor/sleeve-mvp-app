@@ -2,7 +2,6 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Sleeves, SleeveStates } from '../../providers/sleeves';
-import { LifecycleHooks } from '@angular/compiler/src/lifecycle_reflector';
 
 @Component({
     selector: 'qsg',
@@ -62,6 +61,45 @@ export class Qsg {
         private sleevesService: Sleeves,
         private zone: NgZone
     ) {
+        
+    }
+
+    ionViewDidLoad() {
+        this.sleevesService.scanAndConnect().subscribe(() => {
+            this.sleevesService.state().subscribe(state => {
+                switch (state) {
+                    case SleeveStates.DEVICE_FEEDING_EXPECTED:
+                        this.initStartWeighing();
+                        break;
+                    case SleeveStates.DEVICE_WEIGHING_COMPLETED:
+                        if (this.qsgStep == 2) {
+                            this.completeStartWeighing();
+                        }
+                        break;
+                    case SleeveStates.DEVICE_FEEDING:
+                        this.zone.run(() => {
+                            console.log('init Feeding State')
+                            this.qsgStep = 4;
+                        })
+                        break;
+                    case SleeveStates.DEVICE_BUTTON_PRESS:
+                        if (this.qsgStep == 4) {
+                            this.initEndWeighing();
+                        }
+                        break;
+                    case SleeveStates.DEVICE_FEEDING_END:
+                        this.closeFeed();
+                        break;
+                }
+            }, error => {
+                console.error('no states available', error)
+            })
+            this.sleevesService.feedData().then(feedData => {
+                console.log('feeddata from QSG')
+            }, error => {
+                console.error(error)
+            })
+        })
     }
 
     initStartWeighing() {
@@ -94,52 +132,12 @@ export class Qsg {
     }
 
     closeFeed() {
-        this.zone.run(()=>{
+        this.zone.run(() => {
             console.log('init Feeding State')
             this.qsgStep = 5;
             let item = this.qsgItems[3].items[0];
             item.title = "Measure volume";
             item.description = "Awesome!";
-        })
-    }
-
-    ionViewDidEnter() {
-        this.sleevesService.scanAndConnect().subscribe(() => {
-            this.sleevesService.state().subscribe(state => {
-                console.log('Received state from sleeve:', state)
-
-                switch (state) {
-                    case SleeveStates.DEVICE_FEEDING_EXPECTED:
-                        this.initStartWeighing();
-                        break;
-                    case SleeveStates.DEVICE_WEIGHING_COMPLETED:
-                        if (this.qsgStep == 2) {
-                            this.completeStartWeighing();
-                        }
-                        break;
-                    case SleeveStates.DEVICE_FEEDING:
-                        this.zone.run(()=>{
-                            console.log('init Feeding State')
-                            this.qsgStep = 4;
-                        })
-                        break;
-                    case SleeveStates.DEVICE_BUTTON_PRESS:
-                        if (this.qsgStep == 4) {
-                            this.initEndWeighing();
-                        }
-                        break;
-                    case SleeveStates.DEVICE_FEEDING_END:
-                        this.closeFeed();
-                        break;
-                }
-            }, error => {
-                console.error('no states available', error)
-            })
-            this.sleevesService.feedData().then(feedData => {
-                console.log('feeddata from QSG')
-            }, error => {
-                console.error(error)
-            })
         })
     }
 

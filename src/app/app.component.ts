@@ -16,7 +16,7 @@ import { Bluetooth } from '../pages/bluetooth/bluetooth';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = Qsg;
+  rootPage: any = Tabs;
 
   constructor(
     platform: Platform,
@@ -29,8 +29,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       if (platform.is('cordova')) {
         statusBar.styleDefault();
-        splashScreen.hide();
-  
+        splashScreen.hide();  
       }
       sessionsService.setSession();
 
