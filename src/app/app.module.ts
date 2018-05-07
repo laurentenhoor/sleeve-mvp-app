@@ -15,6 +15,7 @@ import { FeedInput } from '../pages/feed-input/feed-input';
 
 import { Connecting } from '../pages/connecting/connecting';
 import { QuickStart } from '../pages/quick-start/quick-start';
+import { Qsg } from '../pages/qsg/qsg';
 
 import { Feeds } from '../providers/feeds';
 import { Sessions } from '../providers/sessions';
@@ -56,6 +57,7 @@ import { PressButtonEnd } from '../pages/quick-start-guide/press-button-end/pres
     Wiggle,
     PressButtonEnd,
     WeighingEnd,
+    Qsg,
   ],
   imports: [
     BrowserModule,
@@ -81,6 +83,7 @@ import { PressButtonEnd } from '../pages/quick-start-guide/press-button-end/pres
     Wiggle,
     PressButtonEnd,
     WeighingEnd,
+    Qsg,
   ],
   providers: [
     StatusBar,

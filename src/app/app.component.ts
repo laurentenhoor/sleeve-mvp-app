@@ -9,12 +9,13 @@ import { QuickStart } from '../pages/quick-start/quick-start';
 import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
 
 import { Sessions } from '../providers/sessions';
+import { Qsg } from '../pages/qsg/qsg';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = Tabs;
+  rootPage: any = Qsg;
 
   constructor(
     platform: Platform,
