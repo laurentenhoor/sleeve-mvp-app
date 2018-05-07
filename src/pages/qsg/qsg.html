@@ -13,80 +13,27 @@
 </ion-header>
 
 <ion-content>
-    <ion-list no-border>
+    <ion-item-group no-border *ngFor="let category of qsgItems">
 
-        <ion-list-header>
-            Preparation
-        </ion-list-header>
+        <ion-item-divider>
+            {{ category.category }}
+        </ion-item-divider>
 
-        <ion-item *ngFor="let item of qsgItems" [ngClass]="{'disabled' : qsgStep != item.index}">
+        <ion-item *ngFor="let item of category.items" [ngClass]="{'disabled' : qsgStep != item.index}">
             <ion-icon *ngIf="qsgStep > item.index" item-start name="checkmark"></ion-icon>
             <ion-thumbnail *ngIf="qsgStep == item.index" item-start>
                 <img src="{{item.image}}">
             </ion-thumbnail>
             <h2>{{item.title}}</h2>
             <p>{{item.description}}</p>
-            <button *ngIf="qsgStep == item.index" ion-button clear item-end (click)="qsgStep=qsgStep+1">Done</button>
+            <div *ngIf="qsgStep == item.index" item-end (click)="qsgStep=qsgStep+1">
+                <button *ngIf="!item.automatic" ion-button clear>
+                    Done
+                </button>
+                <ion-spinner *ngIf="item.automatic" name="dots"></ion-spinner>
+            </div>
         </ion-item>
 
-      
-    </ion-list>
+    </ion-item-group>
 
-
-    <ion-list>
-
-        <ion-list-header>
-            Feeding
-        </ion-list-header>
-
-
-        <ion-item [ngClass]="{'disabled' : qsgStep != 2}">
-            <ion-thumbnail item-end>
-                <img src="assets/imgs/qsg/small/QSG_Screen 4.1_4.2_Press button.gif">
-            </ion-thumbnail>
-            <h2>Press the Button</h2>
-            <p></p>
-            <button ion-button clear item-end (click)="qsgStep=3">Done</button>
-        </ion-item>
-
-        <ion-item [ngClass]="{'disabled' : qsgStep != 3}">
-            <ion-thumbnail item-end>
-                <img src="assets/imgs/qsg/small/QSG_Screen 5.1_Measure start volume.gif">
-            </ion-thumbnail>
-            <h2>Place it on the table</h2>
-            <p></p>
-            <button ion-button clear item-end (click)="qsgStep=4">Done</button>
-        </ion-item>
-
-
-
-
-    </ion-list>
-
-    <ion-list>
-
-        <ion-list-header>
-            Friends
-        </ion-list-header>
-
-        <ion-item>
-            <ion-icon name='flash' item-start></ion-icon>
-            Harry
-            <ion-note item-end>The boy who lived</ion-note>
-        </ion-item>
-
-        <ion-item>
-            <ion-icon name='book' item-start></ion-icon>
-            Hermoine
-            <ion-note item-end>Muggle-born</ion-note>
-        </ion-item>
-
-        <ion-item>
-            <ion-icon name='beer' item-start></ion-icon>
-            Ron
-            <ion-note item-end>Brilliant!</ion-note>
-        </ion-item>
-
-
-    </ion-list>
 </ion-content>

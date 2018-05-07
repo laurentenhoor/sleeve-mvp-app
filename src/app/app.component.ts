@@ -10,6 +10,7 @@ import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
 
 import { Sessions } from '../providers/sessions';
 import { Qsg } from '../pages/qsg/qsg';
+import { Bluetooth } from '../pages/bluetooth/bluetooth';
 
 @Component({
   templateUrl: 'app.html'

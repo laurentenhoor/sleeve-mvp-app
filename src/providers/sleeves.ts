@@ -6,6 +6,24 @@ import PouchDB from 'pouchdb';
 import { Observable } from 'rxjs/Observable';
 import { Feeds } from './feeds';
 
+export
+    enum SleeveStates {
+    DEVICE_STATE_NONE = 0,
+    BLE_ADVERTISING = 1,
+    BLE_PAIRED_AND_BONDED = 2,
+    DEVICE_FEEDING_EXPECTED = 3,
+    DEVICE_FEEDING = 4,
+    DEVICE_FEEDING_PAUSED = 5,
+    DEVICE_FEEDING_END = 6,
+    DEVICE_RESET = 7,
+    BLE_DISCONNECTED = 8,
+    DEVICE_WEIGHING_COMPLETED = 9,
+    DEVICE_VERTICAL_STABLE = 10,
+    DEVICE_WIGGLING = 11,
+    DEVICE_BUTTON_PRESS = 12,
+    DEVICE_WEIGHING_TIMEOUT = 13
+}
+
 @Injectable()
 export class Sleeves {
     private localDb: any;
@@ -14,6 +32,7 @@ export class Sleeves {
     private sleeveConnected: boolean;
     private pairedSleeves: any[];
     public isScanning: boolean = false;
+    public dataBuffer: string = "";
 
     constructor(
         private ble: BLE,
@@ -30,11 +49,11 @@ export class Sleeves {
         this.localDb.remove(sleeve)
     }
 
-    isBluetoothEnabled():Promise<any> {
+    isBluetoothEnabled(): Promise<any> {
         return new Promise((resolve, reject) => {
             this.ble.isEnabled().then(() => {
                 resolve();
-            }).catch(()=>{
+            }).catch(() => {
                 reject();
             })
         })
@@ -147,8 +166,10 @@ export class Sleeves {
                 '000063eC-0000-1000-8000-00805f9b34fb'
             ).subscribe(data => {
                 let value = this.bufferToHex(data);
+                let decimalValue = parseInt(value, 16);
                 console.log('state value hex: ', value)
-                observer.next(value)
+                // console.log('state value dec: ', decimalValue)
+                observer.next(decimalValue)
             }, error => {
                 console.error('state', error);
                 observer.error('receiving state');
@@ -210,6 +231,20 @@ export class Sleeves {
         }
     }
 
+    handleData(data: ArrayBuffer) {
+        let part: string = this.bytesToString(data);
+        console.log('new data chunk', part)
+        try {
+            this.dataBuffer = this.dataBuffer + part;
+            console.log('new databuffer', this.dataBuffer)
+            JSON.parse(this.dataBuffer);
+            return true;
+        } catch (error) {
+            console.error(error)
+            return false;
+        }
+    }
+
     feedData(): Promise<any> {
         return new Promise((resolve, reject) => {
             console.log('subscribeToFeedData', this.connectedDeviceId)
@@ -220,11 +255,13 @@ export class Sleeves {
                 '000030F0-0000-1000-8000-00805F9B34FB',
                 '000063E7-0000-1000-8000-00805F9B34FB'
             ).subscribe(data => {
-                let feedData = this.bytesToString(data);
-                console.log('received feed data', feedData)
-                this.feedsService.createFeedFromSleeve(feedData);
-                resolve(feedData);
-                this.disconnectAll();
+                if (this.handleData(data)) {
+                    console.log('successfully consolidated a JSON:', this.dataBuffer)
+                    this.feedsService.createFeedFromSleeve(this.dataBuffer);
+                    resolve(this.dataBuffer);
+                    this.dataBuffer = "";
+                    this.disconnectAll();
+                }
             }, error => {
                 console.error('error while receiving feedData', error)
                 reject('unable to receive feedData');
@@ -257,12 +294,13 @@ export class Sleeves {
 
     onDeviceDiscovered(device, successCallback) {
         console.log('discovered', JSON.stringify(device))
-        if (device.name == this.defaultSleeveName && device.id != '6710B20A-EE92-44C1-B9B9-684D7B6E1F5D') {
+        if (device.name == this.defaultSleeveName && device.id != '6710B20A-EE92-44C1-B9B9-684D7B6E1F5D') { //SHREYDEVICE// && device.id != 'D7832B16-8B21-4BCB-906C-0B6779BB18D8'
             this.ble.stopScan();
             console.log('Found a bottle sleeve', device.id)
             this.connect(device.id, successCallback);
         }
     }
+
 
     forceBonding(peripheral) {
         console.log('force bonding')
@@ -306,8 +344,9 @@ export class Sleeves {
     }
 
     bufferToHex(buffer: ArrayBuffer) {
-        return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+        return Array.prototype.map.call(new Uint16Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
     }
+
 
     // ASCII only
     stringToBytes(string) {
