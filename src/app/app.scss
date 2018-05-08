@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -16,28 +14,32 @@
 // automatically applied to the <body> element in the app.
 ion-icon {
     &[class*="philips-"] {
-      mask-size: contain;
-      mask-position: 50% 50%;
-      mask-repeat: no-repeat;
-      background: currentColor;
-      width: 1em;
-      height: 1em;
+        mask-size: contain;
+        mask-position: 50% 50%;
+        mask-repeat: no-repeat;
+        background: currentColor;
+        width: 1em;
+        height: 1em;
     }
-  
     &[class*="philips-baby-bottle"] {
-      mask-image: url(../assets/icon/baby-bottle.svg);
-    }
-    
-  }
-
-.range-tick {
-  display:none;
+        mask-image: url(../assets/icon/baby-bottle.svg);
+    }    
 }
 
+.range-tick {
+    display: none;
+}
 
-.vertical-align-content > *
-{
-     display: flex!important;
-     align-content: center!important;
-     align-items: center!important;
+ion-thumbnail img {
+    object-fit: cover !important;
+    border-radius:5px;
+    // animation-play-state: paused;
+    width:90px !important;
+    height:90px !important;
+}
+
+.vertical-align-content>* {
+    display: flex !important;
+    align-content: center !important;
+    align-items: center !important;
 }

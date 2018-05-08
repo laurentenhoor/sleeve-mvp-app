@@ -8,7 +8,7 @@ import { Feeds } from './feeds';
 
 export
     enum SleeveStates {
-    DEVICE_STATE_NONE = 0,
+    DEVICE_STATE_NONE = 0, //Don't add anything before this
     BLE_ADVERTISING = 1,
     BLE_PAIRED_AND_BONDED = 2,
     DEVICE_FEEDING_EXPECTED = 3,
@@ -20,8 +20,10 @@ export
     DEVICE_WEIGHING_COMPLETED = 9,
     DEVICE_VERTICAL_STABLE = 10,
     DEVICE_WIGGLING = 11,
-    DEVICE_BUTTON_PRESS = 12,
-    DEVICE_WEIGHING_TIMEOUT = 13
+    BUTTON_PRESSED = 12,
+    DEVICE_WEIGHING_TIMEOUT = 13,
+    VERTICAL_STABLE = 14,
+    DEVICE_STATE_LAST = 15 //increment this number and all states before this
 }
 
 @Injectable()
@@ -167,8 +169,8 @@ export class Sleeves {
             ).subscribe(data => {
                 let value = this.bufferToHex(data);
                 let decimalValue = parseInt(value, 16);
-                console.log('state value hex: ', value)
-                // console.log('state value dec: ', decimalValue)
+                // console.log('Reveived state: ', value)
+                console.log('Reveived state: ', decimalValue)
                 observer.next(decimalValue)
             }, error => {
                 console.error('state', error);
@@ -176,6 +178,8 @@ export class Sleeves {
             })
         })
     }
+
+    
 
     stopScanning() {
         this.isScanning = false;

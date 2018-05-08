@@ -19,27 +19,54 @@
             {{ category.category }}
         </ion-item-divider>
 
-        <ion-item *ngFor="let item of category.items" [ngClass]="{'disabled' : qsgStep != item.index, 
-                                                                'green':item.index==2 && qsgStep>2, 
-                                                                'purple':item.index==4 && qsgStep>4}">
+        <div *ngFor="let item of category.items">
 
-            <ion-icon *ngIf="qsgStep > item.index" item-start name="checkmark"></ion-icon>
-            <ion-thumbnail *ngIf="qsgStep == item.index" item-start>
-                <img src="{{item.image}}">
-            </ion-thumbnail>
+           
 
-            <h2>{{item.title}}</h2>
-            <p>{{item.description}}</p>
+            <ion-item [ngClass]="{'disabled' : qsgStep != item.index, 
+                                'green':item.index==2 && qsgStep>2, 
+                                'purple':item.index==4 && qsgStep>4}">
 
-            <div *ngIf="qsgStep == item.index" item-end>
-                <button *ngIf="!item.automatic" (click)="nextStep();" ion-button clear>
-                    Done
-                </button>
-                <ion-spinner *ngIf="item.automatic" name="dots"></ion-spinner>
-            </div>
 
-        </ion-item>
+                <ion-icon *ngIf="qsgStep < item.index" item-start name="radio-button-off"></ion-icon>
+                <ion-icon *ngIf="qsgStep == item.index" item-start name="radio-button-on"></ion-icon>
+                <ion-icon *ngIf="qsgStep > item.index" item-start name="checkmark-circle-outline"></ion-icon>
+                <ion-thumbnail *ngIf="qsgStep == item.index" item-end>
+                    <img src="{{item.image}}">
+                </ion-thumbnail>
+                <!-- <ion-icon *ngIf="qsgStep > item.index" item-end name="checkmark" color="secondary"></ion-icon> -->
+                <!-- <ion-thumbnail  *ngIf="qsgStep > item.index" item-start>
+                        <ion-icon name="checkmark"></ion-icon>
+                </ion-thumbnail> -->
+                <h2>{{item.title}}</h2>
+                <p>{{item.description}}</p>
+                <div *ngIf="qsgStep == item.index">
+                    <button *ngIf="!item.automatic" (click)="nextStep();" ion-button style="" outline >
+                        Done
+                    </button>
+                    <button *ngIf="item.automatic" ion-button outline color="light" (click)="nextStep();" >
+                        <ion-spinner name="dots"></ion-spinner>
+                    </button>
+                    
+                </div>
+
+
+
+
+            </ion-item>
+
+            <ion-item-divider color="danger" *ngIf="item.alertMessage">
+                    <ion-icon name="alert" item-start></ion-icon> {{ item.alertMessage }}
+                    <button ion-button item-end outline color="light">More help</button>
+                </ion-item-divider>
+
+                
+            <!-- <div *ngIf="qsgStep == item.index" style="margin:20px;">
+                <img src="{{item.image}}" style="border-radius:20px;">
+            </div> -->
+
+
+        </div>
 
     </ion-item-group>
-
 </ion-content>

@@ -1,7 +1,8 @@
 
 import { Component, NgZone } from '@angular/core';
-import { NavController, Tabs } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { Sleeves, SleeveStates } from '../../providers/sleeves';
+import { Tabs } from '../tabs/tabs';
 
 @Component({
     selector: 'qsg',
@@ -19,7 +20,8 @@ export class Qsg {
             automatic: false
         }, {
             index: 1,
-            image: 'assets/imgs/qsg/small/QSG_Screen-3.0_Insert-Bottle.gif',
+            // image: 'assets/imgs/qsg/small/QSG_Screen-3.0_Insert-Bottle.gif',
+            image: 'assets/imgs/qsg/small/Smartsleeve_teaser_2.gif',
             title: 'Insert the bottle',
             description: 'Keep it attached while feeding',
             automatic: false
@@ -28,17 +30,16 @@ export class Qsg {
         category: 'Volume check-in',
         items: [{
             index: 2,
-            image: 'assets/imgs/qsg/small/QSG_Screen 4.1_4.2_Press button.gif',
+            image: 'assets/imgs/qsg/small/QSG_Screen-5.1_5.2_B-Weight-start-volume-on-table_cropped.gif',
             title: 'Press the button',
             description: 'While standing on a surface',
             automatic: true
         }]
-    }
-        , {
+    }, {
         category: 'Feeding',
         items: [{
             index: 3,
-            image: 'assets/imgs/shark-milk.gif',
+            image: 'assets/imgs/qsg/small/Smartsleeve_teaser_3.gif',
             title: 'Feed your little one',
             description: 'At least five seconds',
             automatic: true
@@ -52,7 +53,6 @@ export class Qsg {
             description: 'While standing on a surface',
             automatic: true
         }]
-
     }
     ]
 
@@ -62,6 +62,10 @@ export class Qsg {
         private zone: NgZone
     ) {
 
+    }
+
+    showError(item) {
+        item['alertMessage'] = "Retry on a flat hard surface"
     }
 
     ionViewDidLoad() {
@@ -81,7 +85,7 @@ export class Qsg {
                         this.qsgStep = 4;
                     })
                     break;
-                case SleeveStates.DEVICE_BUTTON_PRESS:
+                case SleeveStates.BUTTON_PRESSED:
                     if (this.qsgStep == 4) {
                         this.initEndWeighing();
                     }
@@ -100,11 +104,58 @@ export class Qsg {
         })
     }
 
-    nextStep(){
+    nextStep() {
         this.zone.run(() => {
-            this.qsgStep = this.qsgStep+1;
+            this.qsgStep = this.qsgStep + 1;
+        })
+        if (this.qsgStep == 2) {
+            this.startWeighingSimulation();
+        }
+    }
+
+    startWeighingSimulation() {
+        let self = this;
+        let item = self.qsgItems[1].items[0];
+        setTimeout(() => {
+            self.initStartWeighing();
+            setTimeout(() => {
+                this.showError(item)
+                self.zone.run(() => {
+                    console.log('init start weighing');
+                    self.qsgStep = 2;
+                    item.title = "Press the button";
+                    item.description = "While standing on a surface";
+                    item.image = 'assets/imgs/qsg/small/QSG_Screen-5.1_5.2_B-Weight-start-volume-on-table_cropped.gif';
+                })
+                setTimeout(() => {
+                    item['alertMessage'] = "";
+                    self.initStartWeighing();
+                    setTimeout(() => {
+                        self.completeStartWeighing();
+
+                        setTimeout(()=>{
+
+                            self.zone.run(() => {
+                                console.log('init end weighing');
+                                self.qsgStep = 4;
+                                
+                            });
+                        },6000)
+                    }, 2000)
+                }, 7000)
+            }, 7000)
+        }, 4000)
+    }
+
+
+    timeout(timeout:number):Promise<any>{
+        return new Promise((resolve)=>{
+            setTimeout(()=>{
+                resolve()
+            },timeout)
         })
     }
+    
 
     initStartWeighing() {
         this.zone.run(() => {
@@ -113,6 +164,10 @@ export class Qsg {
             let item = this.qsgItems[1].items[0];
             item.title = "Busy measuring...";
             item.description = "Make sure it's on a surface";
+            // item.image = "https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/08/1501862810blinking-eye-quake.gif";
+            // item.image = 'https://cdn.dribbble.com/users/4613/screenshots/911982/jar-loading.gif';
+            // item.image = 'https://cdn.dribbble.com/users/396000/screenshots/2144427/liquid-dribbble.gif';
+            item.image = 'assets/imgs/qsg/small/QSG_Measuring.gif';
         })
     }
 
