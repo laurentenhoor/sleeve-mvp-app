@@ -20,6 +20,7 @@ export class WeighingEnd {
         console.log('state received', state);
         if (state === SleeveStates.DEVICE_WEIGHING_COMPLETED) {
           this.weighingSuccessful();
+          this.sleevesService.disconnectAll();
         } 
       })
     } catch (error) {

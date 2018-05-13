@@ -40,8 +40,8 @@ export class Connecting {
 
     openQsg() {
         this.nav.pop();
-        this.appCtrl.getRootNav().push(QuickStartGuide);
-        // this.modalCtrl.create(Qsg).present();
+        // this.appCtrl.getRootNav().push(QuickStartGuide);
+        this.modalCtrl.create(Qsg).present();
     }
 
     demo() {

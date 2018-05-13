@@ -40,8 +40,8 @@ export class Timeline implements OnInit {
     public loadingCtrl: LoadingController,
   ) {
     this.feeds = this.feedsService.getFeeds();
-    // this.synchronizeFeeds();
-    // this.sleevesService.disconnectAll();
+    this.sleevesService.disconnectAll();
+    this.synchronizeFeeds();
   }
 
   stopScanning() {
@@ -83,7 +83,7 @@ export class Timeline implements OnInit {
   }
 
   ionViewDidLoad() {
-    
+
   }
   ngOnInit() {
   }

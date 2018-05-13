@@ -232,13 +232,13 @@ export class Qsg {
             item.title = "Measure volume";
             item.description = "Awesome!";
         })
+        this.sleevesService.disconnectAll();
         setTimeout(()=>{
             this.closeModal();    
-        },2000)
+        },1000)
     }
 
     closeModal() {
-        this.sleevesService.disconnectAll();
         this.nav.setRoot(Tabs);
     }
 
