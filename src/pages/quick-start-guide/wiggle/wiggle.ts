@@ -1,6 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { Sleeves } from '../../../providers/sleeves';
+import { Sleeves, SleeveStates } from '../../../providers/sleeves';
 import { PressButtonEnd } from '../press-button-end/press-button-end';
 
 @Component({
@@ -18,7 +18,7 @@ export class Wiggle {
     try {
       this.sleevesService.state().subscribe(state => {
         console.log('state received', state);
-        if (state === '0b00') {
+        if (state === SleeveStates.DEVICE_WIGGLING) {
           this.wiggleDetected();
         }
       })

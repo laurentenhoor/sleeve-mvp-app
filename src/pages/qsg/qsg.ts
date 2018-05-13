@@ -70,6 +70,7 @@ export class Qsg {
 
     ionViewDidLoad() {
         this.sleevesService.state().subscribe(state => {
+            this.hideErrors();
             switch (state) {
                 case SleeveStates.DEVICE_FEEDING_EXPECTED:
                     this.initStartWeighing();
@@ -90,6 +91,13 @@ export class Qsg {
                         this.initEndWeighing();
                     }
                     break;
+                case SleeveStates.DEVICE_WEIGHING_TIMEOUT:
+                    if (this.qsgStep == 2) {
+                        this.showStartWeighError();
+                    } else {
+                        this.showEndWeighError();
+                    }
+                    break;
                 case SleeveStates.DEVICE_FEEDING_END:
                     this.closeFeed();
                     break;
@@ -104,13 +112,38 @@ export class Qsg {
         })
     }
 
+    hideErrors() {
+        this.qsgItems[1].items[0]['alertMessage'] = null;
+        this.qsgItems[3].items[0]['alertMessage'] = null;
+    }
+
     nextStep() {
         this.zone.run(() => {
             this.qsgStep = this.qsgStep + 1;
         })
-        if (this.qsgStep == 2) {
-            this.startWeighingSimulation();
-        }
+        // if (this.qsgStep == 2) {
+        //     this.startWeighingSimulation();
+        // }
+    }
+
+    showStartWeighError() {
+        this.zone.run(() => {
+            let item = this.qsgItems[1].items[0];
+            item['alertMessage'] = "Retry on a flat hard surface"
+            item.image = 'assets/imgs/qsg/small/QSG_Screen-5.1_5.2_B-Weight-start-volume-on-table_cropped.gif';
+            item.title ='Press the button';
+            item.description = 'While standing on a surface';
+        })
+    }
+
+    showEndWeighError() {
+        this.zone.run(() => {
+            let item = this.qsgItems[3].items[0];
+            item['alertMessage'] = "Retry on a flat hard surface";
+            item.image ='assets/imgs/qsg/small/QSG_Screen 4.1_4.2_Press button.gif';
+            item.title = 'Press the button';
+            item.description = 'While standing on a surface';
+        })
     }
 
     startWeighingSimulation() {
@@ -133,14 +166,14 @@ export class Qsg {
                     setTimeout(() => {
                         self.completeStartWeighing();
 
-                        setTimeout(()=>{
+                        setTimeout(() => {
 
                             self.zone.run(() => {
                                 console.log('init end weighing');
                                 self.qsgStep = 4;
-                                
+
                             });
-                        },6000)
+                        }, 6000)
                     }, 2000)
                 }, 7000)
             }, 7000)
@@ -148,14 +181,14 @@ export class Qsg {
     }
 
 
-    timeout(timeout:number):Promise<any>{
-        return new Promise((resolve)=>{
-            setTimeout(()=>{
+    timeout(timeout: number): Promise<any> {
+        return new Promise((resolve) => {
+            setTimeout(() => {
                 resolve()
-            },timeout)
+            }, timeout)
         })
     }
-    
+
 
     initStartWeighing() {
         this.zone.run(() => {
@@ -187,6 +220,7 @@ export class Qsg {
             let item = this.qsgItems[3].items[0];
             item.title = "Busy measuring...";
             item.description = "Make sure it's on a surface";
+            item.image = 'assets/imgs/qsg/small/QSG_Measuring.gif';
         })
     }
 
@@ -198,6 +232,9 @@ export class Qsg {
             item.title = "Measure volume";
             item.description = "Awesome!";
         })
+        setTimeout(()=>{
+            this.closeModal();    
+        },2000)
     }
 
     closeModal() {

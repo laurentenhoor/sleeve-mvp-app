@@ -1,5 +1,5 @@
-import { Component, NgZone, OnInit, ApplicationRef } from '@angular/core';
-import { NavController, Events } from 'ionic-angular';
+import { Component, NgZone, OnInit, ApplicationRef, ViewChild} from '@angular/core';
+import { NavController, Events, Content } from 'ionic-angular';
 import { ToastController, ModalController, LoadingController } from 'ionic-angular';
 import { Http } from '@angular/http';
 
@@ -12,12 +12,15 @@ import { Sessions } from '../../providers/sessions';
 import { Sleeves } from '../../providers/sleeves';
 import { Connecting } from '../connecting/connecting';
 import { Bluetooth } from '../bluetooth/bluetooth';
+import { Tabs } from '../tabs/tabs';
+
 
 @Component({
   selector: 'timeline',
   templateUrl: 'timeline.html'
 })
 export class Timeline implements OnInit {
+  @ViewChild(Content) content: Content;
   fakeScan: any;
   public amountOfAvailableFeeds;
   private feeds: any;
@@ -37,7 +40,7 @@ export class Timeline implements OnInit {
     public loadingCtrl: LoadingController,
   ) {
     this.feeds = this.feedsService.getFeeds();
-    this.synchronizeFeeds();
+    // this.synchronizeFeeds();
     // this.sleevesService.disconnectAll();
   }
 
@@ -54,6 +57,7 @@ export class Timeline implements OnInit {
         // this.presentLoading()
         this.sleevesService.synchronizeFeeds().then(feedData => {
           console.log('feedData:', feedData)
+          this.navCtrl.setRoot(Tabs); // todo: replace this hack to refresh viewport!
         }).catch(error => {
           console.error(error);
         })
@@ -79,6 +83,7 @@ export class Timeline implements OnInit {
   }
 
   ionViewDidLoad() {
+    
   }
   ngOnInit() {
   }

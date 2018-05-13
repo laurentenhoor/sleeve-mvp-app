@@ -63,6 +63,8 @@ export class Sleeves {
     }
 
     disconnectAll() {
+        this.ble.stopScan();
+        this.isScanning = false;
         this.getPairedSleeves().then(pairedSleeves => {
             pairedSleeves.forEach((sleeve) => {
                 this.ble.disconnect(sleeve._id).then(
@@ -138,8 +140,8 @@ export class Sleeves {
 
     scanAndConnect(): Observable<string> {
         console.log('scanAndConnect()')
-        this.ble.stopScan();
-        this.disconnectAll();
+        // this.ble.stopScan();
+        // this.disconnectAll();
         return Observable.create(observer => {
             this.initScan((connectedSleeve) => {
                 console.log('Starting Forced Bonding', connectedSleeve)
@@ -179,7 +181,6 @@ export class Sleeves {
         })
     }
 
-    
 
     stopScanning() {
         this.isScanning = false;
@@ -190,7 +191,7 @@ export class Sleeves {
     synchronizeFeeds() {
         let self = this;
         this.ble.stopScan();
-        this.disconnectAll();
+        // this.disconnectAll();
         if (this.sleeveConnected) {
             console.log('a sleeve is already connected')
             return self.feedData()
@@ -234,6 +235,7 @@ export class Sleeves {
 
         }
     }
+
 
     handleData(data: ArrayBuffer) {
         let part: string = this.bytesToString(data);
@@ -287,7 +289,7 @@ export class Sleeves {
         })
     }
 
-    initScan(successCallback) {
+    private initScan(successCallback) {
         this.ble.stopScan();
         this.isScanning = true;
         this.ble.startScan([]).subscribe(

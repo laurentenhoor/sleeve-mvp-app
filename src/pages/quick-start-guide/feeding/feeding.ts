@@ -1,6 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { Sleeves } from '../../../providers/sleeves';
+import { Sleeves, SleeveStates } from '../../../providers/sleeves';
 import { Wiggle } from '../wiggle/wiggle';
 
 @Component({
@@ -18,14 +18,13 @@ export class Feeding {
     try {
       this.sleevesService.state().subscribe(state => {
         console.log('received state', state);
-        if (state === '0400') {
+        if (state === SleeveStates.DEVICE_FEEDING) {
           this.feedDetected();
         }
       })
     } catch (error) {
       console.error(error)
     }
-
   }
 
   feedDetected() {

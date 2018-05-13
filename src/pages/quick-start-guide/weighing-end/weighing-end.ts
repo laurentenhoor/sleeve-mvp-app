@@ -1,6 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { Sleeves } from '../../../providers/sleeves';
+import { Sleeves, SleeveStates } from '../../../providers/sleeves';
 import { Tabs } from '../../tabs/tabs';
 
 @Component({
@@ -18,7 +18,7 @@ export class WeighingEnd {
     try {
       this.sleevesService.state().subscribe(state => {
         console.log('state received', state);
-        if (state === '0900') {
+        if (state === SleeveStates.DEVICE_WEIGHING_COMPLETED) {
           this.weighingSuccessful();
         } 
       })

@@ -11,12 +11,13 @@ import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
 import { Sessions } from '../providers/sessions';
 import { Qsg } from '../pages/qsg/qsg';
 import { Bluetooth } from '../pages/bluetooth/bluetooth';
+import { Timeline } from '../pages/timeline/timeline';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = Qsg;
+  rootPage: any = Tabs;
 
   constructor(
     platform: Platform,

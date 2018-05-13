@@ -1,6 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { Sleeves } from '../../../providers/sleeves';
+import { Sleeves, SleeveStates } from '../../../providers/sleeves';
 import { WeighingStart } from '../weighing-start/weighing-start';
 
 
@@ -19,7 +19,7 @@ export class PressButtonStart {
     try {
       this.sleevesService.state().subscribe(state => {
         console.log('state received', state)
-        if (state === '0300') {
+        if (state === SleeveStates.DEVICE_FEEDING_EXPECTED) {
           this.buttonPress();
         }
       })
