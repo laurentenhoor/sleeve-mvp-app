@@ -27,6 +27,10 @@ export class Devices {
         
     }
 
+    ionViewDidLoad() {
+        this.pairedSleeves = this.sleevesService.getPairedSleeves();
+    }
+
     pair() {
         this.modalCtrl.create(Connecting).present();
     }
