@@ -24,11 +24,11 @@ export class Devices {
     }
 
     ionViewDidEnter() {
-        
+        // this.sleevesService.storeSleeve(Math.random()+'sleeveId')
     }
 
     ionViewDidLoad() {
-        this.pairedSleeves = this.sleevesService.getPairedSleeves();
+        
     }
 
     pair() {

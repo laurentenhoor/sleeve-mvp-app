@@ -32,7 +32,7 @@ export class Sleeves {
     private defaultSleeveName: string = 'Philips Avent SCH820';
     private connectedDeviceId: string;
     private sleeveConnected: boolean;
-    private pairedSleeves: any[];
+    private pairedSleeves: any[] = null;
     public isScanning: boolean = false;
     public dataBuffer: string = "";
 
@@ -79,11 +79,14 @@ export class Sleeves {
     }
 
     getPairedSleeves(): Promise<any[]> {
-        if (this.pairedSleeves) {
+        if (this.pairedSleeves !== null) {
+            console.log('follow-up sleeve promise')
             return new Promise(resolve => {
                 resolve(this.pairedSleeves)
             })
         }
+        console.log('initial sleeve promise')
+        this.pairedSleeves = [];
         return new Promise(resolve => {
             this.localDb.allDocs({
                 include_docs: true,
