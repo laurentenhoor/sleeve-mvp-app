@@ -4,7 +4,7 @@ import { Sessions } from './sessions';
 
 @Injectable()
 export class Feeds {
-    data: any;
+    data: any = null;
     localDb: any;
     remoteDb: any;
 
@@ -24,10 +24,10 @@ export class Feeds {
     }
 
     getFeeds(): Promise<Object[]> {
-        if (this.data) {
+        if (this.data !== null) {
             return new Promise(resolve=> {resolve(this.data)});
         }
-
+        this.data = [];
         return new Promise(resolve => {
 
             this.localDb.allDocs({
