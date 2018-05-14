@@ -10,7 +10,7 @@ export class Feeds {
 
     constructor(
         private zone: NgZone,
-        private sessionsService:Sessions
+        private sessionsService: Sessions
     ) {
 
         this.localDb = new PouchDB('feeds');
@@ -25,7 +25,7 @@ export class Feeds {
 
     getFeeds(): Promise<Object[]> {
         if (this.data !== null) {
-            return new Promise(resolve=> {resolve(this.data)});
+            return new Promise(resolve => { resolve(this.data) });
         }
         this.data = [];
         return new Promise(resolve => {
@@ -68,7 +68,7 @@ export class Feeds {
             amount = sleeveFeed.m.w[0][1] - sleeveFeed.m.w[1][1]
         }
         if (sleeveFeed.m && sleeveFeed.m.i) {
-            duration = sleeveFeed.m.i.reduce(function(acc, val) { return acc + val; });
+            duration = sleeveFeed.m.i.reduce(function (acc, val) { return acc + val; });
         }
         let feed = {
             type: 'smart',
@@ -108,16 +108,22 @@ export class Feeds {
         });
         //A document was deleted
         if (change.deleted) {
-            this.data.splice(changedIndex, 1);
+            this.zone.run(() => {
+                this.data.splice(changedIndex, 1);
+            });
         }
         else {
             //A document was updated
             if (changedDoc) {
-                this.data[changedIndex] = change.doc;
+                this.zone.run(() => {
+                    this.data[changedIndex] = change.doc;
+                });
             }
             //A document was added
             else {
-                this.data.unshift(change.doc);
+                this.zone.run(() => {
+                    this.data.unshift(change.doc);
+                });
             }
 
         }
