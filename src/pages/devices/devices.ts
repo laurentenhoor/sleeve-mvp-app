@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { AlertController, NavController } from 'ionic-angular';
 
 import { Sleeves } from '../../providers/sleeves';
@@ -18,17 +18,16 @@ export class Devices {
         private alertCtrl: AlertController,
         private nav: NavController,
         private sleevesService: Sleeves,
-        public modalCtrl: ModalController
+        public modalCtrl: ModalController,
+        private zone: NgZone
     ) {
         this.pairedSleeves = this.sleevesService.getPairedSleeves();
     }
 
     ionViewDidEnter() {
-        // this.sleevesService.storeSleeve(Math.random()+'sleeveId')
     }
 
     ionViewDidLoad() {
-        
     }
 
     pair() {

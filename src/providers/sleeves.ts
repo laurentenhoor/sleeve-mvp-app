@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { ModalController } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
 
@@ -39,6 +39,7 @@ export class Sleeves {
     constructor(
         private ble: BLE,
         private feedsService: Feeds,
+        private zone: NgZone
     ) {
         this.localDb = new PouchDB('sleeves');
         this.defaultSleeveName
@@ -113,16 +114,22 @@ export class Sleeves {
         });
         //A document was deleted
         if (change.deleted) {
-            this.pairedSleeves.splice(changedIndex, 1);
+            this.zone.run(() => {
+                this.pairedSleeves.splice(changedIndex, 1);
+            });
         }
         else {
             //A document was updated
             if (changedDoc) {
-                this.pairedSleeves[changedIndex] = change.doc;
+                this.zone.run(() => {
+                    this.pairedSleeves[changedIndex] = change.doc;
+                });
             }
             //A document was added
             else {
-                this.pairedSleeves.unshift(change.doc);
+                this.zone.run(() => {
+                    this.pairedSleeves.unshift(change.doc);
+                });
             }
         }
     }
