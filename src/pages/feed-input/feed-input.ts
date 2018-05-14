@@ -28,6 +28,7 @@ export class FeedInput {
                 type: 'manual',
                 timestamp: Date.now(),
                 date: new Date(),
+                duration: 23,
                 sessionId: this.sessionsService.getSessionId()
             }
         }

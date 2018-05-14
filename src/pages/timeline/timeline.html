@@ -27,8 +27,8 @@
     <ion-item-sliding *ngFor="let feed of feeds | async">
       <ion-item (click)="openFeedModal(feed)">
         <ion-icon color="{{ feed.type == 'smart' ? 'secondary' : 'primary' }}" name="philips-baby-bottle" item-left large></ion-icon>
-        <h2>{{ feed.amount < 0 ? '--' : feed.amount < 5 ? '0' : feed.amount | number : '1.0-0' }} ml</h2>
-            <p *ngIf="feed.type == 'smart'">{{ feed.duration | number : '1.0-0' }} sec</p>
+        <h2 style="display:inline;">{{ feed.amount < 0 ? '--' : feed.amount < 5 ? '0' : feed.amount | number : '1.0-0' }} ml </h2>
+            <p style="display:inline;" *ngIf="feed.duration"> in {{ feed.duration | number : '1.0-0' }} sec</p>
             <p>{{ formatTimeAgo(feed.timestamp) }}</p>
             <p item-end>
               <ion-icon name="{{ feed.type == 'smart' ? 'bluetooth' : 'hand' }}" item-left large></ion-icon>{{ feed.type == 'smart' ? 'Smart Bottle Tracker' : 'Manual' }}
