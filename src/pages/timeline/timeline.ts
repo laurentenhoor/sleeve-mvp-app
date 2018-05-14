@@ -57,7 +57,6 @@ export class Timeline implements OnInit {
         // this.presentLoading()
         this.sleevesService.synchronizeFeeds().then(feedData => {
           console.log('feedData:', feedData)
-          this.navCtrl.setRoot(Tabs); // todo: replace this hack to refresh viewport!
         }).catch(error => {
           console.error(error);
         })
