@@ -13,8 +13,6 @@ import { Sleeves } from '../../providers/sleeves';
 import { Connecting } from '../connecting/connecting';
 import { Bluetooth } from '../bluetooth/bluetooth';
 
-
-
 @Component({
   selector: 'timeline',
   templateUrl: 'timeline.html'
@@ -25,6 +23,7 @@ export class Timeline {
   public amountOfAvailableFeeds;
   private feeds: any;
   private synchronizing: boolean = false;
+  private lastSyncTimestamp: Promise<number>;
 
   constructor(
     public navCtrl: NavController,
@@ -47,6 +46,7 @@ export class Timeline {
   ionViewDidLoad() { 
     this.synchronizeFeeds();
     this.feeds = this.feedsService.getFeeds();
+    this.lastSyncTimestamp = this.sleevesService.getSyncTimestamp();
   }
 
   synchronizeFeeds() {
@@ -74,7 +74,7 @@ export class Timeline {
 
   presentTimeoutToast() {
     let toast = this.toastCtrl.create({
-      message: 'No new feeds found',
+      message: 'No New Feeds Found',
       duration: 5000,
       showCloseButton: true,
       closeButtonText: 'Close',
@@ -85,7 +85,7 @@ export class Timeline {
 
   presentFeedToast() {
     let toast = this.toastCtrl.create({
-      message: 'One new feed synced',
+      message: 'One New Feed Synced',
       duration: 5000,
       showCloseButton: true,
       closeButtonText: 'Close',
@@ -110,5 +110,10 @@ export class Timeline {
     let feedInputModal = this.modalCtrl.create(FeedInput, { feed: feed });
     feedInputModal.present();
   }
+
+  deleteFeed(feed) {
+    this.feedsService.deleteFeed(feed)
+  }
+
 
 }

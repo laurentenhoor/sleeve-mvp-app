@@ -26,7 +26,7 @@
 
     <ion-item-sliding *ngFor="let feed of feeds | async">
       <ion-item (click)="openFeedModal(feed)">
-        <ion-icon color="{{ feed.type == 'smart' ? 'secondary' : 'primary' }}" name="philips-baby-bottle" item-left large></ion-icon>
+        <ion-icon color="{{ feed.timestamp > (lastSyncTimestamp | async) ? 'primary' : 'grey' }}" name="philips-baby-bottle" item-left large></ion-icon>
         <h2 style="display:inline;">{{ feed.amount < 0 ? '--' : feed.amount < 5 ? '0' : feed.amount | number : '1.0-0' }} ml </h2>
             <p style="display:inline;" *ngIf="feed.duration"> in {{ feed.duration | number : '1.0-0' }} sec</p>
             <p>{{ formatTimeAgo(feed.timestamp) }}</p>
@@ -36,11 +36,10 @@
       </ion-item>
 
       <ion-item-options side="right">
-        <button ion-button color="light">
+        <!-- <button ion-button color="light" large >
           <ion-icon name="create"></ion-icon>
-          Edit
-        </button>
-        <button ion-button color="danger">
+        </button> -->
+        <button ion-button color="danger" (click)="deleteFeed(feed)">
           <ion-icon name="trash"></ion-icon>
           Delete
         </button>
