@@ -11,16 +11,17 @@
     <div style="text-align:center;width:100%;">
         <img (click)="wiggleDetected();" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 7.1_7.2_Wiggle and Wiggle Detected.gif"
         />
-        <h1 ion-text>Is the device recording?</h1>
+        <h1 ion-text>Extra tip: Wiggle!</h1>
         <p>
-            To ensure long battery life, the lights are turned off as much as possible. Wiggle the device to check if the device is recording.
+            If you want to be sure that the Sleeve is tracking your feed. You can wiggle the Sleeve and the light will blink white to
+            indicate it is tracking.
         </p>
     </div>
 
 </ion-content>
 
 <ion-footer padding>
-    <button color="{{ !wiggleIsDetected ? 'light' : 'secondary'}}" ion-button block icon-start>
+    <button color="{{ !wiggleIsDetected ? 'light' : 'secondary'}}" (click)="nextStep();" ion-button block icon-start>
         <ion-icon *ngIf="!wiggleIsDetected">
             <ion-spinner name="dots"></ion-spinner>
         </ion-icon>

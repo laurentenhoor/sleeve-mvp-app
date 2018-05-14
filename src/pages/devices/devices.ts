@@ -20,17 +20,18 @@ export class Devices {
         private sleevesService: Sleeves,
         public modalCtrl: ModalController,
         private zone: NgZone
-    ) {
-        this.pairedSleeves = this.sleevesService.getPairedSleeves();
+    ) {        
     }
 
     ionViewDidEnter() {
     }
 
     ionViewDidLoad() {
+        this.pairedSleeves = this.sleevesService.getPairedSleeves();
     }
 
     pair() {
+        this.sleevesService.disconnectAll();
         this.modalCtrl.create(Connecting).present();
     }
 

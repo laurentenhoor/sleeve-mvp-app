@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit, ApplicationRef, ViewChild} from '@angular/core';
+import { Component, NgZone, OnInit, ApplicationRef, ViewChild } from '@angular/core';
 import { NavController, Events, Content } from 'ionic-angular';
 import { ToastController, ModalController, LoadingController } from 'ionic-angular';
 import { Http } from '@angular/http';
@@ -50,21 +50,45 @@ export class Timeline implements OnInit {
   }
 
   synchronizeFeeds() {
+
+    // setTimeout(() => {
+    //   let toast = this.toastCtrl.create({
+    //     message: 'No new feeds available',
+    //     duration: 5000,
+    //     showCloseButton: true,
+    //     closeButtonText: 'Close',
+    //     position: 'top',
+    //   });
+    //   toast.present();
+    // }, 1000)
+
     this.sleevesService.getPairedSleeves().then(pairedSleeves => {
+      console.log('pairedSleeves', pairedSleeves)
       if (pairedSleeves.length == 0) {
         this.modalCtrl.create(Connecting).present();
       } else {
         // this.presentLoading()
         this.sleevesService.synchronizeFeeds().then(feedData => {
           console.log('feedData:', feedData)
+          
+          let toast = this.toastCtrl.create({
+            message: 'One new feed synced',
+            duration: 5000,
+            showCloseButton: true,
+            closeButtonText: 'Close',
+            position: 'top',
+          });
+          toast.present();
+
         }).catch(error => {
           console.error(error);
+
         })
       }
     })
   }
 
-  openSettings(){
+  openSettings() {
     this.navCtrl.push(Bluetooth)
   }
 

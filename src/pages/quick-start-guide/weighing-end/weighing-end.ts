@@ -1,14 +1,15 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Sleeves, SleeveStates } from '../../../providers/sleeves';
-import { Tabs } from '../../tabs/tabs';
+import { Synchronize } from '../synchronize/synchronize';
 
 @Component({
   selector: 'weighing-end',
   templateUrl: 'weighing-end.html'
 })
 export class WeighingEnd {
-  weighingDone: boolean = false;
+  private hasMeasured: boolean = false;
+  private isMeasuring: boolean = false;
 
   constructor(
     public navCtrl: NavController,
@@ -17,30 +18,37 @@ export class WeighingEnd {
   ) {
     try {
       this.sleevesService.state().subscribe(state => {
-        console.log('state received', state);
-        if (state === SleeveStates.DEVICE_WEIGHING_COMPLETED) {
-          this.weighingSuccessful();
-          this.sleevesService.disconnectAll();
-        } 
+        console.log('state received', state)
+        if (state === SleeveStates.BUTTON_PRESSED) {
+          this.measure();
+        } else if (state == SleeveStates.DEVICE_WEIGHING_COMPLETED) {
+          this.successfullyMeasured();
+        } else if (state == SleeveStates.DEVICE_WEIGHING_TIMEOUT) {
+        }
       })
     } catch (error) {
       console.error(error)
     }
-
   }
 
-  weighingSuccessful() {
+  measure() {
+    console.log('measure called')
     this.ngZone.run(() => {
-      this.weighingDone = true;
-    });
-    setTimeout(() => {
-      this.nextStep();
-      this.weighingDone = false;
-    }, 2000)
+      this.isMeasuring = true;
+    })
+  }
+
+  successfullyMeasured() {
+    this.ngZone.run(() => {
+      this.hasMeasured = true;
+      this.isMeasuring = false;
+    })
   }
 
   nextStep() {
-    this.navCtrl.setRoot(Tabs)
+    if (this.hasMeasured) {
+      this.navCtrl.push(Synchronize);
+    }
   }
 
 }

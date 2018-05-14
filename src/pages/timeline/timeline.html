@@ -52,24 +52,38 @@
 
   <ion-list>
 
-      <ion-item (click)="addFeed()" *ngIf="(feeds | async)?.length == 0">
-          <ion-icon color="primary" name="alert" item-left large></ion-icon>
-          <h2>No feeds tracked yet</h2>
-          <p>Tap to add a feed</p>
-        </ion-item>
-
-    <ion-item *ngFor="let feed of feeds | async" (click)="openFeedModal(feed)">
-      <ion-icon color="{{ feed.type == 'smart' ? 'secondary' : 'primary' }}" name="philips-baby-bottle" item-left large></ion-icon>
-      <h2>{{ feed.amount | number : '1.0-0' }} ml</h2>
-      <p *ngIf="feed.type == 'smart'">{{ feed.duration | number : '1.0-0' }} sec</p>
-      <p>{{ formatTimeAgo(feed.timestamp) }}</p>
-      <p item-end>
-        <ion-icon name="{{ feed.type == 'smart' ? 'bluetooth' : 'hand' }}" item-left large></ion-icon>{{ feed.type == 'smart' ? 'Smart Bottle Tracker' : 'Manual' }}
-      </p>
+    <ion-item (click)="addFeed()" *ngIf="(feeds | async)?.length == 0">
+      <ion-icon color="primary" name="alert" item-left large></ion-icon>
+      <h2>No feeds tracked yet</h2>
+      <p>Tap to add a feed</p>
     </ion-item>
+
+    <ion-item-sliding *ngFor="let feed of feeds | async" >
+      <ion-item (click)="openFeedModal(feed)">
+        <ion-icon color="{{ feed.type == 'smart' ? 'secondary' : 'primary' }}" name="philips-baby-bottle" item-left large></ion-icon>
+        <h2>{{ feed.amount
+          < 0 ? '--' : feed.amount < 5 ? '0' : feed.amount | number : '1.0-0' }} ml</h2>
+            <p *ngIf="feed.type == 'smart'">{{ feed.duration | number : '1.0-0' }} sec</p>
+            <p>{{ formatTimeAgo(feed.timestamp) }}</p>
+            <p item-end>
+              <ion-icon name="{{ feed.type == 'smart' ? 'bluetooth' : 'hand' }}" item-left large></ion-icon>{{ feed.type == 'smart' ? 'Smart Bottle Tracker' : 'Manual' }}
+            </p>
+      </ion-item>
+
+      <ion-item-options side="right">
+        <button ion-button color="light">
+          <ion-icon name="create"></ion-icon>
+          Edit
+        </button>
+        <button ion-button color="danger">
+          <ion-icon name="trash"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
 
-  <ion-fab right bottom #fab>
+  <!-- <ion-fab right bottom #fab>
 
     <button ion-fab color="primary">
       <ion-icon name="add"></ion-icon>
@@ -85,11 +99,11 @@
         <ion-icon name="settings"></ion-icon>
       </button>
 
-      <!-- <button ion-fab (click)="synchronizeFeeds();fab.close();">
+      <button ion-fab (click)="synchronizeFeeds();fab.close();">
         <ion-icon name="sync"></ion-icon>
-      </button> -->
+      </button>
 
     </ion-fab-list>
-  </ion-fab>
+  </ion-fab> -->
 
 </ion-content>

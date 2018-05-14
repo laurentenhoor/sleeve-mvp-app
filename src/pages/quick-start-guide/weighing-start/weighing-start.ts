@@ -8,38 +8,48 @@ import { Feeding } from '../feeding/feeding';
   templateUrl: 'weighing-start.html'
 })
 export class WeighingStart {
-  weighingDone: boolean = false;
+  private isMeasuring: boolean = false;
+  private hasMeasured: boolean = false;
 
   constructor(
     public navCtrl: NavController,
     public sleevesService: Sleeves,
     public ngZone: NgZone
+
   ) {
     try {
       this.sleevesService.state().subscribe(state => {
-        console.log('state received', state);
-        if (state === SleeveStates.DEVICE_WEIGHING_COMPLETED) {
-          this.weighingSuccessful();
+        console.log('state received', state)
+        if (state === SleeveStates.DEVICE_FEEDING_EXPECTED) {
+          this.measure();
+        } else if (state == SleeveStates.DEVICE_WEIGHING_COMPLETED) {
+          this.successfullyMeasured();
+        } else if (state == SleeveStates.DEVICE_WEIGHING_TIMEOUT) {
         }
       })
     } catch (error) {
       console.error(error)
     }
-
   }
 
-  weighingSuccessful() {
-    this.ngZone.run(()=>{
-      this.weighingDone = true;
+  measure() {
+    console.log('measure called')
+    this.ngZone.run(() => {
+      this.isMeasuring = true;
     })
-    setTimeout(() => {
-      this.nextStep();
-      this.weighingDone = false;
-    }, 500)
+  }
+
+  successfullyMeasured() {
+    this.ngZone.run(() => {
+      this.hasMeasured = true;
+      this.isMeasuring = false;
+    })
   }
 
   nextStep() {
-    this.navCtrl.push(Feeding);
+    if (this.hasMeasured) {
+      this.navCtrl.push(Feeding);
+    }
   }
 
 }

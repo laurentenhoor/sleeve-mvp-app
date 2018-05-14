@@ -28,17 +28,15 @@ export class Feeding {
   }
 
   feedDetected() {
-    this.ngZone.run(()=>{
+    this.ngZone.run(() => {
       this.feedIsDetected = true;
     });
-    setTimeout(() => {
-      this.nextStep();
-      this.feedIsDetected = false;
-    }, 500)
   }
 
   nextStep() {
-    this.navCtrl.push(Wiggle);
+    if (this.feedIsDetected) {
+      this.navCtrl.push(Wiggle);
+    }
   }
 
 }

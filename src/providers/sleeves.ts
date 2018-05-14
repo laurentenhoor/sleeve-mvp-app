@@ -83,11 +83,11 @@ export class Sleeves {
         if (this.pairedSleeves !== null) {
             console.log('follow-up sleeve promise')
             return new Promise(resolve => {
+                console.log('resolve of paired sleeves', this.pairedSleeves)
                 resolve(this.pairedSleeves)
             })
         }
         console.log('initial sleeve promise')
-        this.pairedSleeves = [];
         return new Promise(resolve => {
             this.localDb.allDocs({
                 include_docs: true,
@@ -101,6 +101,7 @@ export class Sleeves {
             })
         });
     }
+
 
     handleChange(change) {
         let changedDoc = null;

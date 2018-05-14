@@ -27,7 +27,6 @@ export class Feeds {
         if (this.data !== null) {
             return new Promise(resolve => { resolve(this.data) });
         }
-        this.data = [];
         return new Promise(resolve => {
 
             this.localDb.allDocs({

@@ -13,18 +13,19 @@
 
         <h1 ion-text>Feeding</h1>
         <p>
-            Hold the bottle in feeding position.<br>
-            <b>After 5 seconds a feed will be detected.</b>
+            Hold the bottle in feeding position.
+            <br>
+            <b>After 10 seconds a feed will be detected.</b>
         </p>
         <p>
-           
+            The lights will be off while your tracking your baby's feeding.
         </p>
     </div>
 
 </ion-content>
 
 <ion-footer class="qsg" padding>
-    <button color="{{ !feedIsDetected ? 'light' : 'secondary'}}" ion-button block icon-start>
+    <button color="{{ !feedIsDetected ? 'light' : 'secondary'}}" (click)="nextStep();" ion-button block icon-start>
         <ion-icon *ngIf="!feedIsDetected">
             <ion-spinner name="dots"></ion-spinner>
         </ion-icon>

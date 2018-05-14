@@ -3,15 +3,9 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { Tabs } from '../pages/tabs/tabs';
-import { Connecting } from '../pages/connecting/connecting';
-import { QuickStart } from '../pages/quick-start/quick-start';
-import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
-
 import { Sessions } from '../providers/sessions';
-import { Qsg } from '../pages/qsg/qsg';
-import { Bluetooth } from '../pages/bluetooth/bluetooth';
-import { Timeline } from '../pages/timeline/timeline';
+
+import { Tabs } from '../pages/tabs/tabs';
 
 @Component({
   templateUrl: 'app.html'

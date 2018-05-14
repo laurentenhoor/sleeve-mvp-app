@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { PressButtonStart } from '../press-button-start/press-button-start';
+import { WeighingStart } from '../weighing-start/weighing-start';
 
 @Component({
   selector: 'insert-bottle',
@@ -15,7 +15,7 @@ export class InsertBottle {
   }
 
   nextStep() {
-   this.navCtrl.push(PressButtonStart);
+   this.navCtrl.push(WeighingStart);
   }
   
 }

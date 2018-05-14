@@ -9,22 +9,23 @@
 <ion-content class="qsg" padding no-bounce class="vertical-align-content">
 
     <div style="text-align:center;width:100%;">
-        <img (click)="weighingSuccessful();" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen-8.2_8.3_Finish-Feeding.gif" />
+        <img (click)="buttonPress();" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 8.1_Finish Feeding.gif" />
 
-        <h1 ion-text>Measure the Volume</h1>
+        <h1 ion-text>Second Volume Measurement to Finish Feeding</h1>
         <p>
-            The purple light indicates that the end volume of the feed was measured succesfully, and the feeding is finished.
+            Press the button shortly to finish the feed. The blinking white light indicates the Smart Bottle Sleeve is ready to measure
+            the feed’s end volume.
         </p>
     </div>
 </ion-content>
 
 <ion-footer class="qsg" padding>
-    <button color="{{ !weighingDone ? 'light' : 'secondary'}}" ion-button block icon-start>
-        <ion-icon *ngIf="!weighingDone">
-            <ion-spinner name="dots"></ion-spinner>
-        </ion-icon>
-        <ion-icon *ngIf="weighingDone" style="color:white;font-weight: bold" name="checkmark">
-        </ion-icon>
-        {{ !weighingDone ? 'Waiting for End Volume' : 'End Volume Measured' }}
-    </button>
-</ion-footer>
+        <button color="{{ hasMeasured ? 'secondary' : 'light'}}" ion-button block icon-start (click)="nextStep();">
+            <ion-icon *ngIf="!hasMeasured">
+                <ion-spinner name="dots"></ion-spinner>
+            </ion-icon>
+            <ion-icon *ngIf="hasMeasured" style="color:white;font-weight: bold" name="checkmark">
+            </ion-icon>
+            {{ isMeasuring ? 'Measuring' : hasMeasured ? 'Volume Measured & Feeding Finished' :  'Waiting for Button Press'}}
+        </button>
+    </ion-footer>

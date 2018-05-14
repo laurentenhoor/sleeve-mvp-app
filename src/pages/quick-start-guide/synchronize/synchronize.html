@@ -1,0 +1,29 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Quick Start Guide
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content class="qsg" padding no-bounce class="vertical-align-content">
+
+    <div style="text-align:center;width:100%;">
+        <img (click)="weighingSuccessful();" style="width:50%;" src="assets/imgs/qsg/image_pairing screen.png" />
+
+        <h1 ion-text>Syncing Data</h1>
+        <p>
+            After you've finished the feed, the data will be synced when opening the app.
+        </p>
+        <p>
+            <b>The sleeve can store up to 100 feeds. The app is not needed while tracking the feed.</b>
+        </p>
+
+    </div>
+</ion-content>
+
+<ion-footer class="qsg" padding>
+    <button color="primary" (click)="nextStep();" ion-button block icon-start>
+        Go to Timeline
+    </button>
+</ion-footer>

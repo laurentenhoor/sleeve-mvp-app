@@ -1,7 +1,8 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Sleeves, SleeveStates } from '../../../providers/sleeves';
-import { PressButtonEnd } from '../press-button-end/press-button-end';
+import { WeighingEnd } from '../weighing-end/weighing-end';
+
 
 @Component({
   selector: 'wiggle',
@@ -25,21 +26,18 @@ export class Wiggle {
     } catch (error) {
       console.error(error)
     }
-
   }
 
   wiggleDetected() {
     this.ngZone.run(() => {
       this.wiggleIsDetected = true;
     });
-    setTimeout(() => {
-      this.nextStep();
-      this.wiggleIsDetected = false;
-    }, 500)
   }
 
   nextStep() {
-    this.navCtrl.push(PressButtonEnd);
+    if (this.wiggleIsDetected) {
+      this.navCtrl.push(WeighingEnd);
+    }
   }
 
 }
