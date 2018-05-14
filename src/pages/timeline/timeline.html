@@ -4,10 +4,10 @@
       Timeline
     </ion-title>
     <ion-buttons end>
-      <button *ngIf="!sleevesService.isScanning" (click)="synchronizeFeeds();" ion-button icon-left color="royal">
+      <button *ngIf="!sleevesService.isScanning" (click)="synchronizeFeeds();" ion-button icon-left>
         Sync
       </button>
-      <button (click)="stopScanning();" *ngIf="sleevesService.isScanning" ion-button>
+      <button *ngIf="sleevesService.isScanning" ion-button>
         <ion-spinner name="dots"></ion-spinner>
       </button>
     </ion-buttons>
@@ -16,53 +16,18 @@
 
 <ion-content>
 
-  <!-- <ion-card (click)="addFeed()" *ngIf="(feeds | async)?.length == 0">
-    <ion-item >
-      <ion-icon color="primary" name="alert" item-left large></ion-icon>
-      <h2>No feeds tracked yet</h2>
-      <p>Tap to add a feed</p>
-    </ion-item>
-  </ion-card> -->
-
-  <ion-card *ngIf="fakeScan">
-    <img src="assets/imgs/cute-baby-banner.jpg" />
-    <ion-card-header>
-      One new feed available on your sleeve!
-    </ion-card-header>
-
-    <ion-item>
-      <button ion-button icon-left clear item-end (click)="fakeScan=false;fakeFeeds=true;addFakeFeeds();">
-        <ion-icon name="sync"></ion-icon>
-        Synchronize
-      </button>
-    </ion-item>
-
-  </ion-card>
-
-  <!-- <ion-card *ngFor="let feed of feeds | async" (click)="openFeedModal(feed)">
-    <ion-item>
-      <ion-icon color="{{ feed.type == 'smart' ? 'secondary' : 'primary' }}" name="philips-baby-bottle" item-left large></ion-icon>
-      <h2>{{ feed.amount | number : '1.0-0' }} ml</h2>
-      <h2 *ngIf="feed.type == 'smart'">{{ feed.duration | number : '1.0-0' }} sec</h2>
-      <h3>{{ formatTimeAgo(feed.timestamp) }}</h3>
-      <p>
-        <ion-icon name="{{ feed.type == 'smart' ? 'bluetooth' : 'hand' }}" item-left large></ion-icon>{{ feed.type == 'smart' ? 'Smart Bottle Tracker' : 'Manual' }}</p>
-    </ion-item>
-  </ion-card> -->
-
   <ion-list>
-
+    
     <ion-item (click)="addFeed()" *ngIf="(feeds | async)?.length == 0">
       <ion-icon color="primary" name="alert" item-left large></ion-icon>
       <h2>No feeds tracked yet</h2>
       <p>Tap to add a feed</p>
     </ion-item>
 
-    <ion-item-sliding *ngFor="let feed of feeds | async" >
+    <ion-item-sliding *ngFor="let feed of feeds | async">
       <ion-item (click)="openFeedModal(feed)">
         <ion-icon color="{{ feed.type == 'smart' ? 'secondary' : 'primary' }}" name="philips-baby-bottle" item-left large></ion-icon>
-        <h2>{{ feed.amount
-          < 0 ? '--' : feed.amount < 5 ? '0' : feed.amount | number : '1.0-0' }} ml</h2>
+        <h2>{{ feed.amount < 0 ? '--' : feed.amount < 5 ? '0' : feed.amount | number : '1.0-0' }} ml</h2>
             <p *ngIf="feed.type == 'smart'">{{ feed.duration | number : '1.0-0' }} sec</p>
             <p>{{ formatTimeAgo(feed.timestamp) }}</p>
             <p item-end>
@@ -81,28 +46,20 @@
         </button>
       </ion-item-options>
     </ion-item-sliding>
+
   </ion-list>
 
   <!-- <ion-fab right bottom #fab>
-
     <button ion-fab color="primary">
       <ion-icon name="add"></ion-icon>
     </button>
-
     <ion-fab-list side="top">
-
       <button ion-fab (click)="addFeed();fab.close();">
         <ion-icon name="philips-baby-bottle"></ion-icon>
       </button>
-
       <button ion-fab (click)="openSettings();fab.close();">
         <ion-icon name="settings"></ion-icon>
       </button>
-
-      <button ion-fab (click)="synchronizeFeeds();fab.close();">
-        <ion-icon name="sync"></ion-icon>
-      </button>
-
     </ion-fab-list>
   </ion-fab> -->
 

@@ -60,7 +60,6 @@ export class Sleeves {
                 reject();
             })
         })
-
     }
 
     disconnectAll() {
@@ -103,7 +102,7 @@ export class Sleeves {
     }
 
 
-    handleChange(change) {
+    private handleChange(change) {
         let changedDoc = null;
         let changedIndex = null;
 
@@ -151,8 +150,7 @@ export class Sleeves {
 
     scanAndConnect(): Observable<string> {
         console.log('scanAndConnect()')
-        // this.ble.stopScan();
-        // this.disconnectAll();
+        this.ble.stopScan();
         return Observable.create(observer => {
             this.initScan((connectedSleeve) => {
                 console.log('Starting Forced Bonding', connectedSleeve)
@@ -168,6 +166,24 @@ export class Sleeves {
             })
         })
     }
+
+    private initScan(successCallback) {
+        this.ble.stopScan();
+        this.ble.startScan([]).subscribe(
+            device => this.onDeviceDiscovered(device, successCallback),
+            error => console.error('scan error', error)
+        );
+    }
+
+    private onDeviceDiscovered(device, successCallback) {
+        console.log('discovered', JSON.stringify(device))
+        if (device.name == this.defaultSleeveName && device.id != '6710B20A-EE92-44C1-B9B9-684D7B6E1F5D') { //SHREYDEVICE// && device.id != 'D7832B16-8B21-4BCB-906C-0B6779BB18D8'
+            this.ble.stopScan();
+            console.log('Found a bottle sleeve', device.id)
+            this.connect(device.id, successCallback);
+        }
+    }
+
 
     state(): Observable<any> {
         return Observable.create(observer => {
@@ -194,15 +210,14 @@ export class Sleeves {
 
 
     stopScanning() {
-        this.isScanning = false;
         this.ble.stopScan();
-        this.disconnectAll();
+        // this.disconnectAll();
     }
 
     synchronizeFeeds() {
         let self = this;
         this.ble.stopScan();
-        // this.disconnectAll();
+        this.isScanning = true;
         if (this.sleeveConnected) {
             console.log('a sleeve is already connected')
             return self.feedData()
@@ -216,11 +231,12 @@ export class Sleeves {
                         return reject('no paired devices')
                     }
                     console.log('scanning for following ids', uuids)
-                    this.isScanning = true;
-                    let timeout = 30;
+                    
+                    let timeout = 10;
                     setTimeout(() => {
                         this.isScanning = false
                         console.log('scanning timeout')
+                        reject('scanTimeout');
                     }, timeout * 1000)
                     self.ble.scan([], timeout)
                         .subscribe(peripheral => {
@@ -233,12 +249,14 @@ export class Sleeves {
                                     self.connect(peripheral.id, (device) => {
                                         // console.log('connected to a sleeve')
                                         self.feedData().then(feedData => {
+                                            this.isScanning = false;
                                             resolve(feedData)
                                         })
                                     })
                                 }
                             })
                         }, scanError => {
+                            this.isScanning = false;
                             reject('unable to scan: ' + scanError)
                         })
                 })
@@ -267,6 +285,7 @@ export class Sleeves {
             console.log('subscribeToFeedData', this.connectedDeviceId)
             if (!this.sleeveConnected) {
                 reject('unable to subscribeToFeedData: no sleeve connected');
+                this.isScanning = false;
             }
             this.ble.startNotification(this.connectedDeviceId,
                 '000030F0-0000-1000-8000-00805F9B34FB',
@@ -277,12 +296,14 @@ export class Sleeves {
                     this.feedsService.createFeedFromSleeve(this.dataBuffer);
                     resolve(this.dataBuffer);
                     this.dataBuffer = "";
+                    this.isScanning = false;
                     this.disconnectAll();
                 }
             }, error => {
                 console.error('error while receiving feedData', error)
                 reject('unable to receive feedData');
                 this.disconnectAll();
+                this.isScanning = false;
             })
             this.sendDownloadFeedRequest();
         })
@@ -298,24 +319,6 @@ export class Sleeves {
         }).catch(error => {
             console.error('error during writing the feed-download-request')
         })
-    }
-
-    private initScan(successCallback) {
-        this.ble.stopScan();
-        this.isScanning = true;
-        this.ble.startScan([]).subscribe(
-            device => this.onDeviceDiscovered(device, successCallback),
-            error => console.error('scan error', error)
-        );
-    }
-
-    onDeviceDiscovered(device, successCallback) {
-        console.log('discovered', JSON.stringify(device))
-        if (device.name == this.defaultSleeveName && device.id != '6710B20A-EE92-44C1-B9B9-684D7B6E1F5D') { //SHREYDEVICE// && device.id != 'D7832B16-8B21-4BCB-906C-0B6779BB18D8'
-            this.ble.stopScan();
-            console.log('Found a bottle sleeve', device.id)
-            this.connect(device.id, successCallback);
-        }
     }
 
 
@@ -354,10 +357,10 @@ export class Sleeves {
             },
             peripheral => {
                 this.sleeveConnected = false;
+                this.connectedDeviceId = null;
                 console.error('disconnected from sleeve', deviceId);
             }
         )
-
     }
 
     bufferToHex(buffer: ArrayBuffer) {

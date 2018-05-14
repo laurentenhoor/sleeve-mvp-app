@@ -8,7 +8,7 @@ import { BLE } from '@ionic-native/ble';
 import { HttpModule } from '@angular/http';
 
 import { MyApp } from './app.component';
-import { Tabs } from '../pages/tabs/tabs';
+import { TabsPage } from '../pages/tabs/tabs';
 import { Timeline } from '../pages/timeline/timeline';
 import { Bluetooth } from '../pages/bluetooth/bluetooth';
 import { FeedInput } from '../pages/feed-input/feed-input';
@@ -33,7 +33,7 @@ import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-gu
 @NgModule({
   declarations: [
     MyApp,
-    Tabs,
+    TabsPage,
     Timeline,
     Bluetooth,
     FeedInput,
@@ -51,7 +51,7 @@ import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-gu
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    Tabs,
+    TabsPage,
     Timeline,
     Bluetooth,
     FeedInput,

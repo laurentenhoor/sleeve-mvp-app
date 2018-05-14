@@ -2,7 +2,7 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Sleeves, SleeveStates } from '../../providers/sleeves';
-import { Tabs } from '../tabs/tabs';
+import { TabsPage } from '../tabs/tabs';
 
 @Component({
     selector: 'qsg',
@@ -105,11 +105,11 @@ export class Qsg {
         }, error => {
             console.error('no states available', error)
         })
-        this.sleevesService.feedData().then(feedData => {
-            console.log('feeddata from QSG')
-        }, error => {
-            console.error(error)
-        })
+        // this.sleevesService.feedData().then(feedData => {
+        //     console.log('feeddata from QSG')
+        // }, error => {
+        //     console.error(error)
+        // })
     }
 
     hideErrors() {
@@ -239,7 +239,7 @@ export class Qsg {
     }
 
     closeModal() {
-        this.nav.setRoot(Tabs);
+        this.nav.setRoot(TabsPage);
     }
 
     finishInstallation() {

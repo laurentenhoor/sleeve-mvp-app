@@ -12,14 +12,14 @@ import { Sessions } from '../../providers/sessions';
 import { Sleeves } from '../../providers/sleeves';
 import { Connecting } from '../connecting/connecting';
 import { Bluetooth } from '../bluetooth/bluetooth';
-import { Tabs } from '../tabs/tabs';
+
 
 
 @Component({
   selector: 'timeline',
   templateUrl: 'timeline.html'
 })
-export class Timeline implements OnInit {
+export class Timeline {
   @ViewChild(Content) content: Content;
   fakeScan: any;
   public amountOfAvailableFeeds;
@@ -39,80 +39,63 @@ export class Timeline implements OnInit {
     public sleevesService: Sleeves,
     public loadingCtrl: LoadingController,
   ) {
-    this.feeds = this.feedsService.getFeeds();
-    this.sleevesService.disconnectAll();
-    this.synchronizeFeeds();
+    events.subscribe('synchronize-feeds', () => {
+      this.synchronizeFeeds();
+    });
   }
 
-  stopScanning() {
-    console.log('stopScanning;')
-    this.sleevesService.stopScanning();
+  ionViewDidLoad() { 
+    this.synchronizeFeeds();
+    this.feeds = this.feedsService.getFeeds();
   }
 
   synchronizeFeeds() {
 
-    // setTimeout(() => {
-    //   let toast = this.toastCtrl.create({
-    //     message: 'No new feeds available',
-    //     duration: 5000,
-    //     showCloseButton: true,
-    //     closeButtonText: 'Close',
-    //     position: 'top',
-    //   });
-    //   toast.present();
-    // }, 1000)
-
     this.sleevesService.getPairedSleeves().then(pairedSleeves => {
-      console.log('pairedSleeves', pairedSleeves)
+      
       if (pairedSleeves.length == 0) {
         this.modalCtrl.create(Connecting).present();
+
       } else {
-        // this.presentLoading()
         this.sleevesService.synchronizeFeeds().then(feedData => {
-          console.log('feedData:', feedData)
-          
-          let toast = this.toastCtrl.create({
-            message: 'One new feed synced',
-            duration: 5000,
-            showCloseButton: true,
-            closeButtonText: 'Close',
-            position: 'top',
-          });
-          toast.present();
+          this.presentFeedToast();
 
         }).catch(error => {
-          console.error(error);
+          if (error === 'scanTimeout') {
+            this.presentTimeoutToast();
+          } else {
+            console.error(error);
+          }
 
         })
       }
     })
   }
 
+  presentTimeoutToast() {
+    let toast = this.toastCtrl.create({
+      message: 'No new feeds found',
+      duration: 5000,
+      showCloseButton: true,
+      closeButtonText: 'Close',
+      position: 'top',
+    });
+    toast.present();
+  }
+
+  presentFeedToast() {
+    let toast = this.toastCtrl.create({
+      message: 'One new feed synced',
+      duration: 5000,
+      showCloseButton: true,
+      closeButtonText: 'Close',
+      position: 'top',
+    });
+    toast.present();
+  }
+
   openSettings() {
     this.navCtrl.push(Bluetooth)
-  }
-
-  presentLoading() {
-    let loading = this.loadingCtrl.create({
-      spinner: 'dots',
-      content: 'Synchronizing'
-    });
-
-    loading.present();
-
-    setTimeout(() => {
-      loading.dismiss();
-    }, 2000);
-  }
-
-  ionViewDidLoad() {
-
-  }
-  ngOnInit() {
-  }
-
-  getAmountOfAvailableFeeds() {
-    return this.amountOfAvailableFeeds;
   }
 
   formatTimeAgo(timestamp) {

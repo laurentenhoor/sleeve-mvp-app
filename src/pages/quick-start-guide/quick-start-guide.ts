@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ViewController, App } from 'ionic-angular';
 
 import { RemoveCap } from './remove-cap/remove-cap';
-import { Tabs } from '../tabs/tabs';
+import { TabsPage } from '../tabs/tabs';
 
 @Component({
   selector: 'quick-start-guide',

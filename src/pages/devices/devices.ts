@@ -1,6 +1,6 @@
 
 import { Component, NgZone } from '@angular/core';
-import { AlertController, NavController } from 'ionic-angular';
+import { AlertController, NavController, Events } from 'ionic-angular';
 
 import { Sleeves } from '../../providers/sleeves';
 import { Connecting } from '../connecting/connecting';
@@ -16,14 +16,9 @@ export class Devices {
 
     constructor(
         private alertCtrl: AlertController,
-        private nav: NavController,
         private sleevesService: Sleeves,
         public modalCtrl: ModalController,
-        private zone: NgZone
     ) {        
-    }
-
-    ionViewDidEnter() {
     }
 
     ionViewDidLoad() {
@@ -31,7 +26,6 @@ export class Devices {
     }
 
     pair() {
-        this.sleevesService.disconnectAll();
         this.modalCtrl.create(Connecting).present();
     }
 

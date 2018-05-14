@@ -1,47 +1,161 @@
 <ion-header>
+
     <ion-toolbar>
         <ion-title>
             Quick Start Guide
         </ion-title>
-        <ion-buttons start>
-            <button ion-button (click)="closeModal()">
-                <span ion-text color="primary" showWhen="ios">Cancel</span>
-                <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+        <ion-buttons start *ngIf="slides.getActiveIndex() > 0">
+            <button ion-button icon-only (click)="slides.slidePrev()">
+                <ion-icon name="arrow-back"></ion-icon> Back
             </button>
         </ion-buttons>
     </ion-toolbar>
+
 </ion-header>
-<ion-slides pager style="background:white;">
 
-    <ion-slide>
-        <h2>Click the button to start</h2>
-        <p>A short press is sufficient</p>
-        <img src="assets/imgs/pig-milk.gif" />
-    </ion-slide>
+<ion-slides pager style="background:white;" class="swiper-no-swiping">
 
-    <ion-slide>
-        <h2>Place it on the table</h2>
-        <p>light will turn green if we measured how much milk is in.</p>
-        <img src="assets/imgs/cat-milk.gif" />
-    </ion-slide>
-
-    <ion-slide>
-        <h2>You may now feed...</h2>
-        <p>Hold in feeding position for at least 5 seconds to be detected</p>
-        <img src="assets/imgs/shark-milk.gif" />
+    <ion-slide padding>
+        <img *ngIf="slides.getActiveIndex()>=QsgStep.REMOVE_CAP" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 2.0_Remove-Cap.gif"
+        />
+        
+        <h1 ion-text>
+            Remove the Cap
+        </h1>
+        <p>
+            We will weigh to measure the amount of milk. The weight of the cap disturbs the measurement.
+        </p>
+        <ion-footer class="qsg" padding>
+            <button (click)="slides.slideNext();" ion-button block>Next Step</button>
+        </ion-footer>
     </ion-slide>
 
-    <ion-slide>
-        <h2>If you are ready, press the button to stop</h2>
-        <p>We wil measure how much milk is left.</p>
-        <img src="assets/imgs/cat-milk.gif" />
-        <!-- <button (click)="finishInstallation()" ion-button icon-left color="royal">
-            Finish installation
-        </button> -->
+    <ion-slide padding>
+        <img *ngIf="slides.getActiveIndex()>=QsgStep.PLACE_BOTTLE" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen-3.0_Insert-Bottle.gif"
+        />
+        <h1 ion-text>
+            Insert the Bottle
+        </h1>
+        <p>
+            After preparing your baby’s bottle, insert the bottle in the bottle tracker.
+        </p>
+        <ion-footer class="qsg" padding>
+            <button (click)="slides.slideNext();" ion-button block>Next Step</button>
+        </ion-footer>
     </ion-slide>
-    <ion-slide>
-        <h2>Place it on the table</h2>
-        <p>It will turn purple to show the end</p>
-        <img src="assets/imgs/pig-milk.gif" />
+
+    <ion-slide padding>
+        <img *ngIf="slides.getActiveIndex()>=QsgStep.WEIGH_BEFORE" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen-5.1_5.2_B-Weight-start-volume-on-table_cropped.gif"
+        />
+        <h1 ion-text>
+            First Volume Measurement
+            <br>Before Feeding
+        </h1>
+        <p>
+            Place the sleeve on a flat and hard surface and short press the button.
+        </p>
+        <p>
+            The light turns green when the feed's volume measurement is successful.
+        </p>
+        <ion-footer class="qsg" padding>
+            <button color="{{ hasMeasuredBefore ? 'secondary' : 'light'}}" ion-button block icon-start (click)="hasMeasuredBefore && slides.slideNext();">
+                <ion-icon *ngIf="!hasMeasuredBefore">
+                    <ion-spinner name="dots"></ion-spinner>
+                </ion-icon>
+                <ion-icon *ngIf="hasMeasuredBefore" style="color:white;font-weight: bold" name="checkmark">
+                </ion-icon>
+                {{ isMeasuringBefore ? 'Measuring' : hasMeasuredBefore ? 'Volume Measured' : 'Waiting for Button Press'}}
+            </button>
+        </ion-footer>
     </ion-slide>
+
+    <ion-slide padding>
+        <img *ngIf="slides.getActiveIndex()>=QsgStep.FEEDING" class="qsg-gif" src="assets/imgs/qsg/small/Smartsleeve_teaser_3.gif"
+        />
+        <h1 ion-text>
+            Feeding
+        </h1>
+        <p>
+            Hold the bottle in feeding position.
+            <br>
+            <b>After 10 seconds a feed will be detected.</b>
+        </p>
+        <p>
+            The lights will be off while your tracking your baby's feeding.
+        </p>
+        <ion-footer class="qsg" padding>
+            <button color="{{ !feedIsDetected ? 'light' : 'secondary'}}" (click)="feedIsDetected && slides.slideNext();" ion-button block icon-start>
+                <ion-icon *ngIf="!feedIsDetected">
+                    <ion-spinner name="dots"></ion-spinner>
+                </ion-icon>
+                <ion-icon *ngIf="feedIsDetected" style="color:white;font-weight: bold" name="checkmark">
+                </ion-icon>
+                {{ !feedIsDetected ? 'Waiting for Feeding' : 'Feed Detected' }}
+            </button>
+        </ion-footer>
+    </ion-slide>
+
+    <ion-slide padding>
+        <img *ngIf="slides.getActiveIndex()>=QsgStep.WIGGLE" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 7.1_7.2_Wiggle and Wiggle Detected.gif"
+        />
+        <h1 ion-text>
+            Extra tip: Wiggle!
+        </h1>
+        <p>
+            If you want to be sure that the Sleeve is tracking your feed. You can wiggle the Sleeve and the light will blink white to
+            indicate it is tracking.
+        </p>
+        <ion-footer padding>
+            <button color="{{ !wiggleIsDetected ? 'light' : 'secondary'}}" (click)="wiggleIsDetected && slides.slideNext();" ion-button block icon-start>
+                <ion-icon *ngIf="!wiggleIsDetected">
+                    <ion-spinner name="dots"></ion-spinner>
+                </ion-icon>
+                <ion-icon *ngIf="wiggleIsDetected" style="color:white;font-weight: bold" name="checkmark">
+                </ion-icon>
+                {{ !wiggleIsDetected ? 'Waiting for Wiggle' : 'Wiggle Detected' }}
+            </button>
+        </ion-footer>
+    </ion-slide>
+
+    <ion-slide padding>
+        <img *ngIf="slides.getActiveIndex()>=QsgStep.WEIGH_AFTER" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 8.1_Finish Feeding.gif"
+        />
+
+        <h1 ion-text>
+            Second Volume Measurement to Finish Feeding
+        </h1>
+        <p>
+            Press the button shortly to finish the feed. The blinking white light indicates the Smart Bottle Sleeve is ready to measure
+            the feed’s end volume.
+        </p>
+        <ion-footer class="qsg" padding>
+            <button color="{{ hasMeasuredAfter ? 'purple' : 'light'}}" ion-button block icon-start (click)="hasMeasuredAfter && slides.slideNext();">
+                <ion-icon *ngIf="!hasMeasuredAfter">
+                    <ion-spinner name="dots"></ion-spinner>
+                </ion-icon>
+                <ion-icon *ngIf="hasMeasuredAfter" style="color:white;font-weight: bold" name="checkmark">
+                </ion-icon>
+                {{ isMeasuringAfter ? 'Measuring' : hasMeasuredAfter ? 'Volume Measured & Feeding Finished' : 'Waiting for Button Press'}}
+            </button>
+        </ion-footer>
+    </ion-slide>
+
+    <ion-slide padding>
+        <img *ngIf="slides.getActiveIndex()>=QsgStep.SYNCHRHONIZE" style="width:50%;" src="assets/imgs/qsg/image_pairing screen.png"
+        />
+
+        <h1 ion-text>Syncing Data</h1>
+        <p>
+            After you've finished the feed, the data will be synced when opening the app.
+        </p>
+        <p>
+            <b>The sleeve can store up to 100 feeds. The app is not needed while tracking the feed.</b>
+        </p>
+        <ion-footer class="qsg" padding>
+            <button color="primary" (click)="gotoTimeline();" ion-button block icon-start>
+                Go to Timeline
+            </button>
+        </ion-footer>
+    </ion-slide>
+
 </ion-slides>

@@ -5,13 +5,15 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { Sessions } from '../providers/sessions';
 
-import { Tabs } from '../pages/tabs/tabs';
+import { TabsPage } from '../pages/tabs/tabs';
+import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
+import { QuickStart } from '../pages/quick-start/quick-start';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = Tabs;
+  rootPage: any = TabsPage;
 
   constructor(
     platform: Platform,
@@ -27,8 +29,6 @@ export class MyApp {
         splashScreen.hide();
       }
       sessionsService.setSession();
-
-
     });
   }
 }

@@ -9,6 +9,7 @@ import { QuickStart } from '../quick-start/quick-start';
 import { ModalController } from 'ionic-angular';
 // import { QuickStartGuide } from '../quick-start-guide/quick-start-guide';
 import { Qsg } from '../qsg/qsg';
+import { QuickStartGuide } from '../quick-start-guide/quick-start-guide';
 
 @Component({
     selector: 'connecting',
@@ -41,7 +42,8 @@ export class Connecting {
     openQsg() {
         this.nav.pop();
         // this.appCtrl.getRootNav().push(QuickStartGuide);
-        this.modalCtrl.create(Qsg).present();
+        // this.modalCtrl.create(Qsg).present();
+        this.modalCtrl.create(QuickStart).present();
     }
 
     demo() {

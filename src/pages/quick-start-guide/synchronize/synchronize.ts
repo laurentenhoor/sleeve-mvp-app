@@ -1,7 +1,7 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Sleeves, SleeveStates } from '../../../providers/sleeves';
-import { Tabs } from '../../tabs/tabs';
+import { TabsPage } from '../../tabs/tabs';
 
 @Component({
   selector: 'synchronize',
@@ -16,7 +16,7 @@ export class Synchronize {
   }
   
   nextStep() {
-    this.navCtrl.setRoot(Tabs)
+    this.navCtrl.setRoot(TabsPage)
   }
 
 }
