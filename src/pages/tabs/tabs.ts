@@ -24,7 +24,7 @@ export class TabsPage {
     this.tab3 = Devices;
 
     events.subscribe('synchronize-feeds', () => {
-      // this.app.getActiveNavs()[0].parent.select(0); 
+      this.app.getActiveNavs()[0].parent.select(0); 
     })
   }
 }

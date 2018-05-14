@@ -18,6 +18,7 @@ export class Devices {
         private alertCtrl: AlertController,
         private sleevesService: Sleeves,
         public modalCtrl: ModalController,
+        private events: Events
     ) {        
     }
 
