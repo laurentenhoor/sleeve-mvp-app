@@ -6,7 +6,7 @@
         </ion-title>
         <ion-buttons start *ngIf="slides.getActiveIndex() > 0">
             <button ion-button icon-only (click)="slides.slidePrev()">
-                <ion-icon name="arrow-back"></ion-icon> Back
+                <ion-icon name="arrow-back"></ion-icon>
             </button>
         </ion-buttons>
     </ion-toolbar>
@@ -16,16 +16,29 @@
 <ion-slides pager style="background:white;" class="swiper-no-swiping">
 
     <ion-slide padding>
+
+
         <img *ngIf="slides.getActiveIndex()>=QsgStep.REMOVE_CAP" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 2.0_Remove-Cap.gif"
         />
-        
         <h1 ion-text>
             Remove the Cap
         </h1>
         <p>
             We will weigh to measure the amount of milk. The weight of the cap disturbs the measurement.
         </p>
+
         <ion-footer class="qsg" padding>
+
+            <ion-item color="orange">
+                <ion-icon item-start name="alert"></ion-icon>
+                <ion-label class="warning">
+                    Please retry on a flat and hard surface.
+                </ion-label>
+                <button ion-button item-end outline small color="white">
+                    Help
+                </button>
+            </ion-item>
+            
             <button (click)="slides.slideNext();" ion-button block>Next Step</button>
         </ion-footer>
     </ion-slide>
@@ -39,6 +52,7 @@
         <p>
             After preparing your baby’s bottle, insert the bottle in the bottle tracker.
         </p>
+
         <ion-footer class="qsg" padding>
             <button (click)="slides.slideNext();" ion-button block>Next Step</button>
         </ion-footer>
@@ -48,8 +62,7 @@
         <img *ngIf="slides.getActiveIndex()>=QsgStep.WEIGH_BEFORE" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen-5.1_5.2_B-Weight-start-volume-on-table_cropped.gif"
         />
         <h1 ion-text>
-            First Volume Measurement
-            <br>Before Feeding
+            First Volume Measurement Before Feeding
         </h1>
         <p>
             Place the sleeve on a flat and hard surface and short press the button.
@@ -58,6 +71,9 @@
             The light turns green when the feed's volume measurement is successful.
         </p>
         <ion-footer class="qsg" padding>
+
+
+
             <button color="{{ hasMeasuredBefore ? 'secondary' : 'light'}}" ion-button block icon-start (click)="hasMeasuredBefore && slides.slideNext();">
                 <ion-icon *ngIf="!hasMeasuredBefore">
                     <ion-spinner name="dots"></ion-spinner>
@@ -84,7 +100,8 @@
             The lights will be off while your tracking your baby's feeding.
         </p>
         <ion-footer class="qsg" padding>
-            <button color="{{ !feedIsDetected ? 'light' : 'secondary'}}" (click)="feedIsDetected && slides.slideNext();" ion-button block icon-start>
+            <button color="{{ !feedIsDetected ? 'light' : 'secondary'}}" (click)="feedIsDetected && slides.slideNext();" ion-button block
+                icon-start>
                 <ion-icon *ngIf="!feedIsDetected">
                     <ion-spinner name="dots"></ion-spinner>
                 </ion-icon>
@@ -106,7 +123,8 @@
             indicate it is tracking.
         </p>
         <ion-footer padding>
-            <button color="{{ !wiggleIsDetected ? 'light' : 'secondary'}}" (click)="wiggleIsDetected && slides.slideNext();" ion-button block icon-start>
+            <button color="{{ !wiggleIsDetected ? 'light' : 'secondary'}}" (click)="wiggleIsDetected && slides.slideNext();" ion-button
+                block icon-start>
                 <ion-icon *ngIf="!wiggleIsDetected">
                     <ion-spinner name="dots"></ion-spinner>
                 </ion-icon>

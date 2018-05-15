@@ -6,8 +6,7 @@ import PouchDB from 'pouchdb';
 import { Observable } from 'rxjs/Observable';
 import { Feeds } from './feeds';
 
-export
-    enum SleeveStates {
+export enum SleeveStates {
     DEVICE_STATE_NONE = 0, //Don't add anything before this
     BLE_ADVERTISING = 1,
     BLE_PAIRED_AND_BONDED = 2,
@@ -73,7 +72,7 @@ export class Sleeves {
             self.syncTimestampDb.put({
                 _id: id,
                 _rev: doc ? doc._rev : null,
-                timestamp: Date.now()-2000,
+                timestamp: Date.now() - 2000,
                 date: new Date()
             }, function (err, response) {
                 if (err) { return console.log(err); }
@@ -106,7 +105,7 @@ export class Sleeves {
                         })
                     }
                 });
-            }).catch(error=>console.error(error))
+            }).catch(error => console.error(error))
         });
     }
 
