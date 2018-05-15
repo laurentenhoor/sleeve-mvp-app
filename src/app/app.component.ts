@@ -15,7 +15,7 @@ import { Qsg } from '../pages/qsg/qsg';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = QuickStart;
+  rootPage: any = TabsPage;
 
   constructor(
     platform: Platform,
