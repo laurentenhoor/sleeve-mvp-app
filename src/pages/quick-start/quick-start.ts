@@ -68,7 +68,9 @@ export class QuickStart {
                     this.afterFeeding();
                     break;
                 case SleeveStates.DEVICE_WIGGLING:
-                    this.afterWiggle();
+                    if (this.slides.getActiveIndex() == QsgStep.WIGGLE) {
+                        this.afterWiggle();
+                    }
                     break;
                 case SleeveStates.BUTTON_PRESSED:
                     if (this.slides.getActiveIndex() >= QsgStep.WEIGH_BEFORE) {
