@@ -6,14 +6,16 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Sessions } from '../providers/sessions';
 
 import { TabsPage } from '../pages/tabs/tabs';
+
 import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
 import { QuickStart } from '../pages/quick-start/quick-start';
+import { Qsg } from '../pages/qsg/qsg';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = TabsPage;
+  rootPage: any = QuickStart;
 
   constructor(
     platform: Platform,
