@@ -28,17 +28,6 @@
         </p>
 
         <ion-footer class="qsg" padding>
-
-            <ion-item color="orange" style="border-radius:4px;">
-                <ion-icon item-start name="alert"></ion-icon>
-                <ion-label class="warning">
-                    Please retry on a flat and hard surface.
-                </ion-label>
-                <button ion-button item-end outline small color="white">
-                    Help
-                </button>
-            </ion-item>
-            
             <button (click)="slides.slideNext();" ion-button block>Next Step</button>
         </ion-footer>
     </ion-slide>
@@ -72,7 +61,15 @@
         </p>
         <ion-footer class="qsg" padding>
 
-
+            <ion-item *ngIf="startWeighTimeoutError" color="orange" style="border-radius:4px;">
+                <ion-icon item-start name="alert"></ion-icon>
+                <ion-label class="warning">
+                    Please retry on a flat and hard surface.
+                </ion-label>
+                <button ion-button item-end outline small color="white" (click)="showWeighErrorHints()">
+                    Help
+                </button>
+            </ion-item>
 
             <button color="{{ hasMeasuredBefore ? 'secondary' : 'light'}}" ion-button block icon-start (click)="hasMeasuredBefore && slides.slideNext();">
                 <ion-icon *ngIf="!hasMeasuredBefore">
@@ -147,6 +144,17 @@
             the feed’s end volume.
         </p>
         <ion-footer class="qsg" padding>
+
+            <ion-item *ngIf="endWeighTimeoutError" color="orange" style="border-radius:4px;">
+                <ion-icon item-start name="alert"></ion-icon>
+                <ion-label class="warning">
+                    Please retry on a flat and hard surface.
+                </ion-label>
+                <button ion-button item-end outline small color="white" (click)="showWeighErrorHints()">
+                    Help
+                </button>
+            </ion-item>
+
             <button color="{{ hasMeasuredAfter ? 'purple' : 'light'}}" ion-button block icon-start (click)="hasMeasuredAfter && slides.slideNext();">
                 <ion-icon *ngIf="!hasMeasuredAfter">
                     <ion-spinner name="dots"></ion-spinner>

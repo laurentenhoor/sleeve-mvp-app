@@ -22,14 +22,17 @@ enum QsgStep {
 export class QuickStart {
 
     @ViewChild(Slides) slides: Slides;
-
+    
     private QsgStep: typeof QsgStep = QsgStep;
+
     private isMeasuringBefore: boolean = false;
     private hasMeasuredBefore: boolean = false;
     private isMeasuringAfter: boolean = false;
     private hasMeasuredAfter: boolean = false;
     private feedIsDetected: boolean = false;
     private wiggleIsDetected: boolean = false;
+    private startWeighTimeoutError: boolean = false;
+    private endWeighTimeoutError: boolean = false;
 
     constructor(
         private nav: NavController,
@@ -37,7 +40,8 @@ export class QuickStart {
         private sleevesService: Sleeves,
         private zone: NgZone,
         private app: App,
-        private events: Events
+        private events: Events,
+        private alertCtrl: AlertController
     ) {
 
     }
@@ -90,12 +94,13 @@ export class QuickStart {
         this.zone.run(() => {
             this.isMeasuringBefore = true;
             this.hasMeasuredBefore = false;
+            this.startWeighTimeoutError = false;
         });
     }
 
     showStartWeighError() {
         this.zone.run(() => {
-
+            this.startWeighTimeoutError = true;
         });
     }
 
@@ -122,12 +127,13 @@ export class QuickStart {
         this.zone.run(() => {
             this.isMeasuringAfter = true;
             this.hasMeasuredAfter = false;
+            this.endWeighTimeoutError = false;
         });
     }
 
     showEndWeighError() {
         this.zone.run(() => {
-            
+            this.endWeighTimeoutError = true;
         });
     }
 
@@ -141,6 +147,15 @@ export class QuickStart {
     gotoTimeline() {
         this.events.publish('synchronize-feeds');
         this.nav.pop();
+    }
+
+    showWeighErrorHints() {
+        let alert = this.alertCtrl.create({
+            title: 'Extra Tip!',
+            subTitle: 'Do not touch the device during the measurement. Make sure it is on a flat and hard surface.',
+            buttons: ['OK']
+        });
+        alert.present();
     }
 
 }
