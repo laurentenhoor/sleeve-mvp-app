@@ -1,6 +1,6 @@
 
 import { ViewChild, Component, NgZone } from '@angular/core';
-import { AlertController, NavController, Slides, App, Events } from 'ionic-angular';
+import { AlertController, NavController, Slides, App, Events, ToastController } from 'ionic-angular';
 
 import { BLE } from '@ionic-native/ble';
 import { Sleeves, SleeveStates } from '../../providers/sleeves'
@@ -22,7 +22,7 @@ enum QsgStep {
 export class QuickStart {
 
     @ViewChild(Slides) slides: Slides;
-    
+
     private QsgStep: typeof QsgStep = QsgStep;
 
     private isMeasuringBefore: boolean = false;
@@ -41,7 +41,8 @@ export class QuickStart {
         private zone: NgZone,
         private app: App,
         private events: Events,
-        private alertCtrl: AlertController
+        private alertCtrl: AlertController,
+        private toastCtrl: ToastController,
     ) {
 
     }
@@ -156,6 +157,15 @@ export class QuickStart {
             buttons: ['OK']
         });
         alert.present();
+    }
+
+    showDeviceActionToast() {
+        let toast = this.toastCtrl.create({
+            message: 'Please Use Your Sleeve!',
+            duration: 3000,
+            position: 'top',
+        });
+        toast.present();
     }
 
 }

@@ -71,7 +71,7 @@
                 </button>
             </ion-item>
 
-            <button color="{{ hasMeasuredBefore ? 'secondary' : 'light'}}" ion-button block icon-start (click)="hasMeasuredBefore && slides.slideNext();">
+            <button color="{{ hasMeasuredBefore ? 'secondary' : 'light'}}" ion-button block icon-start (click)="(hasMeasuredBefore && slides.slideNext()) || (!hasMeasuredBefore && showDeviceActionToast())">
                 <ion-icon *ngIf="!hasMeasuredBefore">
                     <ion-spinner name="dots"></ion-spinner>
                 </ion-icon>
@@ -97,7 +97,7 @@
             The lights will be off while your tracking your baby's feeding.
         </p>
         <ion-footer class="qsg" padding>
-            <button color="{{ !feedIsDetected ? 'light' : 'secondary'}}" (click)="feedIsDetected && slides.slideNext();" ion-button block
+            <button color="{{ !feedIsDetected ? 'light' : 'secondary'}}" (click)="(feedIsDetected && slides.slideNext()) || (!feedIsDetected && showDeviceActionToast())" ion-button block
                 icon-start>
                 <ion-icon *ngIf="!feedIsDetected">
                     <ion-spinner name="dots"></ion-spinner>
@@ -113,14 +113,14 @@
         <img *ngIf="slides.getActiveIndex()>=QsgStep.WIGGLE" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 7.1_7.2_Wiggle and Wiggle Detected.gif"
         />
         <h1 ion-text>
-            Extra tip: Wiggle!
+            Extra Tip: Wiggle!
         </h1>
         <p>
             If you want to be sure that the Sleeve is tracking your feed. You can wiggle the Sleeve and the light will blink white to
             indicate it is tracking.
         </p>
         <ion-footer padding>
-            <button color="{{ !wiggleIsDetected ? 'light' : 'secondary'}}" (click)="wiggleIsDetected && slides.slideNext();" ion-button
+            <button color="{{ !wiggleIsDetected ? 'light' : 'secondary'}}" (click)="(wiggleIsDetected && slides.slideNext()) || (!wiggleIsDetected && showDeviceActionToast())" ion-button
                 block icon-start>
                 <ion-icon *ngIf="!wiggleIsDetected">
                     <ion-spinner name="dots"></ion-spinner>
@@ -155,7 +155,7 @@
                 </button>
             </ion-item>
 
-            <button color="{{ hasMeasuredAfter ? 'purple' : 'light'}}" ion-button block icon-start (click)="hasMeasuredAfter && slides.slideNext();">
+            <button color="{{ hasMeasuredAfter ? 'purple' : 'light'}}" ion-button block icon-start (click)="(hasMeasuredAfter && slides.slideNext()) || (!hasMeasuredAfter && showDeviceActionToast())">
                 <ion-icon *ngIf="!hasMeasuredAfter">
                     <ion-spinner name="dots"></ion-spinner>
                 </ion-icon>

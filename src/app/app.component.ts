@@ -13,7 +13,7 @@ import { QuickStart } from '../pages/quick-start/quick-start';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = QuickStart;
+  rootPage: any = TabsPage;
 
   constructor(
     platform: Platform,
