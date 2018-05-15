@@ -1,6 +1,6 @@
 
 import { Component } from '@angular/core';
-import { AlertController, NavController, App } from 'ionic-angular';
+import { AlertController, NavController, App, Events } from 'ionic-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 import { Sleeves } from '../../providers/sleeves';
@@ -23,11 +23,11 @@ export class Connecting {
         private inAppBrowser: InAppBrowser,
         private sleevesService: Sleeves,
         public modalCtrl: ModalController,
-        public appCtrl: App
+        public appCtrl: App,
+        public events: Events
     ) {
 
     }
-
     ionViewDidEnter() {
         this.sleevesService.scanAndConnect()
             .subscribe(connectedSleeve => {

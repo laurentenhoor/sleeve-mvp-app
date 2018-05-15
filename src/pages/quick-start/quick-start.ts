@@ -148,8 +148,10 @@ export class QuickStart {
     }
 
     gotoTimeline() {
-        this.events.publish('synchronize-feeds');
         this.nav.pop();
+        setTimeout(() => {
+            this.events.publish('synchronize-feeds');
+        }, 500)
     }
 
     showWeighErrorHints() {
