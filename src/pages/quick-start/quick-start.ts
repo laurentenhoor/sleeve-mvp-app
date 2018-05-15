@@ -163,7 +163,7 @@ export class QuickStart {
         let toast = this.toastCtrl.create({
             message: 'Please Use Your Sleeve!',
             duration: 3000,
-            position: 'top',
+            position: 'bottom',
         });
         toast.present();
     }
