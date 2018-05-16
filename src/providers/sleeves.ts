@@ -27,15 +27,16 @@ export enum SleeveStates {
 
 @Injectable()
 export class Sleeves {
+    isScanning: boolean = false;
+    lastSyncTimestamp: number = 0;
+
     private localDb: any;
     private syncTimestampDb: any;
     private defaultSleeveName: string = 'Philips Avent SCH820';
     private connectedDeviceId: string;
     private sleeveConnected: boolean;
     private pairedSleeves: any[] = null;
-    public isScanning: boolean = false;
-    public dataBuffer: string = "";
-    public lastSyncTimestamp: number = null;
+    private dataBuffer: string = "";
 
     constructor(
         private ble: BLE,
@@ -47,6 +48,7 @@ export class Sleeves {
         this.defaultSleeveName
         this.sleeveConnected = false;
         this.getPairedSleeves().then(pairedSleeves => this.pairedSleeves = pairedSleeves);
+        this.initSyncTimestamp();
     }
 
     removeSleeve(sleeve): void {
@@ -80,32 +82,19 @@ export class Sleeves {
         });
     }
 
-    getSyncTimestamp(): Promise<number> {
-        if (this.lastSyncTimestamp !== null) {
-            console.log('follow-up timestamp promise')
-            return new Promise(resolve => {
-                resolve(this.lastSyncTimestamp)
-            })
-        }
-        console.log('initial timestamp promise')
-        this.lastSyncTimestamp = 0;
-        return new Promise(resolve => {
-            this.syncTimestampDb.get(
-                'lastTimestamp'
-            ).then(doc => {
-                console.log('lasttimestamp doc', doc)
-                this.lastSyncTimestamp = doc.timestamp;
-                console.log(this.lastSyncTimestamp)
-                resolve(this.lastSyncTimestamp)
-                this.syncTimestampDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-                    console.log('change of timestamp', change.doc)
-                    if (change && change.doc && change.doc.timestamp) {
-                        this.zone.run(() => {
-                            this.lastSyncTimestamp = change.doc.timestamp;
-                        })
-                    }
-                });
-            }).catch(error => console.error(error))
+    initSyncTimestamp(): void {      
+        this.syncTimestampDb.get(
+            'lastTimestamp'
+        ).then(doc => {
+            this.lastSyncTimestamp = doc.timestamp;
+        }).catch(error => console.error(error));
+
+        this.syncTimestampDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
+            if (change && change.doc && change.doc.timestamp) {
+                this.zone.run(() => {
+                    this.lastSyncTimestamp = change.doc.timestamp;
+                })
+            }
         });
     }
 

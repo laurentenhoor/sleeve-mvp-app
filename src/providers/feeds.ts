@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import PouchDB from 'pouchdb';
 import { Sessions } from './sessions';
+import { orderBy } from 'lodash';
 
 @Injectable()
 export class Feeds {
@@ -38,6 +39,7 @@ export class Feeds {
                     // console.log(row)
                     this.data.push(row.doc);
                 });
+                this.sortData();
                 resolve(this.data);
 
                 this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
@@ -94,6 +96,10 @@ export class Feeds {
         this.getFeeds();
     }
 
+    sortData() {
+        this.data = orderBy(this.data, ['timestamp'], ['desc']);
+    }
+
     handleChange(change) {
 
         let changedDoc = null;
@@ -122,10 +128,11 @@ export class Feeds {
             else {
                 this.zone.run(() => {
                     this.data.unshift(change.doc);
+                    
                 });
             }
 
         }
-
+        this.sortData()
     }
 }

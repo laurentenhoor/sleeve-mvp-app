@@ -1,11 +1,12 @@
 <ion-header>
     <ion-toolbar>
         <ion-title>
-            {{ selectedFeed ? 'Edit This Feed' : 'Add A Feed' }}
+            {{ selectedFeed ? 'Edit this Feed' : 'Add A Feed' }}
         </ion-title>
         <ion-buttons start>
-            <button ion-button (click)="dismiss()">
-                <span ion-text color="primary" showWhen="ios">Cancel</span>
+            <button ion-button (click)="saveFeed()">
+                <span ion-text color="primary" showWhen="ios">
+                        <ion-icon name="arrow-back"></ion-icon> Back</span>
                 <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
             </button>
         </ion-buttons>
@@ -14,27 +15,25 @@
 
 <ion-content text-center>
 
-
     <ion-label>
-            <h2><ion-icon name="water" color="{{ updatedFeed.type =='smart' ? 'secondary' : 'primary'}}"></ion-icon> {{ (updatedFeed ? updatedFeed.amount : 125 )| number : '1.0-0' }} ml</h2></ion-label>
+            <h2><ion-icon name="water" color="{{ updatedFeed.type =='smart' ? 'primary' : 'primary'}}"></ion-icon> {{ (updatedFeed ? updatedFeed.amount : 125 )| number : '1.0-0' }} ml</h2></ion-label>
     <ion-range min="0" max="250" step="5" snaps="true" color="primary" [(ngModel)]="updatedFeed.amount"></ion-range>
 
-
-    <button ion-button icon-start (click)="saveFeed()">
+    <!-- <button ion-button icon-start (click)="saveFeed()">
         <ion-icon name="checkmark"></ion-icon>
         Save
-    </button>
+    </button> -->
 
-    <button ion-button icon-start (click)="dismiss()">
+    <!-- <button ion-button icon-start (click)="dismiss()">
         <ion-icon name="close"></ion-icon>
         Cancel
-    </button>
+    </button> -->
 
 
-    <button ion-button icon-start (click)="deleteFeed()" [hidden]="!selectedFeed">
+    <!-- <button ion-button icon-start (click)="deleteFeed()" [hidden]="!selectedFeed">
         <ion-icon name="trash"></ion-icon>
         Delete
-    </button>
+    </button> -->
 
 
 </ion-content>

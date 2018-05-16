@@ -46,7 +46,6 @@ export class Timeline {
   ionViewDidLoad() { 
     this.synchronizeFeeds();
     this.feeds = this.feedsService.getFeeds();
-    this.lastSyncTimestamp = this.sleevesService.getSyncTimestamp();
   }
 
   synchronizeFeeds() {
