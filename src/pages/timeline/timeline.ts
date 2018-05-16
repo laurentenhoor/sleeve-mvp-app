@@ -43,15 +43,14 @@ export class Timeline {
     });
   }
 
-  ionViewDidLoad() { 
+  ionViewDidLoad() {
     this.synchronizeFeeds();
-    this.feeds = this.feedsService.getFeeds();
   }
 
   synchronizeFeeds() {
 
     this.sleevesService.getPairedSleeves().then(pairedSleeves => {
-      
+
       if (pairedSleeves.length == 0) {
         this.modalCtrl.create(Connecting).present();
 
@@ -111,7 +110,7 @@ export class Timeline {
   }
 
   deleteFeed(feed) {
-    this.feedsService.deleteFeed(feed)
+    this.feedsService.deleteFeed(feed);
   }
 
 

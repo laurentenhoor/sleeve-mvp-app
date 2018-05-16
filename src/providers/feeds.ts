@@ -5,7 +5,7 @@ import { orderBy } from 'lodash';
 
 @Injectable()
 export class Feeds {
-    data: any = null;
+    feeds: any = null;
     localDb: any;
     remoteDb: any;
 
@@ -22,36 +22,56 @@ export class Feeds {
             retry: true,
             continuous: true,
         });
+
+        this.initFeeds();
+
     }
 
-    getFeeds(): Promise<Object[]> {
-        if (this.data !== null) {
-            return new Promise(resolve => { resolve(this.data) });
-        }
-        return new Promise(resolve => {
+    initFeeds(): void {
+        this.feeds = [];
 
-            this.localDb.allDocs({
-                include_docs: true
-            }).then((result) => {
-
-                this.data = [];
-                let docs = result.rows.map((row) => {
-                    // console.log(row)
-                    this.data.push(row.doc);
-                });
-                this.sortData();
-                resolve(this.data);
-
-                this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-                    this.handleChange(change);
-                });
-
-            }).catch((error) => {
-                console.error(error);
+        this.localDb.allDocs({
+            include_docs: true
+        }).then((result) => {
+            let docs = result.rows.map((row) => {
+                this.feeds.push(row.doc);
             });
+            this.sortData();
 
+        })
+        this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
+            this.handleChange(change);
         });
     }
+
+    // getFeeds(): Promise<Object[]> {
+    //     if (this.feeds !== null) {
+    //         return new Promise(resolve => { resolve(this.feeds) });
+    //     }
+    //     return new Promise(resolve => {
+
+    //         this.localDb.allDocs({
+    //             include_docs: true
+    //         }).then((result) => {
+
+    //             this.feeds = [];
+    //             let docs = result.rows.map((row) => {
+    //                 // console.log(row)
+    //                 this.feeds.push(row.doc);
+    //             });
+    //             this.sortData();
+    //             resolve(this.feeds);
+
+    //             this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
+    //                 this.handleChange(change);
+    //             });
+
+    //         }).catch((error) => {
+    //             console.error(error);
+    //         });
+
+    //     });
+    // }
 
     createFeed(feed) {
         this.localDb.post(feed).then((result) => {
@@ -93,11 +113,10 @@ export class Feeds {
         this.localDb.remove(feed).catch((err) => {
             console.error(err);
         });
-        this.getFeeds();
     }
 
     sortData() {
-        this.data = orderBy(this.data, ['timestamp'], ['desc']);
+        this.feeds = orderBy(this.feeds, ['timestamp'], ['desc']);
     }
 
     handleChange(change) {
@@ -105,7 +124,7 @@ export class Feeds {
         let changedDoc = null;
         let changedIndex = null;
 
-        this.data.forEach((doc, index) => {
+        this.feeds.forEach((doc, index) => {
             if (doc._id === change.id) {
                 changedDoc = doc;
                 changedIndex = index;
@@ -114,21 +133,21 @@ export class Feeds {
         //A document was deleted
         if (change.deleted) {
             this.zone.run(() => {
-                this.data.splice(changedIndex, 1);
+                this.feeds.splice(changedIndex, 1);
             });
         }
         else {
             //A document was updated
             if (changedDoc) {
                 this.zone.run(() => {
-                    this.data[changedIndex] = change.doc;
+                    this.feeds[changedIndex] = change.doc;
                 });
             }
             //A document was added
             else {
                 this.zone.run(() => {
-                    this.data.unshift(change.doc);
-                    
+                    this.feeds.unshift(change.doc);
+
                 });
             }
 
