@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { ModalController } from 'ionic-angular';
+import { ModalController, Events } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
 
 import PouchDB from 'pouchdb';
@@ -27,7 +27,8 @@ export enum SleeveStates {
 
 @Injectable()
 export class Sleeves {
-    isScanning: boolean = false;
+    isSyncing: boolean = false;
+    isPairing: boolean = false;
     lastSyncTimestamp: number = 0;
 
     private localDb: any;
@@ -41,7 +42,8 @@ export class Sleeves {
     constructor(
         private ble: BLE,
         private feedsService: Feeds,
-        private zone: NgZone
+        private zone: NgZone,
+        private events: Events
     ) {
         this.localDb = new PouchDB('sleeves');
         this.syncTimestampDb = new PouchDB('syncTimestamp');
@@ -98,10 +100,10 @@ export class Sleeves {
         });
     }
 
-    disconnectAll() {
-        this.ble.stopScan();
-        this.isScanning = false;
-        this.getPairedSleeves().then(pairedSleeves => {
+    async disconnectAll() {
+        await this.ble.stopScan();
+        this.isSyncing = false;
+        await this.getPairedSleeves().then(pairedSleeves => {
             pairedSleeves.forEach((sleeve) => {
                 this.ble.disconnect(sleeve._id).then(
                     success => {
@@ -184,27 +186,51 @@ export class Sleeves {
     }
 
 
-    scanAndConnect(): Observable<string> {
+    async scanAndConnect(): Promise<any> {
+        this.isPairing = true;
         console.log('scanAndConnect()')
-        this.ble.stopScan();
-        return Observable.create(observer => {
+        await this.disconnectAll();
+        return new Promise((resolve, reject) => {
             this.initScan((connectedSleeve) => {
                 console.log('Starting Forced Bonding', connectedSleeve)
                 this.forceBonding(connectedSleeve).then(() => {
                     console.log('It was not needed to force this bonding!')
-                    observer.next(connectedSleeve.id);
+                    this.isPairing = false;
+                    resolve(connectedSleeve.id);
                 }, () => {
                     console.log('Forced a bonding by reading!')
-                    observer.next(connectedSleeve.id);
+                    this.isPairing = false;
+                    resolve(connectedSleeve.id);
                 }).catch(error => {
                     console.error('forcebonding error', error)
+                    this.isPairing = false;
+                    reject(error);
                 });
             })
         })
     }
 
-    private initScan(successCallback) {
-        this.ble.stopScan();
+    // scanAndConnect(): Observable<string> {
+    //     console.log('scanAndConnect()')
+    //     this.disconnectAll();
+    //     return Observable.create(observer => {
+    //         this.initScan((connectedSleeve) => {
+    //             console.log('Starting Forced Bonding', connectedSleeve)
+    //             this.forceBonding(connectedSleeve).then(() => {
+    //                 console.log('It was not needed to force this bonding!')
+    //                 observer.next(connectedSleeve.id);
+    //             }, () => {
+    //                 console.log('Forced a bonding by reading!')
+    //                 observer.next(connectedSleeve.id);
+    //             }).catch(error => {
+    //                 console.error('forcebonding error', error)
+    //             });
+    //         })
+    //     })
+    // }
+
+    private async initScan(successCallback) {
+        await this.ble.stopScan();
         this.ble.startScan([]).subscribe(
             device => this.onDeviceDiscovered(device, successCallback),
             error => console.error('scan error', error)
@@ -244,16 +270,12 @@ export class Sleeves {
         })
     }
 
+    async synchronizeFeeds() {
+        await this.disconnectAll();
 
-    stopScanning() {
-        this.ble.stopScan();
-        // this.disconnectAll();
-    }
-
-    synchronizeFeeds() {
+        this.isSyncing = true;
         let self = this;
-        this.ble.stopScan();
-        this.isScanning = true;
+
         if (this.sleeveConnected) {
             console.log('a sleeve is already connected')
             return self.feedData()
@@ -270,11 +292,14 @@ export class Sleeves {
 
                     let timeout = 10;
                     setTimeout(() => {
-                        this.isScanning = false
-                        console.log('scanning timeout')
-                        reject('scanTimeout');
+                        if (!this.isPairing) {
+                            this.isSyncing = false
+                            this.disconnectAll();
+                            console.log('scanning timeout')
+                            reject('scanTimeout');
+                        }
                     }, timeout * 1000)
-                    self.ble.scan([], timeout)
+                    self.ble.startScan([])
                         .subscribe(peripheral => {
                             // console.log('found a sleeve to synchronize feeds from!', peripheral._id)
                             uuids.forEach((uuid) => {
@@ -285,14 +310,14 @@ export class Sleeves {
                                     self.connect(peripheral.id, (device) => {
                                         // console.log('connected to a sleeve')
                                         self.feedData().then(feedData => {
-                                            this.isScanning = false;
+                                            this.isSyncing = false;
                                             resolve(feedData)
                                         })
                                     })
                                 }
                             })
                         }, scanError => {
-                            this.isScanning = false;
+                            this.isSyncing = false;
                             reject('unable to scan: ' + scanError)
                         })
                 })
@@ -321,7 +346,7 @@ export class Sleeves {
             console.log('subscribeToFeedData', this.connectedDeviceId)
             if (!this.sleeveConnected) {
                 reject('unable to subscribeToFeedData: no sleeve connected');
-                this.isScanning = false;
+                this.isSyncing = false;
             }
             this.ble.startNotification(this.connectedDeviceId,
                 '000030F0-0000-1000-8000-00805F9B34FB',
@@ -333,14 +358,14 @@ export class Sleeves {
                     this.storeSyncTimestamp();
                     resolve(this.dataBuffer);
                     this.dataBuffer = "";
-                    this.isScanning = false;
+                    this.isSyncing = false;
                     this.disconnectAll();
                 }
             }, error => {
                 console.error('error while receiving feedData', error)
                 reject('unable to receive feedData');
                 this.disconnectAll();
-                this.isScanning = false;
+                this.isSyncing = false;
             })
             this.sendDownloadFeedRequest();
         })
@@ -396,6 +421,7 @@ export class Sleeves {
                 this.sleeveConnected = false;
                 this.connectedDeviceId = null;
                 console.error('disconnected from sleeve', deviceId);
+                this.events.publish('sleeve-disconnected');
             }
         )
     }

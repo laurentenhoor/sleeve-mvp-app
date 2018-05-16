@@ -1,9 +1,10 @@
 
 import { ViewChild, Component, NgZone } from '@angular/core';
-import { AlertController, NavController, Slides, App, Events, ToastController } from 'ionic-angular';
+import { AlertController, NavController, Slides, App, Events, ToastController, ModalController } from 'ionic-angular';
 
 import { BLE } from '@ionic-native/ble';
 import { Sleeves, SleeveStates } from '../../providers/sleeves'
+import { Connecting } from '../connecting/connecting';
 
 enum QsgStep {
     REMOVE_CAP,
@@ -44,11 +45,25 @@ export class QuickStart {
         private events: Events,
         private alertCtrl: AlertController,
         private toastCtrl: ToastController,
+        private modalCtrl: ModalController
     ) {
 
     }
 
     ionViewDidLoad() {
+        this.events.subscribe('sleeve-disconnected', () =>{
+            this.nav.pop();
+            this.modalCtrl.create(Connecting).present();
+            let alert = this.alertCtrl.create({
+                title: 'Sleeve Disconnected',
+                subTitle: 'Please pair again to restart the quick start guide.',
+                buttons: ['OK']
+            });
+            setTimeout(() => {
+                alert.present();
+            }, 1000)
+        });
+
         this.sleevesService.state().subscribe(state => {
             switch (state) {
                 case SleeveStates.DEVICE_FEEDING_EXPECTED:

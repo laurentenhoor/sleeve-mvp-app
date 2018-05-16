@@ -30,13 +30,13 @@ export class Connecting {
     }
     ionViewDidEnter() {
         this.sleevesService.scanAndConnect()
-            .subscribe(connectedSleeve => {
+            .then(connectedSleeve => {
                 console.log('Successfully connected to a sleeve', connectedSleeve)
                 this.sleevesService.storeSleeve(connectedSleeve);
                 this.openQsg();
             }, error => {
                 console.error(error);
-            })
+            }).catch(error=>console.error('serious error'))
     }
 
     openQsg() {
