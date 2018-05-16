@@ -10,6 +10,7 @@ import { ModalController } from 'ionic-angular';
 // import { QuickStartGuide } from '../quick-start-guide/quick-start-guide';
 import { Qsg } from '../qsg/qsg';
 import { QuickStartGuide } from '../quick-start-guide/quick-start-guide';
+import { AngleFeedback } from '../angle-feedback/angle-feedback';
 
 @Component({
     selector: 'connecting',
@@ -43,11 +44,11 @@ export class Connecting {
         this.nav.pop();
         // this.appCtrl.getRootNav().push(QuickStartGuide);
         // this.modalCtrl.create(Qsg).present();
-        this.modalCtrl.create(QuickStart).present();
+        this.modalCtrl.create(AngleFeedback).present();
     }
 
     demo() {
-        // this.openQsg();
+        this.openQsg();
     }
 
     checkBluetooth() {

@@ -29,6 +29,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { Devices } from '../pages/devices/devices';
 
 import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-guide.module';
+import { AngleFeedback } from '../pages/angle-feedback/angle-feedback';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-gu
     QuickStart,
     Devices,
     Qsg,
+    AngleFeedback,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +61,7 @@ import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-gu
     QuickStart,
     Devices,
     Qsg,
+    AngleFeedback,
   ],
   providers: [
     StatusBar,
