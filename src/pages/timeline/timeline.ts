@@ -44,7 +44,7 @@ export class Timeline {
   }
 
   ionViewDidLoad() {
-    this.synchronizeFeeds();
+    // this.synchronizeFeeds();
   }
 
   synchronizeFeeds() {

@@ -33,6 +33,7 @@ export class QuickStart {
     private wiggleIsDetected: boolean = false;
     private startWeighTimeoutError: boolean = false;
     private endWeighTimeoutError: boolean = false;
+    private feedTimeoutError: boolean = false;
 
     constructor(
         private nav: NavController,
@@ -51,7 +52,7 @@ export class QuickStart {
         this.sleevesService.state().subscribe(state => {
             switch (state) {
                 case SleeveStates.DEVICE_FEEDING_EXPECTED:
-                    if (this.slides.getActiveIndex() != QsgStep.WEIGH_BEFORE) {
+                    if (!this.feedIsDetected && this.slides.getActiveIndex() != QsgStep.WEIGH_BEFORE) {
                         this.slides.slideTo(QsgStep.WEIGH_BEFORE);
                     }
                     this.duringStartWeighing();
@@ -62,7 +63,7 @@ export class QuickStart {
                     }
                     break;
                 case SleeveStates.DEVICE_FEEDING:
-                    if (this.slides.getActiveIndex() != QsgStep.FEEDING) {
+                    if (!this.feedIsDetected && this.slides.getActiveIndex() != QsgStep.FEEDING) {
                         this.slides.slideTo(QsgStep.FEEDING);
                     }
                     this.afterFeeding();
@@ -73,12 +74,15 @@ export class QuickStart {
                     }
                     break;
                 case SleeveStates.BUTTON_PRESSED:
-                    if (this.slides.getActiveIndex() >= QsgStep.WEIGH_BEFORE) {
+                    // Limitation firmware: close feeding can only be detected 
+                    // by a button press after feeding state 
+                    if (this.feedIsDetected && !this.hasMeasuredAfter) {
+                        this.slides.slideTo(QsgStep.WEIGH_AFTER);
                         this.duringEndWeighing();
                     }
                     break;
                 case SleeveStates.DEVICE_WEIGHING_TIMEOUT:
-                    if (this.slides.getActiveIndex() == QsgStep.WEIGH_BEFORE) {
+                    if (this.slides.getActiveIndex() <= QsgStep.WEIGH_BEFORE) {
                         this.showStartWeighError();
                     } else {
                         this.showEndWeighError();
@@ -91,6 +95,15 @@ export class QuickStart {
         }, error => {
             console.error('no states available', error)
         })
+    }
+
+    nextSlide() {
+        this.slides.slideNext();
+        switch (this.slides.getActiveIndex()) {
+            case QsgStep.FEEDING:
+                this.duringFeeding();
+                break;
+        }
     }
 
     duringStartWeighing() {
@@ -114,9 +127,20 @@ export class QuickStart {
         });
     }
 
+    duringFeeding() {
+        this.zone.run(() => {
+            setTimeout(() => {
+                if (!this.feedIsDetected) {
+                    this.feedTimeoutError = true;
+                }
+            }, 15 * 1000)
+        })
+    }
+
     afterFeeding() {
         this.zone.run(() => {
             this.feedIsDetected = true;
+            this.feedTimeoutError = false;
         })
     }
 
@@ -158,6 +182,15 @@ export class QuickStart {
         let alert = this.alertCtrl.create({
             title: 'Extra Tip!',
             subTitle: 'Do not touch the device during the measurement. Make sure it is on a flat and hard surface.',
+            buttons: ['OK']
+        });
+        alert.present();
+    }
+
+    showFeedErrorHints() {
+        let alert = this.alertCtrl.create({
+            title: 'Extra Tip!',
+            subTitle: 'It will take a couple of seconds until the feed will be detected.',
             buttons: ['OK']
         });
         alert.present();
