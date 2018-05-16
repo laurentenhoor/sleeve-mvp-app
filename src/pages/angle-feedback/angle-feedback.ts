@@ -20,13 +20,12 @@ export class AngleFeedback {
         private zone: NgZone
     ) {
         this.color ='grey';
-        this.message = 'Angle Feedback'
+        this.message = 'Press the Button to Start';
     }
 
     ionViewDidLoad() {
         this.sleevesService.angle().subscribe((angle) => {
-            console.log('angle', angle);
-
+            
             this.zone.run(() => {
                 this.angle = angle;
 
@@ -40,18 +39,18 @@ export class AngleFeedback {
                 {
                     //feeding angle kind of incorrect 
                     this.color = "orange";
-                    this.message = "A little higher...";
+                    this.message = "Tilt more...";
                 }
                 else if (angle < -15 && angle >= -55) //0 to -74
                 {
                     //feeding State
                     this.color = "green";
-                    this.message = "Great!";
+                    this.message = "You're doing great!";
                 }
                 else if (angle < -55 && angle > -75) {
                     //feeding angle kind of incorrect 
                     this.color = "orange";
-                    this.message = "A little lower...";
+                    this.message = "Tilt less...";
                 }
                 else {
                     //vertical Stable Case
