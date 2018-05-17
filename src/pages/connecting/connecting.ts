@@ -7,6 +7,8 @@ import { Sleeves } from '../../providers/sleeves';
 import { QuickStart } from '../quick-start/quick-start';
 
 import { ModalController } from 'ionic-angular';
+import { UiSettings } from '../../providers/ui-settings';
+
 // import { QuickStartGuide } from '../quick-start-guide/quick-start-guide';
 import { Qsg } from '../qsg/qsg';
 import { QuickStartGuide } from '../quick-start-guide/quick-start-guide';
@@ -24,7 +26,8 @@ export class Connecting {
         private sleevesService: Sleeves,
         public modalCtrl: ModalController,
         public appCtrl: App,
-        public events: Events
+        public events: Events,
+        private uiSettings: UiSettings
     ) {
 
     }
@@ -36,14 +39,16 @@ export class Connecting {
                 this.openQsg();
             }, error => {
                 console.error(error);
-            }).catch(error=>console.error('serious error'))
+            }).catch(error => console.error('serious error'))
     }
 
     openQsg() {
         this.nav.pop();
-        // this.appCtrl.getRootNav().push(QuickStartGuide);
-        // this.modalCtrl.create(Qsg).present();
-        this.modalCtrl.create(QuickStart).present();
+        if (this.uiSettings.defaultQsg) {
+            this.modalCtrl.create(QuickStart).present();
+        } else {
+            this.modalCtrl.create(Qsg).present();
+        }
     }
 
     demo() {

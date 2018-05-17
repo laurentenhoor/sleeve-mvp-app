@@ -29,6 +29,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { Devices } from '../pages/devices/devices';
 
 import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-guide.module';
+import { UiSettings } from '../providers/ui-settings';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-gu
     Sleeves,
     Device,
     InAppBrowser,
+    UiSettings,
   ]
 })
 export class AppModule { }

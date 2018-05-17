@@ -51,7 +51,7 @@ export class QuickStart {
     }
 
     ionViewDidLoad() {
-        this.events.subscribe('sleeve-disconnected', () =>{
+        this.events.subscribe('sleeve-disconnected', () => {
             this.nav.pop();
             this.modalCtrl.create(Connecting).present();
             let alert = this.alertCtrl.create({
@@ -191,6 +191,10 @@ export class QuickStart {
         setTimeout(() => {
             this.events.publish('synchronize-feeds');
         }, 500)
+    }
+
+    closeModal() {
+        this.nav.pop();
     }
 
     showWeighErrorHints() {

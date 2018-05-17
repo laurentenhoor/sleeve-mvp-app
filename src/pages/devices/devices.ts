@@ -6,6 +6,7 @@ import { Sleeves } from '../../providers/sleeves';
 import { Connecting } from '../connecting/connecting';
 
 import { ModalController } from 'ionic-angular';
+import { UiSettings } from '../../providers/ui-settings';
 
 @Component({
     selector: 'devices',
@@ -18,7 +19,8 @@ export class Devices {
         private alertCtrl: AlertController,
         private sleevesService: Sleeves,
         public modalCtrl: ModalController,
-        private events: Events
+        private events: Events,
+        private uiSettings: UiSettings
     ) {        
     }
 
@@ -27,6 +29,10 @@ export class Devices {
 
     pair() {
         this.modalCtrl.create(Connecting).present();
+    }
+
+    setQsg(isDefault){
+        this.uiSettings.defaultQsg = isDefault;
     }
 
     removeSleeve(sleeve) {

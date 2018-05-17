@@ -9,6 +9,11 @@
                 <ion-icon name="arrow-back"></ion-icon>
             </button>
         </ion-buttons>
+        <ion-buttons start *ngIf="slides.getActiveIndex() == 0">
+            <button ion-button icon-only (click)="closeModal()">
+                Close
+            </button>
+        </ion-buttons>
     </ion-toolbar>
 
 </ion-header>
@@ -90,8 +95,7 @@
             Feeding
         </h1>
         <p>
-            Please hold the bottle in feeding position.
-            The lights will be off while tracking your baby's feeding.
+            Please hold the bottle in feeding position. The lights will be off while tracking your baby's feeding.
         </p>
         <p>
         </p>

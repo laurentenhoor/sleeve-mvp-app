@@ -3,18 +3,21 @@
         <ion-title>
             Devices
         </ion-title>
-        <ion-buttons end>
+        <!-- <ion-buttons end>
             <button (click)="pair()" ion-button icon-left color="royal">
                 Pair
             </button>
-        </ion-buttons>
+        </ion-buttons> -->
     </ion-navbar>
 </ion-header>
 
 <ion-content>
-
     <ion-list>
-
+        <ion-item-divider>
+            Paired Devices
+            <button (click)="pair();" ion-button item-end outline color="primary">
+                <ion-icon name="bluetooth" item-end></ion-icon>Pair</button>
+        </ion-item-divider>
         <ion-item (click)="pair()" *ngIf="sleevesService.pairedSleeves?.length == 0">
             <ion-icon color="primary" name="alert" item-left large></ion-icon>
             <h2>No devices paired yet</h2>
@@ -28,5 +31,21 @@
             <p style="opacity:0.4">Tap to unpair</p>
         </ion-item>
 
+        <ion-list radio-group>
+            <ion-item-divider>
+                Quick Start Guide Type
+            </ion-item-divider>
+
+            <ion-item>
+                <ion-icon name="list" item-start color="grey"></ion-icon>
+                <ion-label>One-Screen Todo List</ion-label>
+                <ion-radio [checked]="!uiSettings.defaultQsg" value="oneScreenList" (ionSelect)="setQsg(false)"></ion-radio>
+            </ion-item>
+            <ion-item>
+                <ion-icon name="albums" item-start color="grey"></ion-icon>
+                <ion-label>Step-by-Step Slides</ion-label>
+                <ion-radio [checked]="uiSettings.defaultQsg" value="stepByStepSlides" (ionSelect)="setQsg(true)"></ion-radio>
+            </ion-item>
+        </ion-list>
     </ion-list>
 </ion-content>
