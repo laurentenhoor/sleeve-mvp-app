@@ -44,7 +44,7 @@ export class Timeline {
   }
 
   ionViewDidLoad() {
-    this.synchronizeFeeds();
+    // this.synchronizeFeeds();
   }
 
   synchronizeFeeds() {
@@ -54,7 +54,7 @@ export class Timeline {
     } else {
       this.sleevesService.synchronizeFeeds().then(feedData => {
         this.presentFeedToast();
-
+        
       }).catch(error => {
         if (error === 'scanTimeout') {
           this.presentTimeoutToast();

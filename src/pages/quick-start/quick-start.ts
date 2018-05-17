@@ -191,6 +191,7 @@ export class QuickStart {
         setTimeout(() => {
             this.events.publish('synchronize-feeds');
         }, 500)
+        
     }
 
     closeModal() {

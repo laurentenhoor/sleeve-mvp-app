@@ -1,6 +1,6 @@
 
 import { Component, NgZone } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Events } from 'ionic-angular';
 import { Sleeves, SleeveStates } from '../../providers/sleeves';
 import { TabsPage } from '../tabs/tabs';
 
@@ -59,7 +59,8 @@ export class Qsg {
     constructor(
         private nav: NavController,
         private sleevesService: Sleeves,
-        private zone: NgZone
+        private zone: NgZone,
+        private events: Events
     ) {
 
     }
@@ -180,16 +181,6 @@ export class Qsg {
         }, 4000)
     }
 
-
-    timeout(timeout: number): Promise<any> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve()
-            }, timeout)
-        })
-    }
-
-
     initStartWeighing() {
         this.zone.run(() => {
             console.log('init start weighing');
@@ -234,16 +225,19 @@ export class Qsg {
         })
         this.sleevesService.disconnectAll();
         setTimeout(()=>{
-            this.closeModal();    
+            this.finishInstallation();    
         },1000)
     }
 
     closeModal() {
-        this.nav.setRoot(TabsPage);
+        this.nav.pop();
     }
 
     finishInstallation() {
         this.nav.pop();
+        setTimeout(()=>{
+            this.events.publish('synchronize-feeds');
+        },500) 
     }
 
 }
