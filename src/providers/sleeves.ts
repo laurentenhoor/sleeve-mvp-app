@@ -30,13 +30,14 @@ export class Sleeves {
     isSyncing: boolean = false;
     isPairing: boolean = false;
     lastSyncTimestamp: number = 0;
+    pairedSleeves: any[] = [];
 
     private localDb: any;
     private syncTimestampDb: any;
     private defaultSleeveName: string = 'Philips Avent SCH820';
     private connectedDeviceId: string;
-    private sleeveConnected: boolean;
-    private pairedSleeves: any[] = null;
+    private sleeveConnected: boolean = false;
+
     private dataBuffer: string = "";
 
     constructor(
@@ -47,9 +48,7 @@ export class Sleeves {
     ) {
         this.localDb = new PouchDB('sleeves');
         this.syncTimestampDb = new PouchDB('syncTimestamp');
-        this.defaultSleeveName
-        this.sleeveConnected = false;
-        this.getPairedSleeves().then(pairedSleeves => this.pairedSleeves = pairedSleeves);
+        this.initPairedSleeves();
         this.initSyncTimestamp();
     }
 
@@ -84,7 +83,7 @@ export class Sleeves {
         });
     }
 
-    initSyncTimestamp(): void {      
+    initSyncTimestamp(): void {
         this.syncTimestampDb.get(
             'lastTimestamp'
         ).then(doc => {
@@ -103,44 +102,31 @@ export class Sleeves {
     async disconnectAll() {
         await this.ble.stopScan();
         this.isSyncing = false;
-        await this.getPairedSleeves().then(pairedSleeves => {
-            pairedSleeves.forEach((sleeve) => {
-                this.ble.disconnect(sleeve._id).then(
-                    success => {
-                        this.sleeveConnected = false;
-                        console.log('disconnected', sleeve._id)
-                    },
-                    error => console.error('disconnect', error)
-                )
-            })
+        this.pairedSleeves.forEach((sleeve) => {
+            this.ble.disconnect(sleeve._id).then(
+                success => {
+                    this.sleeveConnected = false;
+                    console.log('disconnected', sleeve._id)
+                },
+                error => console.error('disconnect', error)
+            )
         })
     }
 
-    getPairedSleeves(): Promise<any[]> {
-        if (this.pairedSleeves !== null) {
-            console.log('follow-up sleeve promise')
-            return new Promise(resolve => {
-                console.log('resolve of paired sleeves', this.pairedSleeves)
-                resolve(this.pairedSleeves)
-            })
-        }
-        console.log('initial sleeve promise')
-        return new Promise(resolve => {
-            this.localDb.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(result => {
-                this.pairedSleeves = result.rows.map((row) => { return row.doc });
-                resolve(this.pairedSleeves)
-                this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-                    this.handleChange(change);
-                });
-            })
+
+    initPairedSleeves(): void {
+        this.localDb.allDocs({
+            include_docs: true,
+            attachments: true
+        }).then(result => {
+            this.pairedSleeves = result.rows.map((row) => { return row.doc });
+        })
+        this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
+            this.handleChange(change);
         });
     }
 
-
-    private handleChange(change) {
+    private handleChange(change): void {
         let changedDoc = null;
         let changedIndex = null;
 
@@ -210,25 +196,6 @@ export class Sleeves {
         })
     }
 
-    // scanAndConnect(): Observable<string> {
-    //     console.log('scanAndConnect()')
-    //     this.disconnectAll();
-    //     return Observable.create(observer => {
-    //         this.initScan((connectedSleeve) => {
-    //             console.log('Starting Forced Bonding', connectedSleeve)
-    //             this.forceBonding(connectedSleeve).then(() => {
-    //                 console.log('It was not needed to force this bonding!')
-    //                 observer.next(connectedSleeve.id);
-    //             }, () => {
-    //                 console.log('Forced a bonding by reading!')
-    //                 observer.next(connectedSleeve.id);
-    //             }).catch(error => {
-    //                 console.error('forcebonding error', error)
-    //             });
-    //         })
-    //     })
-    // }
-
     private async initScan(successCallback) {
         await this.ble.stopScan();
         this.ble.startScan([]).subscribe(
@@ -282,45 +249,44 @@ export class Sleeves {
         } else {
             console.log('trying to connect and sync')
             return new Promise((resolve, reject) => {
-                self.getPairedSleeves().then(list => {
-                    let uuids = list.map(item => { return item._id })
-                    // console.log('paired uuids to scan', uuids)
-                    if (!uuids || uuids.length == 0) {
-                        return reject('no paired devices')
-                    }
-                    console.log('scanning for following ids', uuids)
+                let uuids = this.pairedSleeves.map(item => { return item._id })
+                // console.log('paired uuids to scan', uuids)
+                if (!uuids || uuids.length == 0) {
+                    return reject('no paired devices')
+                }
+                console.log('scanning for following ids', uuids)
 
-                    let timeout = 10;
-                    setTimeout(() => {
-                        if (!this.isPairing) {
-                            this.isSyncing = false
-                            this.disconnectAll();
-                            console.log('scanning timeout')
-                            reject('scanTimeout');
-                        }
-                    }, timeout * 1000)
-                    self.ble.startScan([])
-                        .subscribe(peripheral => {
-                            // console.log('found a sleeve to synchronize feeds from!', peripheral._id)
-                            uuids.forEach((uuid) => {
-                                // console.log('Found device:', peripheral.name)
-                                // console.log('compare', uuid, peripheral.id)
-                                if (peripheral.id == uuid) {
-                                    // console.log('found a paired sleeve');
-                                    self.connect(peripheral.id, (device) => {
-                                        // console.log('connected to a sleeve')
-                                        self.feedData().then(feedData => {
-                                            this.isSyncing = false;
-                                            resolve(feedData)
-                                        })
+                let timeout = 10;
+                setTimeout(() => {
+                    if (!this.isPairing) {
+                        this.isSyncing = false
+                        this.disconnectAll();
+                        console.log('scanning timeout')
+                        reject('scanTimeout');
+                    }
+                }, timeout * 1000)
+                self.ble.startScan([])
+                    .subscribe(peripheral => {
+                        // console.log('found a sleeve to synchronize feeds from!', peripheral._id)
+                        uuids.forEach((uuid) => {
+                            // console.log('Found device:', peripheral.name)
+                            // console.log('compare', uuid, peripheral.id)
+                            if (peripheral.id == uuid) {
+                                // console.log('found a paired sleeve');
+                                self.connect(peripheral.id, (device) => {
+                                    // console.log('connected to a sleeve')
+                                    self.feedData().then(feedData => {
+                                        this.isSyncing = false;
+                                        resolve(feedData)
                                     })
-                                }
-                            })
-                        }, scanError => {
-                            this.isSyncing = false;
-                            reject('unable to scan: ' + scanError)
+                                })
+                            }
                         })
-                })
+                    }, scanError => {
+                        this.isSyncing = false;
+                        reject('unable to scan: ' + scanError)
+                    })
+
             })
 
         }

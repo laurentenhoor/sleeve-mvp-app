@@ -44,35 +44,6 @@ export class Feeds {
         });
     }
 
-    // getFeeds(): Promise<Object[]> {
-    //     if (this.feeds !== null) {
-    //         return new Promise(resolve => { resolve(this.feeds) });
-    //     }
-    //     return new Promise(resolve => {
-
-    //         this.localDb.allDocs({
-    //             include_docs: true
-    //         }).then((result) => {
-
-    //             this.feeds = [];
-    //             let docs = result.rows.map((row) => {
-    //                 // console.log(row)
-    //                 this.feeds.push(row.doc);
-    //             });
-    //             this.sortData();
-    //             resolve(this.feeds);
-
-    //             this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-    //                 this.handleChange(change);
-    //             });
-
-    //         }).catch((error) => {
-    //             console.error(error);
-    //         });
-
-    //     });
-    // }
-
     createFeed(feed) {
         this.localDb.post(feed).then((result) => {
             console.log('createFeed', JSON.stringify(result));

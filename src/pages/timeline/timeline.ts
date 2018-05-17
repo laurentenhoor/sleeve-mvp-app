@@ -48,26 +48,22 @@ export class Timeline {
   }
 
   synchronizeFeeds() {
+    if (this.sleevesService.pairedSleeves.length == 0) {
+      this.modalCtrl.create(Connecting).present();
 
-    this.sleevesService.getPairedSleeves().then(pairedSleeves => {
+    } else {
+      this.sleevesService.synchronizeFeeds().then(feedData => {
+        this.presentFeedToast();
 
-      if (pairedSleeves.length == 0) {
-        this.modalCtrl.create(Connecting).present();
+      }).catch(error => {
+        if (error === 'scanTimeout') {
+          this.presentTimeoutToast();
+        } else {
+          console.error(error);
+        }
 
-      } else {
-        this.sleevesService.synchronizeFeeds().then(feedData => {
-          this.presentFeedToast();
-
-        }).catch(error => {
-          if (error === 'scanTimeout') {
-            this.presentTimeoutToast();
-          } else {
-            console.error(error);
-          }
-
-        })
-      }
-    })
+      })
+    }
   }
 
   presentTimeoutToast() {
@@ -112,6 +108,5 @@ export class Timeline {
   deleteFeed(feed) {
     this.feedsService.deleteFeed(feed);
   }
-
 
 }
