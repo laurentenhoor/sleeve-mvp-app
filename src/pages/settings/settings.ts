@@ -9,10 +9,10 @@ import { ModalController } from 'ionic-angular';
 import { UiSettings } from '../../providers/ui-settings';
 
 @Component({
-    selector: 'devices',
-    templateUrl: 'devices.html'
+    selector: 'settings',
+    templateUrl: 'settings.html'
 })
-export class Devices {
+export class Settings {
     private pairedSleeves: any;
 
     constructor(

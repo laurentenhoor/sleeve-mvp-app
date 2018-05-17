@@ -26,7 +26,7 @@ import { Device } from '@ionic-native/device';
 import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
 
 import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { Devices } from '../pages/devices/devices';
+import { Settings } from '../pages/settings/settings';
 
 import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-guide.module';
 import { UiSettings } from '../providers/ui-settings';
@@ -40,7 +40,7 @@ import { UiSettings } from '../providers/ui-settings';
     FeedInput,
     Connecting,
     QuickStart,
-    Devices,
+    Settings,
     Qsg,
   ],
   imports: [
@@ -58,7 +58,7 @@ import { UiSettings } from '../providers/ui-settings';
     FeedInput,
     Connecting,
     QuickStart,
-    Devices,
+    Settings,
     Qsg,
   ],
   providers: [

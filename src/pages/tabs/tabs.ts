@@ -4,7 +4,7 @@ import { Bluetooth } from '../bluetooth/bluetooth'
 import { Component, Input } from '@angular/core';
 import { Events, NavController, Tabs, App } from 'ionic-angular';
 import { QuickStart } from '../quick-start/quick-start';
-import { Devices } from '../devices/devices';
+import { Settings } from '../settings/settings';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -21,7 +21,7 @@ export class TabsPage {
   ) {
     this.tab1 = Timeline;
     this.tab2 = Bluetooth;
-    this.tab3 = Devices;
+    this.tab3 = Settings;
 
     events.subscribe('synchronize-feeds', () => {
       this.app.getActiveNavs()[0].parent.select(0);

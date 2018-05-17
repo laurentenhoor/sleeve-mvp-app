@@ -5,7 +5,7 @@ import { orderBy } from 'lodash';
 
 @Injectable()
 export class Feeds {
-    feeds: any = null;
+    feeds: any = [];
     localDb: any;
     remoteDb: any;
 
@@ -13,7 +13,10 @@ export class Feeds {
         private zone: NgZone,
         private sessionsService: Sessions
     ) {
+        this.initFeedsDb();
+    }
 
+    private initFeedsDb(): void {
         this.localDb = new PouchDB('feeds');
         this.remoteDb = 'http://ec2-34-239-163-2.compute-1.amazonaws.com:5984/feeds';
 
@@ -23,13 +26,6 @@ export class Feeds {
             continuous: true,
         });
 
-        this.initFeeds();
-
-    }
-
-    initFeeds(): void {
-        this.feeds = [];
-
         this.localDb.allDocs({
             include_docs: true
         }).then((result) => {
@@ -37,8 +33,8 @@ export class Feeds {
                 this.feeds.push(row.doc);
             });
             this.sortData();
-
         })
+
         this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
             this.handleChange(change);
         });
@@ -90,7 +86,7 @@ export class Feeds {
         this.feeds = orderBy(this.feeds, ['timestamp'], ['desc']);
     }
 
-    handleChange(change) {
+    private handleChange(change) {
 
         let changedDoc = null;
         let changedIndex = null;
@@ -118,7 +114,6 @@ export class Feeds {
             else {
                 this.zone.run(() => {
                     this.feeds.unshift(change.doc);
-
                 });
             }
 
