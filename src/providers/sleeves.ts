@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { ModalController, Events } from 'ionic-angular';
+import { ModalController, Events, Platform } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
 
 import PouchDB from 'pouchdb';
@@ -44,7 +44,7 @@ export class Sleeves {
         private ble: BLE,
         private feedsService: Feeds,
         private zone: NgZone,
-        private events: Events
+        private events: Events,
     ) {
         this.localDb = new PouchDB('sleeves');
         this.syncTimestampDb = new PouchDB('syncTimestamp');
@@ -172,28 +172,25 @@ export class Sleeves {
     }
 
 
-    async scanAndConnect(): Promise<any> {
+    async scanAndConnect(retryResolve?, retryReject?): Promise<any> {
+        
+        console.log('scanAndConnect()');
         this.isPairing = true;
-        console.log('scanAndConnect()')
         await this.disconnectAll();
+
         return new Promise((resolve, reject) => {
             this.initScan((connectedSleeve) => {
                 console.log('Starting Forced Bonding', connectedSleeve)
-                this.forceBonding(connectedSleeve).then(() => {
-                    console.log('It was not needed to force this bonding!')
-                    this.isPairing = false;
-                    resolve(connectedSleeve.id);
-                }, () => {
-                    console.log('Forced a bonding by reading!')
-                    this.isPairing = false;
-                    resolve(connectedSleeve.id);
-                }).catch(error => {
-                    console.error('forcebonding error', error)
-                    this.isPairing = false;
-                    reject(error);
-                });
+                this.forceBonding()
+                    .then(() => {
+                        retryResolve() || resolve();
+                    })
+                    .catch(() => {
+                        return this.scanAndConnect(resolve, reject)
+                    });
             })
         })
+
     }
 
     private async initScan(successCallback) {
@@ -350,26 +347,18 @@ export class Sleeves {
     }
 
 
-    forceBonding(peripheral) {
-        console.log('force bonding')
+    forceBonding() {
+        console.log('Force bonding by reading the state characteristic')
         return new Promise((resolve, reject) => {
-            let serviceUuid = peripheral && peripheral.characteristics && peripheral.characteristics[0] && peripheral.characteristics[0].service ? peripheral.characteristics[0].service : false;
-            let characteristicUuid = serviceUuid && peripheral.characteristics[0].characteristic ? peripheral.characteristics[0].characteristic : false;
-            if (!serviceUuid || !characteristicUuid) {
-                reject('no correct uuids found to execute force bonding');
-            }
-            this.ble.read(peripheral.id, serviceUuid, characteristicUuid).then(
-                data => {
-                    console.log('forcebonding', data);
-                    resolve();
-                },
-                error => {
-                    console.error('forceBonding', error)
-                    reject();
-                }
-            ).catch(error => {
-                console.error('forcebonding error', error)
-                reject(error)
+            this.ble.read(this.connectedDeviceId,
+                '000030f3-0000-1000-8000-00805f9b34fb',
+                '000063eC-0000-1000-8000-00805f9b34fb'
+            ).then(() => {
+                console.log('successful read');
+                resolve();
+            }).catch(() => {
+                console.log('unsuccessful read');
+                reject();
             })
         })
     }

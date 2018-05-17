@@ -32,12 +32,12 @@
             </ion-item-divider>
 
             <ion-item>
-                <ion-icon name="list" item-start color="grey"></ion-icon>
+                <ion-icon name="list" item-start [color]="!uiSettings.defaultQsg ? 'primary' : 'grey'"></ion-icon>
                 <ion-label>One-Screen Todo List</ion-label>
                 <ion-radio [checked]="!uiSettings.defaultQsg" value="oneScreenList" (ionSelect)="setQsg(false)"></ion-radio>
             </ion-item>
             <ion-item>
-                <ion-icon name="albums" item-start color="grey"></ion-icon>
+                <ion-icon name="albums" item-start [color]="uiSettings.defaultQsg ? 'primary' : 'grey'"></ion-icon>
                 <ion-label>Step-by-Step Slides</ion-label>
                 <ion-radio [checked]="uiSettings.defaultQsg" value="stepByStepSlides" (ionSelect)="setQsg(true)"></ion-radio>
             </ion-item>

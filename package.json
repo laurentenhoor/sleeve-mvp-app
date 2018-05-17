@@ -76,7 +76,7 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-inappbrowser": {},
       "cordova-plugin-ble-central": {
-        "BLUETOOTH_USAGE_DESCRIPTION": " "
+        "BLUETOOTH_USAGE_DESCRIPTION": "Getting data from measuring device."
       },
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-statusbar": {}
