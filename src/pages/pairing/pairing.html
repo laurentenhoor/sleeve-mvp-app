@@ -22,7 +22,7 @@
 
     <ion-slide padding>
 
-        <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" src="assets/imgs/cute-baby-banner.jpg" />
+        <!-- <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" src="assets/imgs/cute-baby-banner.jpg" /> -->
         <h1 ion-text>
             Congratulations with your Smart Bottle Sleeve
         </h1>
@@ -31,30 +31,32 @@
         </p>
 
         <ion-item>
-            <ion-icon name="clock" item-start></ion-icon>
+            <ion-icon name="clock" color="primary" item-left></ion-icon>
             <ion-label>The time you started to feed</ion-label>
         </ion-item>
         <ion-item>
-            <ion-icon name="philips-baby-bottle" item-start></ion-icon>
+            <ion-icon name="time" color="primary"  item-start></ion-icon>
             <ion-label>The volume of the feed</ion-label>
         </ion-item>
         <ion-item>
-            <ion-icon name="time" item-start></ion-icon>
+            <ion-icon name="time" color="primary"  item-start></ion-icon>
             <ion-label>The duration of the feed</ion-label>
         </ion-item>
         <p>
             The Smart Bottle Sleeve is compatible with Philips Avent 4oz/125ml Natural Plastic Bottles.
         </p>
+        <ion-item>
+            <ion-label style="font-size:1rem;" class="multi-line">I share anonymous data to provide me personlized insights and to allow Philips to improve the product experience.</ion-label>
+            <ion-toggle value="foo" [(ngModel)]="isToggled" checked="false"></ion-toggle>
+        </ion-item>
 
         <ion-footer class="qsg" padding>
-            <button (click)="nextSlide();" ion-button block>Pair Smart Bottle Sleeve</button>
+            <button (click)="nextSlide();" [disabled]="!isToggled" ion-button block>Pair Smart Bottle Sleeve</button>
         </ion-footer>
 
     </ion-slide>
 
-
-    <ion-slide padding>
-
+    <!-- <ion-slide padding>
 
         <p>
             With the Smart Bottle Sleeve you can track your baby’s feedings.
@@ -70,11 +72,11 @@
             <button (click)="nextSlide();" [disabled]="!isToggled" ion-button block>I Agree</button>
         </ion-footer>
 
-    </ion-slide>
+    </ion-slide> -->
 
     <ion-slide padding>
 
-        <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" src="assets/imgs/pairing/image_pairing screen 6.0.svg" />
+        <img *ngIf="slides.getActiveIndex()>=0" class="" (click)="hasPaired=true;" src="assets/imgs/pairing/image_pairing screen 6.0.svg" />
         <h1>
             Press and hold the button
         </h1>
@@ -115,6 +117,20 @@
         </ion-footer>
 
     </ion-slide>
+
+    <!-- <ion-slide padding>
+
+        <img *ngIf="slides.getActiveIndex()>=0" style="max-height:200px;" src="assets/imgs/pairing/image_pairing screen 9.0.svg" />
+        <h1>It worked!</h1>
+        <p>
+            Your Smart Bottle Sleeve is paired succesfully with your smartphone.
+        </p>
+
+        <ion-footer class="qsg" padding>
+            <button (click)="nextSlide();" ion-button block>Next Step</button>
+        </ion-footer>
+
+    </ion-slide> -->
 
 
 </ion-slides>

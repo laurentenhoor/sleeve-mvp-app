@@ -16,7 +16,7 @@ import { Pairing } from '../pages/pairing/pairing';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = Pairing;//TabsPage
+  rootPage: any = TabsPage;
 
   constructor(
     platform: Platform,

@@ -7,6 +7,7 @@ import { Connecting } from '../connecting/connecting';
 
 import { ModalController } from 'ionic-angular';
 import { UiSettings } from '../../providers/ui-settings';
+import { Pairing } from '../pairing/pairing';
 
 @Component({
     selector: 'settings',
@@ -28,7 +29,8 @@ export class Settings {
     }
 
     pair() {
-        this.modalCtrl.create(Connecting).present();
+        // this.modalCtrl.create(Connecting).present();
+        this.modalCtrl.create(Pairing).present();
     }
 
     setQsg(isDefault){

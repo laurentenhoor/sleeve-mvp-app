@@ -2,6 +2,10 @@
 import { ViewChild, Component, NgZone } from '@angular/core';
 import { AlertController, NavController, Slides, App, Events, ToastController, ModalController } from 'ionic-angular';
 import { Sleeves } from '../../providers/sleeves';
+import { QuickStart } from '../quick-start/quick-start';
+import { Settings } from '../settings/settings';
+import { UiSettings } from '../../providers/ui-settings';
+import { Qsg } from '../qsg/qsg';
 
 
 enum PairStep {
@@ -20,6 +24,7 @@ export class Pairing {
     private PairStep: typeof PairStep = PairStep;
     private pairingTimeoutError: boolean = false;
     private bluetoothActivatedError: boolean = false;
+    private hasPaired: boolean = false;
 
     constructor(
         private app: App,
@@ -29,7 +34,8 @@ export class Pairing {
         private alertCtrl: AlertController,
         private toastCtrl: ToastController,
         private modalCtrl: ModalController,
-        private sleevesService: Sleeves
+        private sleevesService: Sleeves,
+        private uiSettings: UiSettings
     ) {
     }
 
@@ -38,19 +44,35 @@ export class Pairing {
             // do something if sleeve disconnects
         });
 
-        setTimeout(()=>{
-            this.slides.slideTo(2)
+        setTimeout(() => {
+            // this.slides.slideTo(2)
         }, 200)
-        
+
     }
 
     ionViewDidEnter() {
         this.checkBluetooth();
     }
-    
-    nextSlide() {
-        this.slides.slideNext();
+
+    openQsg() {
+        if (this.uiSettings.defaultQsg) {
+            this.modalCtrl.create(QuickStart).present();
+        } else {
+            this.modalCtrl.create(Qsg).present();
+        }
     }
+
+    nextSlide() {
+        switch (this.slides.getActiveIndex()) {
+            case PairStep.PAIRING:
+                this.openQsg();
+                break;
+            default:
+                this.slides.slideNext();
+                break;
+        }
+    }
+
 
     closeModal() {
         console.log('todo: implement closeModal()')
