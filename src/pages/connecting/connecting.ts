@@ -35,7 +35,6 @@ export class Connecting {
         this.sleevesService.scanAndConnect()
             .then(connectedSleeve => {
                 console.log('Successfully connected to a sleeve', connectedSleeve)
-                this.sleevesService.storeSleeve(connectedSleeve);
                 this.openQsg();
             }, error => {
                 console.error(error);
@@ -78,7 +77,6 @@ export class Connecting {
     }
 
     closeModal() {
-        this.sleevesService.disconnectAll().catch(error => { console.error(error) });
         this.nav.pop();
     }
 

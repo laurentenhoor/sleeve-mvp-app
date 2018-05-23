@@ -48,7 +48,7 @@ export class Qsg {
         category: 'Volume check-out',
         items: [{
             index: 4,
-            image: 'assets/imgs/qsg/small/QSG_Screen 4.1_4.2_Press button.gif',
+            image: 'assets/imgs/qsg/small/QSG-Screen-8.1-8.2_Finish-Feeding-on-table_SD-10fps-cropped.gif',
             title: 'Press the button',
             description: 'While standing on a surface',
             automatic: true
@@ -223,7 +223,6 @@ export class Qsg {
             item.title = "Measure volume";
             item.description = "Awesome!";
         })
-        this.sleevesService.disconnectAll();
         setTimeout(()=>{
             this.finishInstallation();    
         },1000)
