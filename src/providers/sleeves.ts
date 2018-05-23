@@ -83,7 +83,7 @@ export class Sleeves {
         });
     }
 
-    initSyncTimestamp(): void {
+    private initSyncTimestamp(): void {
         this.syncTimestampDb.get(
             'lastTimestamp'
         ).then(doc => {
@@ -104,6 +104,11 @@ export class Sleeves {
         return new Promise((resolve, reject) => {
             let disconnectionCounter = 0;
             this.isSyncing = false;
+
+            if (this.pairedSleeves.length == 0) {
+                resolve();
+            }
+
             this.pairedSleeves.forEach((sleeve) => {
                 this.ble.disconnect(sleeve._id).then(
                     success => {
@@ -119,11 +124,12 @@ export class Sleeves {
                         reject();
                     }
                 )
-            })
+            });
+            
         })
     }
 
-    initPairedSleeves(): void {
+    private initPairedSleeves(): void {
         this.localDb.allDocs({
             include_docs: true,
             attachments: true
@@ -209,6 +215,7 @@ export class Sleeves {
     }
 
     private async initScan(successCallback) {
+        console.log('initScan();')
         await this.ble.stopScan();
         this.ble.startScan([]).subscribe(
             device => this.onDeviceDiscovered(device, successCallback),
@@ -305,7 +312,7 @@ export class Sleeves {
     }
 
 
-    handleData(data: ArrayBuffer) {
+    private handleData(data: ArrayBuffer) {
         let part: string = this.bytesToString(data);
         console.log('new data chunk', part)
         try {
@@ -319,7 +326,7 @@ export class Sleeves {
         }
     }
 
-    feedData(): Promise<any> {
+    private feedData(): Promise<any> {
         return new Promise((resolve, reject) => {
             console.log('subscribeToFeedData', this.connectedDeviceId)
             if (!this.sleeveConnected) {
@@ -349,7 +356,7 @@ export class Sleeves {
         })
     }
 
-    sendDownloadFeedRequest() {
+    private sendDownloadFeedRequest() {
         this.ble.write(this.connectedDeviceId,
             '000030F0-0000-1000-8000-00805F9B34FB',
             '000063E7-0000-1000-8000-00805F9B34FB',
@@ -362,7 +369,7 @@ export class Sleeves {
     }
 
 
-    forceBonding() {
+    private forceBonding() {
         console.log('Force bonding by reading the state characteristic')
         return new Promise((resolve, reject) => {
             this.ble.read(this.connectedDeviceId,
@@ -378,7 +385,7 @@ export class Sleeves {
         })
     }
 
-    connect(deviceId, successCallback) {
+    private connect(deviceId, successCallback) {
         this.ble.connect(deviceId).subscribe(
             peripheral => {
                 this.ble.stopScan();
@@ -396,13 +403,13 @@ export class Sleeves {
         )
     }
 
-    bufferToHex(buffer: ArrayBuffer) {
+    private bufferToHex(buffer: ArrayBuffer) {
         return Array.prototype.map.call(new Uint16Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
     }
 
 
     // ASCII only
-    stringToBytes(string) {
+    private stringToBytes(string) {
         let array = new Uint8Array(string.length);
         for (let i = 0, l = string.length; i < l; i++) {
             array[i] = string.charCodeAt(i);
@@ -411,7 +418,7 @@ export class Sleeves {
     }
 
     // ASCII only
-    bytesToString(buffer) {
+    private bytesToString(buffer) {
         return String.fromCharCode.apply(null, new Uint8Array(buffer));
     }
 
