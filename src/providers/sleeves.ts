@@ -99,19 +99,27 @@ export class Sleeves {
         });
     }
 
-    async disconnectAll() {
-        console.log('disconnectAll()')
-        console.log(this.pairedSleeves)
+    private async disconnectAll(): Promise<any> {
         await this.ble.stopScan();
-        this.isSyncing = false;
-        this.pairedSleeves.forEach((sleeve) => {
-            this.ble.disconnect(sleeve._id).then(
-                success => {
-                    this.sleeveConnected = false;
-                    console.log('disconnected', sleeve._id)
-                },
-                error => console.error('disconnect', error)
-            )
+        return new Promise((resolve, reject) => {
+            let disconnectionCounter = 0;
+            this.isSyncing = false;
+            this.pairedSleeves.forEach((sleeve) => {
+                this.ble.disconnect(sleeve._id).then(
+                    success => {
+                        this.sleeveConnected = false;
+                        console.log('disconnected', sleeve._id)
+                        disconnectionCounter++;
+                        if (disconnectionCounter == this.pairedSleeves.length) {
+                            resolve();
+                        }
+                    },
+                    error => {
+                        console.error('disconnect', error)
+                        reject();
+                    }
+                )
+            })
         })
     }
 
@@ -137,7 +145,7 @@ export class Sleeves {
                 changedIndex = index;
             }
         });
-        
+
         //A document was deleted
         if (change.deleted) {
             this.zone.run(() => {
@@ -160,7 +168,7 @@ export class Sleeves {
         }
     }
 
-    private storeSleeve(sleeveId:string): void {
+    private storeSleeve(sleeveId: string): void {
         console.log('storeSleeve', sleeveId)
         let self = this;
         this.localDb.get(sleeveId, function (err, doc) {
@@ -211,8 +219,8 @@ export class Sleeves {
     private onDeviceDiscovered(device, successCallback) {
         console.log('discovered', JSON.stringify(device))
         if (device.name == this.defaultSleeveName && device.id != '6710B20A-EE92-44C1-B9B9-684D7B6E1F5D') { //SHREYDEVICE// && device.id != 'D7832B16-8B21-4BCB-906C-0B6779BB18D8'
-            this.ble.stopScan();
             console.log('Found a bottle sleeve', device.id)
+            this.ble.stopScan();
             this.connect(device.id, successCallback);
         }
     }

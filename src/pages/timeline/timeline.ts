@@ -40,7 +40,7 @@ export class Timeline {
     public loadingCtrl: LoadingController,
   ) {
     events.subscribe('synchronize-feeds', () => {
-      this.synchronizeFeeds();
+        this.synchronizeFeeds();
     });
   }
 
@@ -54,7 +54,7 @@ export class Timeline {
     } else {
       this.sleevesService.synchronizeFeeds().then(feedData => {
         this.presentFeedToast();
-        
+
       }).catch(error => {
         if (error === 'scanTimeout') {
           this.presentTimeoutToast();

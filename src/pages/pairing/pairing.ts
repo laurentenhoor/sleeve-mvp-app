@@ -41,13 +41,10 @@ export class Pairing {
 
     ionViewDidLoad() {
         this.events.subscribe('sleeve-disconnected', () => {
-            // do something if sleeve disconnects
+            if (this.slides.getActiveIndex() == PairStep.PAIRING) {
+                this.startBlePairing();
+            }
         });
-
-        setTimeout(() => {
-            // this.slides.slideTo(2)
-        }, 200)
-
     }
 
     ionViewDidEnter() {
@@ -89,7 +86,6 @@ export class Pairing {
             })
             .catch(error => {
                 console.error('BlePairing reject', error)
-                // this.slides.slideTo(PairStep.CONSENT);
             })  
     }
 

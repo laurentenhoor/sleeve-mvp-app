@@ -4,7 +4,7 @@
         <ion-title>
             Pairing
         </ion-title>
-        <ion-buttons start *ngIf="slides.getActiveIndex() > 0">
+        <ion-buttons start *ngIf="slides.getActiveIndex() > 0 && !hasPaired">
             <button ion-button icon-only (click)="slides.slidePrev()">
                 <ion-icon name="arrow-back"></ion-icon>
             </button>
@@ -56,24 +56,6 @@
 
     </ion-slide>
 
-    <!-- <ion-slide padding>
-
-        <p>
-            With the Smart Bottle Sleeve you can track your baby’s feedings.
-        </p>
-    
-
-        <ion-item>
-            <ion-label class="multi-line">We keep track of your baby's feeding information and use the data to provide insights.</ion-label>
-            <ion-toggle value="foo" [(ngModel)]="isToggled" checked="false"></ion-toggle>
-        </ion-item>
-
-        <ion-footer class="qsg" padding>
-            <button (click)="nextSlide();" [disabled]="!isToggled" ion-button block>I Agree</button>
-        </ion-footer>
-
-    </ion-slide> -->
-
     <ion-slide padding>
 
         <img *ngIf="slides.getActiveIndex()>=0" class="" (click)="hasPaired=true;" src="assets/imgs/pairing/image_pairing screen 6.0.svg" />
@@ -117,20 +99,5 @@
         </ion-footer>
 
     </ion-slide>
-
-    <!-- <ion-slide padding>
-
-        <img *ngIf="slides.getActiveIndex()>=0" style="max-height:200px;" src="assets/imgs/pairing/image_pairing screen 9.0.svg" />
-        <h1>It worked!</h1>
-        <p>
-            Your Smart Bottle Sleeve is paired succesfully with your smartphone.
-        </p>
-
-        <ion-footer class="qsg" padding>
-            <button (click)="nextSlide();" ion-button block>Next Step</button>
-        </ion-footer>
-
-    </ion-slide> -->
-
 
 </ion-slides>
