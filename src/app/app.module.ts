@@ -30,6 +30,7 @@ import { Settings } from '../pages/settings/settings';
 
 import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-guide.module';
 import { UiSettings } from '../providers/ui-settings';
+import { Pairing } from '../pages/pairing/pairing';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { UiSettings } from '../providers/ui-settings';
     QuickStart,
     Settings,
     Qsg,
+    Pairing,
   ],
   imports: [
     BrowserModule,
@@ -60,6 +62,7 @@ import { UiSettings } from '../providers/ui-settings';
     QuickStart,
     Settings,
     Qsg,
+    Pairing,
   ],
   providers: [
     StatusBar,

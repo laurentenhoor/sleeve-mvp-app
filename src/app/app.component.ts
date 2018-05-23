@@ -10,12 +10,13 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
 import { QuickStart } from '../pages/quick-start/quick-start';
 import { Qsg } from '../pages/qsg/qsg';
+import { Pairing } from '../pages/pairing/pairing';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = TabsPage;
+  rootPage: any = Pairing;//TabsPage
 
   constructor(
     platform: Platform,
