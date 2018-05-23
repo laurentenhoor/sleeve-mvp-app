@@ -7,6 +7,7 @@ import { Sleeves, SleeveStates } from '../../providers/sleeves'
 import { Connecting } from '../connecting/connecting';
 
 enum QsgStep {
+    INTRODUCTION,
     REMOVE_CAP,
     PLACE_BOTTLE,
     WEIGH_BEFORE,

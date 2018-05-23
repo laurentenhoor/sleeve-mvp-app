@@ -31,27 +31,27 @@
         </p>
 
         <ion-item>
-            <ion-icon name="clock" color="primary" item-left></ion-icon>
+            <ion-icon name="time" color="primary" item-left></ion-icon>
             <ion-label>The time you started to feed</ion-label>
         </ion-item>
         <ion-item>
-            <ion-icon name="time" color="primary"  item-start></ion-icon>
+            <ion-icon name="beaker" color="primary"  item-start></ion-icon>
             <ion-label>The volume of the feed</ion-label>
         </ion-item>
         <ion-item>
-            <ion-icon name="time" color="primary"  item-start></ion-icon>
+            <ion-icon name="timer" color="primary"  item-start></ion-icon>
             <ion-label>The duration of the feed</ion-label>
         </ion-item>
         <p>
             The Smart Bottle Sleeve is compatible with Philips Avent 4oz/125ml Natural Plastic Bottles.
         </p>
         <ion-item>
-            <ion-label style="font-size:1rem;" class="multi-line">I share anonymous data to provide me personlized insights and to allow Philips to improve the product experience.</ion-label>
-            <ion-toggle value="foo" [(ngModel)]="isToggled" checked="false"></ion-toggle>
+            <ion-label style="font-size:1.3rem;" class="multi-line">I agree with sharing anonymous data to receive feed insights and to allow Philips to improve the product experience.</ion-label>
+            <ion-toggle [(ngModel)]="hasConsent"></ion-toggle>
         </ion-item>
 
         <ion-footer class="qsg" padding>
-            <button (click)="nextSlide();" [disabled]="!isToggled" ion-button block>Pair Smart Bottle Sleeve</button>
+            <button (click)="nextSlide();" [disabled]="!hasConsent" ion-button block>Pair Smart Bottle Sleeve</button>
         </ion-footer>
 
     </ion-slide>

@@ -12,6 +12,7 @@ import { Sessions } from '../../providers/sessions';
 import { Sleeves } from '../../providers/sleeves';
 import { Connecting } from '../connecting/connecting';
 import { Bluetooth } from '../bluetooth/bluetooth';
+import { Pairing } from '../pairing/pairing';
 
 @Component({
   selector: 'timeline',
@@ -49,8 +50,7 @@ export class Timeline {
 
   synchronizeFeeds() {
     if (this.sleevesService.pairedSleeves.length == 0) {
-      this.modalCtrl.create(Connecting).present();
-
+      this.modalCtrl.create(Pairing).present();
     } else {
       this.sleevesService.synchronizeFeeds().then(feedData => {
         this.presentFeedToast();

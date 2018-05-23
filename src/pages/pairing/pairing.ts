@@ -9,7 +9,6 @@ import { Qsg } from '../qsg/qsg';
 
 
 enum PairStep {
-    PROPOSITION,
     CONSENT,
     PAIRING
 }
@@ -25,6 +24,7 @@ export class Pairing {
     private pairingTimeoutError: boolean = false;
     private bluetoothActivatedError: boolean = false;
     private hasPaired: boolean = false;
+    private hasConsent: boolean = false;
 
     constructor(
         private app: App,
@@ -55,6 +55,7 @@ export class Pairing {
     }
 
     openQsg() {
+        this.closeModal();
         if (this.uiSettings.defaultQsg) {
             this.modalCtrl.create(QuickStart).present();
         } else {
@@ -63,19 +64,34 @@ export class Pairing {
     }
 
     nextSlide() {
+        console.log('nextSlide();')
         switch (this.slides.getActiveIndex()) {
             case PairStep.PAIRING:
                 this.openQsg();
                 break;
-            default:
-                this.slides.slideNext();
+            case PairStep.CONSENT:
+                if (this.hasConsent) {
+                    this.startBlePairing();
+                    this.slides.slideNext();
+                }
                 break;
         }
     }
 
+    startBlePairing() {
+        console.log('Start BLE Scanning')
+        this.sleevesService.scanAndConnect()
+            .then(connectedSleeve => {
+                console.log('Successfully connected to a sleeve', connectedSleeve)
+                this.sleevesService.storeSleeve(connectedSleeve);
+                this.hasPaired = true;
+            }, error => {
+                console.error(error);
+            }).catch(error => console.error('serious error'))
+    }
 
     closeModal() {
-        console.log('todo: implement closeModal()')
+        this.nav.pop();
     }
 
     checkBluetooth() {
