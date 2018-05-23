@@ -53,16 +53,7 @@ export class QuickStart {
 
     ionViewDidLoad() {
         this.events.subscribe('sleeve-disconnected', () => {
-            this.nav.pop();
-            this.modalCtrl.create(Connecting).present();
-            let alert = this.alertCtrl.create({
-                title: 'Sleeve Disconnected',
-                subTitle: 'Please pair again to restart the quick start guide.',
-                buttons: ['OK']
-            });
-            setTimeout(() => {
-                alert.present();
-            }, 1000)
+            
         });
 
         this.sleevesService.state().subscribe(state => {

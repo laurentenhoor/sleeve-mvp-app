@@ -100,6 +100,8 @@ export class Sleeves {
     }
 
     async disconnectAll() {
+        console.log('disconnectAll()')
+        console.log(this.pairedSleeves)
         await this.ble.stopScan();
         this.isSyncing = false;
         this.pairedSleeves.forEach((sleeve) => {
@@ -112,7 +114,6 @@ export class Sleeves {
             )
         })
     }
-
 
     initPairedSleeves(): void {
         this.localDb.allDocs({
@@ -136,6 +137,7 @@ export class Sleeves {
                 changedIndex = index;
             }
         });
+        
         //A document was deleted
         if (change.deleted) {
             this.zone.run(() => {
@@ -158,7 +160,7 @@ export class Sleeves {
         }
     }
 
-    storeSleeve(sleeveId): void {
+    private storeSleeve(sleeveId:string): void {
         console.log('storeSleeve', sleeveId)
         let self = this;
         this.localDb.get(sleeveId, function (err, doc) {
@@ -166,27 +168,32 @@ export class Sleeves {
                 _id: sleeveId,
                 _rev: doc ? doc._rev : null
             }, function (err, response) {
-                if (err) { return console.log(err); }
+                if (err) { return console.error(JSON.stringify(err)); }
             });
         });
     }
 
 
     async scanAndConnect(retryResolve?, retryReject?): Promise<any> {
-        
-        console.log('scanAndConnect()');
         this.isPairing = true;
         await this.disconnectAll();
 
         return new Promise((resolve, reject) => {
+            if (!retryResolve) {
+                retryResolve = resolve;
+                retryReject = reject;
+            }
             this.initScan((connectedSleeve) => {
                 console.log('Starting Forced Bonding', connectedSleeve)
                 this.forceBonding()
                     .then(() => {
-                        retryResolve() || resolve();
+                        this.isPairing = false;
+                        this.storeSleeve(connectedSleeve.id);
+                        retryResolve(connectedSleeve);
                     })
-                    .catch(() => {
-                        return this.scanAndConnect(resolve, reject)
+                    .catch((error) => {
+                        console.error('Forcebonding error: ', JSON.stringify(error))
+                        return this.scanAndConnect(resolve, reject);
                     });
             })
         })
@@ -356,9 +363,9 @@ export class Sleeves {
             ).then(() => {
                 console.log('successful read');
                 resolve();
-            }).catch(() => {
+            }).catch((error) => {
                 console.log('unsuccessful read');
-                reject();
+                reject(error);
             })
         })
     }

@@ -82,12 +82,15 @@ export class Pairing {
         console.log('Start BLE Scanning')
         this.sleevesService.scanAndConnect()
             .then(connectedSleeve => {
-                console.log('Successfully connected to a sleeve', connectedSleeve)
-                this.sleevesService.storeSleeve(connectedSleeve);
-                this.hasPaired = true;
-            }, error => {
-                console.error(error);
-            }).catch(error => console.error('serious error'))
+                console.log('Successfully connected to a sleeve', connectedSleeve.id)
+                this.zone.run(() => {
+                    this.hasPaired = true;
+                })
+            })
+            .catch(error => {
+                console.error('BlePairing reject', error)
+                // this.slides.slideTo(PairStep.CONSENT);
+            })  
     }
 
     closeModal() {
