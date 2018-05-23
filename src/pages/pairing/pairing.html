@@ -22,19 +22,99 @@
 
     <ion-slide padding>
 
-        <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 2.0_Remove-Cap.gif"
-        />
+        <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" src="assets/imgs/cute-baby-banner.jpg" />
         <h1 ion-text>
-            Remove the Cap
+            Congratulations with your Smart Bottle Sleeve
         </h1>
         <p>
-            We will weigh to measure the amount of milk. The weight of the cap disturbs the measurement.
+            With the Smart Bottle Sleeve you can track your baby’s feedings.
+        </p>
+
+        <ion-item>
+            <ion-icon name="clock" item-start></ion-icon>
+            <ion-label>The time you started to feed</ion-label>
+        </ion-item>
+        <ion-item>
+            <ion-icon name="philips-baby-bottle" item-start></ion-icon>
+            <ion-label>The volume of the feed</ion-label>
+        </ion-item>
+        <ion-item>
+            <ion-icon name="time" item-start></ion-icon>
+            <ion-label>The duration of the feed</ion-label>
+        </ion-item>
+        <p>
+            The Smart Bottle Sleeve is compatible with Philips Avent 4oz/125ml Natural Plastic Bottles.
         </p>
 
         <ion-footer class="qsg" padding>
-            <button (click)="nextSlide();" ion-button block>Next Step</button>
+            <button (click)="nextSlide();" ion-button block>Pair Smart Bottle Sleeve</button>
         </ion-footer>
 
     </ion-slide>
+
+
+    <ion-slide padding>
+
+
+        <p>
+            With the Smart Bottle Sleeve you can track your baby’s feedings.
+        </p>
+    
+
+        <ion-item>
+            <ion-label class="multi-line">We keep track of your baby's feeding information and use the data to provide insights.</ion-label>
+            <ion-toggle value="foo" [(ngModel)]="isToggled" checked="false"></ion-toggle>
+        </ion-item>
+
+        <ion-footer class="qsg" padding>
+            <button (click)="nextSlide();" [disabled]="!isToggled" ion-button block>I Agree</button>
+        </ion-footer>
+
+    </ion-slide>
+
+    <ion-slide padding>
+
+        <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" src="assets/imgs/pairing/image_pairing screen 6.0.svg" />
+        <h1>
+            Press and hold the button
+        </h1>
+        <p>
+            Hold it until the blue light starts flashing. Make sure the batteries are placed in the device.
+        </p>
+
+        <ion-footer class="qsg" padding>
+
+            <ion-item *ngIf="pairingTimeoutError" color="orange" style="border-radius:4px;">
+                <ion-icon item-start name="alert"></ion-icon>
+                <ion-label class="warning">
+                    Please hold the button until it starts flashing blue again.
+                </ion-label>
+                <button ion-button item-end outline small color="white" (click)="showPairingErrorHints()">
+                    Help
+                </button>
+            </ion-item>
+
+            <ion-item *ngIf="bluetoothActivatedError" color="orange" style="border-radius:4px;">
+                <ion-icon item-start name="alert"></ion-icon>
+                <ion-label class="warning">
+                    Bluetooth is turned off! Please turn on Bluetooth on your smartphone.
+                </ion-label>
+                <button ion-button item-end outline small color="white" (click)="showBluetoothErrorHints()">
+                    Help
+                </button>
+            </ion-item>
+
+            <button color="{{ hasPaired ? 'secondary' : 'light'}}" ion-button block icon-start (click)="(hasPaired && nextSlide()) || (!hasPaired && showDeviceActionToast())">
+                <ion-icon *ngIf="!hasPaired">
+                    <ion-spinner name="dots"></ion-spinner>
+                </ion-icon>
+                <ion-icon *ngIf="hasPaired" style="color:white;font-weight: bold" name="checkmark">
+                </ion-icon>
+                {{ hasPaired ? 'Succesfully Paired' : 'Scanning for your Sleeve' }}
+            </button>
+        </ion-footer>
+
+    </ion-slide>
+
 
 </ion-slides>
