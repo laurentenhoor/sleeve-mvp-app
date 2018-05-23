@@ -232,6 +232,34 @@ export class Sleeves {
         }
     }
 
+    angle(): Observable<any> {
+        return Observable.create((observer)=>{
+            console.log('subscribeToAngle', this.connectedDeviceId)
+            if (!this.sleeveConnected) {
+                observer.error('no sleeve connected');
+                return;
+            }
+            this.ble.startNotification(this.connectedDeviceId,
+                '000030F1-0000-1000-8000-00805F9B34FB',
+                '000063E8-0000-1000-8000-00805F9B34FB'
+            ).subscribe(data => {
+                var dataView = new DataView(data, 0);
+
+                // console.log('Int8', dataView.getInt8(0));
+                // console.log('Int16', dataView.getInt16(0));
+                // console.log('Int32', dataView.getInt32(0));
+                // console.log('UInt8', dataView.getUint8(0));
+                // console.log('UInt16', dataView.getUint16(0));
+                // console.log('UInt32', dataView.getUint32(0));
+
+                let value = dataView.getInt8(0);
+                observer.next(value);
+            }, error => {
+                console.error('state', error);
+                observer.error('receiving state');
+            })
+        });
+    }
 
     state(): Observable<any> {
         return Observable.create(observer => {

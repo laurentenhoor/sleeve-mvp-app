@@ -1,0 +1,31 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            Angle Feedback
+        </ion-title>
+        <ion-buttons start>
+            <button ion-button (click)="closeModal()">
+                <span ion-text color="primary" showWhen="ios">Cancel</span>
+                <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content no-bounce>
+
+    <div class="vertical-align-content" style="height: 100%; width:100%; opacity:0.6;" [style.background-color]="color">
+        <div style="text-align:center;width:100%; height: 100%">
+            <!-- <img (click)="demo()" class="sleeve-image" src="assets/imgs/sleeve-white-bg.png" [style.transform]="'rotate(' + (angle ? angle-90 : 0) + 'deg)'"
+        /> -->
+            <ion-icon name="philips-baby-bottle" style="font-size:200px!important;margin:auto;" [style.transform]="'rotate(' + (angle ? angle-90 : 0) + 'deg)'"
+                [style.color]="'white'"></ion-icon>
+        </div>
+        
+    </div>
+
+    <ion-footer style="text-align: center; color:white; opacity:0.8;">
+        <h1>{{ message }}</h1>
+    </ion-footer>
+</ion-content>
