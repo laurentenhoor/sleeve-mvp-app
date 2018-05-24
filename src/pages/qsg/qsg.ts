@@ -235,10 +235,14 @@ export class Qsg {
     }
 
     finishInstallation() {
-        this.nav.pop();
-        setTimeout(()=>{
-            this.events.publish('synchronize-feeds');
-        },500) 
+        
+        this.closeModal();
+        
+        // this.nav.pop();
+        // setTimeout(()=>{
+        //     this.events.publish('synchronize-feeds');
+        // },500) 
+
     }
 
 }

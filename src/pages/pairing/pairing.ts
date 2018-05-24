@@ -38,6 +38,8 @@ export class Pairing {
         private sleevesService: Sleeves,
         private uiSettings: UiSettings
     ) {
+
+
     }
 
     ionViewDidLoad() {
@@ -46,11 +48,17 @@ export class Pairing {
                 this.startBlePairing();
             }
         });
+
+        setInterval(() => {
+            this.checkBluetooth();
+        }, 500);
     }
 
     ionViewDidEnter() {
-        this.checkBluetooth();
+
     }
+
+
 
     openQsg() {
         // this.closeModal();
@@ -100,10 +108,12 @@ export class Pairing {
     checkBluetooth() {
         this.sleevesService.isBluetoothEnabled()
             .then(() => {
-                console.log('Bluetooth is turned ON.')
-                this.bluetoothActivatedError = false;
+                if (this.bluetoothActivatedError) {
+                    console.log('Bluetooth has been turned ON.')
+                    this.startBlePairing();
+                    this.bluetoothActivatedError = false;
+                }
             }).catch(() => {
-                console.log('Bluetooth is turned OFF.')
                 this.bluetoothActivatedError = true;
             })
     }

@@ -2,7 +2,7 @@
 
     <ion-toolbar>
         <ion-title>
-            Pairing
+            Installation
         </ion-title>
         <ion-buttons start *ngIf="slides.getActiveIndex() > 0 && !hasPaired">
             <button ion-button icon-only (click)="slides.slidePrev()">
@@ -18,21 +18,21 @@
 
 </ion-header>
 
-<ion-slides pager style="background:white;" class="">
+<ion-slides pager style="background:white;" class="swiper-no-swiping">
 
     <ion-slide padding>
 
         <!-- <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" src="assets/imgs/cute-baby-banner.jpg" /> -->
         <h1 ion-text>
-            Setup your Smart Bottle Sleeve
+            Setup Your Smart Bottle Tracker
         </h1>
         <p>
-            With the Smart Bottle Sleeve you can track your baby’s feedings.
+            With the Smart Bottle Sleeve you can track your baby’s feeds.
         </p>
 
         <ion-item>
             <ion-icon name="clock" color="primary" item-left></ion-icon>
-            <ion-label>The time you started to feed</ion-label>
+            <ion-label>The time you started feeding</ion-label>
         </ion-item>
         <ion-item>
             <ion-icon name="beaker" color="primary"  item-start></ion-icon>
@@ -43,7 +43,7 @@
             <ion-label>The duration of the feed</ion-label>
         </ion-item>
         <p>
-            The Smart Bottle Sleeve is compatible with Philips Avent 4oz/125ml Natural Plastic Bottles.
+            <!-- The Smart Bottle Sleeve is compatible with Philips Avent 4oz/125ml Natural Plastic Bottles. -->
         </p>
         <ion-item>
             <ion-label style="font-size:1.3rem;" class="multi-line">I agree with sharing anonymous data to receive feed insights and to allow Philips to improve the product experience.</ion-label>
@@ -58,12 +58,12 @@
 
     <ion-slide padding>
 
-        <img *ngIf="slides.getActiveIndex()>=0" class="" (click)="hasPaired=true;" src="assets/imgs/pairing/image_pairing screen 6.0.svg" />
+        <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" (click)="hasPaired=true;" src="assets/imgs/pairing/Pairing_SD-15fps.gif" />
         <h1>
-            Press and hold the button
+           Pair the Bottle Tracker 
         </h1>
         <p>
-            Hold it until the blue light starts flashing. Make sure the batteries are placed in the device.
+            Press and hold the button until the blue light starts flashing. Make sure the batteries are placed in the device.
         </p>
 
         <ion-footer class="qsg" padding>

@@ -6,6 +6,7 @@ import { BLE } from '@ionic-native/ble';
 import { Sleeves, SleeveStates } from '../../providers/sleeves'
 import { Connecting } from '../connecting/connecting';
 import { TabsPage } from '../tabs/tabs';
+import { Pairing } from '../pairing/pairing';
 
 enum QsgStep {
     INTRODUCTION,
@@ -55,7 +56,7 @@ export class QuickStart {
 
     ionViewDidLoad() {
         this.events.subscribe('sleeve-disconnected', () => {
-            
+
         });
 
         this.sleevesService.state().subscribe(state => {
@@ -99,6 +100,9 @@ export class QuickStart {
                     break;
                 case SleeveStates.DEVICE_FEEDING_END:
                     this.afterEndWeighing();
+                    break;
+                case SleeveStates.BLE_ADVERTISING:
+                    this.nav.push(Pairing, {}, { animation: 'md-tranistion' });
                     break;
             }
         }, error => {
@@ -181,11 +185,7 @@ export class QuickStart {
     }
 
     gotoTimeline() {
-        this.nav.pop();
-        setTimeout(() => {
-            this.events.publish('synchronize-feeds');
-        }, 500)
-        
+        this.closeModal();
     }
 
     closeModal() {
@@ -193,7 +193,7 @@ export class QuickStart {
         // this.nav.popToRoot();
         // this.app.getRootNav().popToRoot();
         // this.nav.push(TabsPage)
-        this.nav.setRoot(TabsPage, {}, {animate: true, direction: 'forward', animation:'md-transition'});       
+        this.nav.setRoot(TabsPage, {}, { animate: true, direction: 'forward', animation: 'md-transition' });
     }
 
     showWeighErrorHints() {

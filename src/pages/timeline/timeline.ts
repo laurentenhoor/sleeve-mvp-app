@@ -41,9 +41,9 @@ export class Timeline {
     public loadingCtrl: LoadingController,
     private app: App
   ) {
-    events.subscribe('synchronize-feeds', () => {
-        this.synchronizeFeeds();
-    });
+    // events.subscribe('synchronize-feeds', () => {
+    //     this.synchronizeFeeds();
+    // });
   }
 
   ionViewDidLoad() {
