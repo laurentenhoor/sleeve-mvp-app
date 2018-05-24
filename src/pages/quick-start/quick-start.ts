@@ -117,7 +117,7 @@ export class QuickStart {
             title: 'Uh oh! You did a long press.',
             subTitle: "A long press is only used for pairing the Smart Sleeve. No problem, let's start over again.",
             buttons: ['Discard']
-          }).present();
+        }).present();
     }
 
     nextSlide() {
@@ -196,6 +196,28 @@ export class QuickStart {
 
     gotoTimeline() {
         this.closeModal();
+    }
+
+    skipQsg() {
+        let alert = this.alertCtrl.create({
+            title: 'Are you sure?',
+            message: 'This will exit the quick start guide.',
+            buttons: [
+                {
+                    text: 'Stay here',
+                    role: 'cancel',
+                    handler: () => {
+                    }
+                },
+                {
+                    text: 'Yes, skip',
+                    handler: () => {
+                        this.closeModal();
+                    }
+                }
+            ]
+        });
+        alert.present();
     }
 
     closeModal() {
