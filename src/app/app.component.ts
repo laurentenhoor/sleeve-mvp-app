@@ -1,18 +1,12 @@
 import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+import { Platform } from 'ionic-angular';
 
-import { Sessions } from '../providers/sessions';
-
-import { TabsPage } from '../pages/tabs/tabs';
-
-import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
-import { QuickStart } from '../pages/quick-start/quick-start';
-import { Qsg } from '../pages/qsg/qsg';
-import { Pairing } from '../pages/pairing/pairing';
-import { Sleeves } from '../providers/sleeves/sleeves';
 import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
+import { TabsPage } from '../pages/tabs/tabs';
+import { Sessions } from '../providers/sessions';
+import { PairModel } from '../providers/sleeves/pair.model';
 
 @Component({
   templateUrl: 'app.html'
@@ -25,12 +19,13 @@ export class MyApp {
     statusBar: StatusBar,
     splashScreen: SplashScreen,
     sessionsService: Sessions,
-    sleevesService: Sleeves
+    pairedSleeves: PairModel
   ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      sleevesService.amountOfPairedSleeves().then((amount) => {
+      pairedSleeves.amountOfPairedSleeves().then((amount) => {
+        console.log('initial amount', amount)
         if (amount == 0) {
           this.rootPage = NoSleeve;
         } else {

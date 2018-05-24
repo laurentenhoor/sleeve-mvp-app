@@ -5,8 +5,10 @@ import { BLE } from '@ionic-native/ble';
 import PouchDB from 'pouchdb';
 import { Observable } from 'rxjs/Observable';
 import { Feeds } from '../feeds';
-import { PairManager } from './pair-manager';
-import { ComManager } from './com-manager';
+import { PairModel } from './pair.model';
+import { PairService } from './pair.service';
+import { ConnectService } from './connect.service';
+
 
 export enum SleeveStates {
     DEVICE_STATE_NONE = 0, //Don't add anything before this
@@ -34,7 +36,7 @@ export class Sleeves {
     lastSyncTimestamp: number = 0;
     pairedSleeves: any[] = [];
 
-    private localDb: any;
+    // private localDb: any;
     private syncTimestampDb: any;
     // private defaultSleeveName: string = 'Philips Avent SCH820';
     private connectedDeviceId: string;
@@ -47,23 +49,24 @@ export class Sleeves {
         private feedsService: Feeds,
         private zone: NgZone,
         private events: Events,
-        private pairManager: PairManager,
-        private comManager: ComManager
+        private pairModel: PairModel,
+        private pairService: PairService,
+        private connectService: ConnectService
     ) {
-        this.localDb = new PouchDB('sleeves');
+        // this.localDb = new PouchDB('sleeves');
         this.syncTimestampDb = new PouchDB('syncTimestamp');
         // this.initPairedSleeves();
         this.initSyncTimestamp();
     }
 
-    async scanAndConnect(retryResolve?, retryReject?): Promise<any> {
+    scanAndConnect(retryResolve?, retryReject?): Promise<any> {
         return new Promise((resolve, reject) => {
 
             this.isPairing = true;
 
-            this.comManager.pair()
+            this.pairService.pair()
                 .then((pairedSleeve) => {
-                    this.pairManager.storePairedSleeveId(pairedSleeve.id)
+                    this.pairModel.storePairedSleeveId(pairedSleeve.id)
                     this.isPairing = false;
                     resolve(pairedSleeve);
 
@@ -72,7 +75,6 @@ export class Sleeves {
                     reject();
 
                 })
-
         })
     }
 
@@ -88,10 +90,7 @@ export class Sleeves {
         })
     }
 
-    removeSleeve(sleeve): void {
-        console.log('remove sleeve', sleeve)
-        this.localDb.remove(sleeve)
-    }
+    
 
     storeSyncTimestamp() {
         console.log('storelast SyncTimeStamp');
@@ -123,15 +122,6 @@ export class Sleeves {
                 })
             }
         });
-    }
-
-    amountOfPairedSleeves(): Promise<any> {
-        return new Promise((resolve) => {
-            this.localDb.allDocs({
-            }).then(result => {
-                resolve(result.rows.length);
-            })
-        })
     }
 
     angle(): Observable<any> {
@@ -187,7 +177,7 @@ export class Sleeves {
     }
 
     async synchronizeFeeds() {
-        await this.pairManager.disconnectAll();
+        await this.connectService.disconnectAll();
 
         this.isSyncing = true;
         let self = this;
@@ -209,7 +199,7 @@ export class Sleeves {
                 setTimeout(() => {
                     if (!this.isPairing) {
                         this.isSyncing = false
-                        this.pairManager.disconnectAll();
+                        this.connectService.disconnectAll();
                         console.log('scanning timeout')
                         reject('scanTimeout');
                     }
@@ -274,12 +264,12 @@ export class Sleeves {
                     resolve(this.dataBuffer);
                     this.dataBuffer = "";
                     this.isSyncing = false;
-                    this.pairManager.disconnectAll();
+                    this.connectService.disconnectAll();
                 }
             }, error => {
                 console.error('error while receiving feedData', error)
                 reject('unable to receive feedData');
-                this.pairManager.disconnectAll();
+                this.connectService.disconnectAll();
                 this.isSyncing = false;
             })
             this.sendDownloadFeedRequest();

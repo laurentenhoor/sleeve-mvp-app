@@ -8,6 +8,7 @@ import { Connecting } from '../connecting/connecting';
 import { ModalController } from 'ionic-angular';
 import { UiSettings } from '../../providers/ui-settings';
 import { Pairing } from '../pairing/pairing';
+import { PairModel } from '../../providers/sleeves/pair.model';
 
 @Component({
     selector: 'settings',
@@ -18,7 +19,7 @@ export class Settings {
 
     constructor(
         private alertCtrl: AlertController,
-        private sleevesService: Sleeves,
+        private sleevesService: PairModel,
         public modalCtrl: ModalController,
         private events: Events,
         private uiSettings: UiSettings,

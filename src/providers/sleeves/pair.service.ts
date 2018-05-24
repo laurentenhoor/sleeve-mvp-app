@@ -1,24 +1,26 @@
 import { Injectable } from '@angular/core';
 import { BLE } from '@ionic-native/ble';
-import { PairManager } from './pair-manager';
+import { PairModel } from './pair.model';
 import { Events } from 'ionic-angular';
+import { ConnectService } from './connect.service';
 
 @Injectable()
-export class ComManager {
+export class PairService {
     private defaultSleeveName: string = 'Philips Avent SCH820';
     private connectedDeviceId: string;
     private sleeveConnected: boolean = false;
 
     constructor(
         private ble: BLE,
-        private pairManager: PairManager,
+        private pairModel: PairModel,
         private events: Events,
+        private connectService: ConnectService,
     ) {
         
     }
 
     async pair(retryResolve?, retryReject?): Promise<any> {
-        await this.pairManager.disconnectAll();
+        await this.connectService.disconnectAll();
 
         return new Promise((resolve, reject) => {
             if (!retryResolve) {
@@ -53,7 +55,7 @@ export class ComManager {
         if (device.name == this.defaultSleeveName && device.id != '6710B20A-EE92-44C1-B9B9-684D7B6E1F5D') { //SHREYDEVICE// && device.id != 'D7832B16-8B21-4BCB-906C-0B6779BB18D8'
             console.log('Found a bottle sleeve', device.id)
             this.ble.stopScan();
-            this.connect(device.id, successCallback);
+            this.connectService.connect(device.id, successCallback);
         }
     }
 
@@ -73,22 +75,6 @@ export class ComManager {
         })
     }
 
-    private connect(deviceId, successCallback) {
-        this.ble.connect(deviceId).subscribe(
-            peripheral => {
-                this.ble.stopScan();
-                this.sleeveConnected = true;
-                this.connectedDeviceId = deviceId;
-                successCallback(peripheral);
-                console.error('Successfully connected to sleeve', deviceId)
-            },
-            peripheral => {
-                this.sleeveConnected = false;
-                this.connectedDeviceId = null;
-                console.error('disconnected from sleeve', deviceId);
-                this.events.publish('sleeve-disconnected');
-            }
-        )
-    }
+    
 
 }

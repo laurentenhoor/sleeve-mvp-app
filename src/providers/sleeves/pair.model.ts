@@ -3,7 +3,7 @@ import PouchDB from 'pouchdb';
 import { BLE } from '@ionic-native/ble';
 
 @Injectable()
-export class PairManager {
+export class PairModel {
     private localDb: PouchDB.Database;
     pairedSleeves: any[] = [];
 
@@ -19,7 +19,7 @@ export class PairManager {
         this.pairedSleeves = await this.getPairedSleeves();
     }
 
-    private getPairedSleeves(): Promise<any> {
+    private getPairedSleeves(): Promise<any[]> {
         return new Promise((resolve, reject) => {
             this.localDb.allDocs({
                 include_docs: true,
@@ -30,11 +30,20 @@ export class PairManager {
         })
     }
 
+    async amountOfPairedSleeves(): Promise<any> {
+        return (await this.getPairedSleeves()).length;        
+    }
+
     initLocalDb() {
         this.localDb = new PouchDB('sleeves');
         this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
             this.mimicLocalDbChangeInLocalVariable(change);
         });
+    }
+
+    removeSleeve(sleeve): void {
+        console.log('remove sleeve', sleeve)
+        this.localDb.remove(sleeve)
     }
 
     storePairedSleeveId(sleeveId: string): void {
@@ -50,34 +59,6 @@ export class PairManager {
                 if (err) { return console.error(JSON.stringify(err)); }
             });
         });
-    }
-
-    disconnectAll(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            if (this.pairedSleeves.length == 0) {
-                resolve();
-            }
-
-            let disconnectionCounter = 0;
-            
-            this.pairedSleeves.forEach((sleeve) => {
-                this.ble.disconnect(sleeve._id).then(
-                    success => {
-                        console.log('disconnected', sleeve._id)
-                        disconnectionCounter++;
-                        if (disconnectionCounter == this.pairedSleeves.length) {
-                            resolve();
-                        }
-                    },
-                    error => {
-                        console.error('disconnect', error)
-                        reject();
-                    }
-                )
-            });
-
-        })
-
     }
 
     private mimicLocalDbChangeInLocalVariable(change): void {

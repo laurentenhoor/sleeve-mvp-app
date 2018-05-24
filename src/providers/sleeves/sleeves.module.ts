@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { IonicModule } from 'ionic-angular';
 
-import { ComManager } from './com-manager';
-import { PairManager } from './pair-manager';
 import { Sleeves } from './sleeves';
+import { PairService } from './pair.service';
+import { PairModel } from './pair.model';
+import { ConnectService } from './connect.service';
 
 @NgModule({
     declarations: [
@@ -15,8 +16,9 @@ import { Sleeves } from './sleeves';
     entryComponents: [
     ],
     providers: [
-        ComManager,
-        PairManager,
+        PairService,
+        PairModel,
+        ConnectService,
         Sleeves,
     ]
 })
