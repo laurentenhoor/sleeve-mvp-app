@@ -8,7 +8,7 @@ export class PairManager {
     pairedSleeves: any[] = [];
 
     constructor(
-        private ble:BLE,
+        private ble: BLE,
         private zone: NgZone
     ) {
         this.init();
@@ -19,8 +19,8 @@ export class PairManager {
         this.pairedSleeves = await this.getPairedSleeves();
     }
 
-    private getPairedSleeves():Promise<any> {
-        return new Promise((resolve, reject)=>{
+    private getPairedSleeves(): Promise<any> {
+        return new Promise((resolve, reject) => {
             this.localDb.allDocs({
                 include_docs: true,
                 attachments: true
@@ -33,13 +33,13 @@ export class PairManager {
     initLocalDb() {
         this.localDb = new PouchDB('sleeves');
         this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-            this.handleChange(change);
+            this.mimicLocalDbChangeInLocalVariable(change);
         });
     }
 
     storePairedSleeveId(sleeveId: string): void {
         console.log('storeSleeve', sleeveId)
-        
+
         let self = this;
 
         this.localDb.get(sleeveId, {}, (err, doc) => {
@@ -54,12 +54,12 @@ export class PairManager {
 
     disconnectAll(): Promise<any> {
         return new Promise((resolve, reject) => {
-            let disconnectionCounter = 0;
-
             if (this.pairedSleeves.length == 0) {
                 resolve();
             }
 
+            let disconnectionCounter = 0;
+            
             this.pairedSleeves.forEach((sleeve) => {
                 this.ble.disconnect(sleeve._id).then(
                     success => {
@@ -80,7 +80,7 @@ export class PairManager {
 
     }
 
-    private handleChange(change): void {
+    private mimicLocalDbChangeInLocalVariable(change): void {
         let changedDoc = null;
         let changedIndex = null;
 

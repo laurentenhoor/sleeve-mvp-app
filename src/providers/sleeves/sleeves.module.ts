@@ -5,7 +5,6 @@ import { ComManager } from './com-manager';
 import { PairManager } from './pair-manager';
 import { Sleeves } from './sleeves';
 
-
 @NgModule({
     declarations: [
     ],
