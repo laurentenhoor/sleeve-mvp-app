@@ -4,26 +4,9 @@ import { BLE } from '@ionic-native/ble';
 
 import PouchDB from 'pouchdb';
 import { Observable } from 'rxjs/Observable';
-import { Feeds } from './feeds';
-
-export enum SleeveStates {
-    DEVICE_STATE_NONE = 0, //Don't add anything before this
-    BLE_ADVERTISING = 1,
-    BLE_PAIRED_AND_BONDED = 2,
-    DEVICE_FEEDING_EXPECTED = 3,
-    DEVICE_FEEDING = 4,
-    DEVICE_FEEDING_PAUSED = 5,
-    DEVICE_FEEDING_END = 6,
-    DEVICE_RESET = 7,
-    BLE_DISCONNECTED = 8,
-    DEVICE_WEIGHING_COMPLETED = 9,
-    DEVICE_VERTICAL_STABLE = 10,
-    DEVICE_WIGGLING = 11,
-    BUTTON_PRESSED = 12,
-    DEVICE_WEIGHING_TIMEOUT = 13,
-    VERTICAL_STABLE = 14,
-    DEVICE_STATE_LAST = 15 //increment this number and all states before this
-}
+import { Feeds } from '../feeds';
+import { PairManager } from './pair-manager';
+import { ComManager } from './com-manager';
 
 @Injectable()
 export class Sleeves {
@@ -45,16 +28,51 @@ export class Sleeves {
         private feedsService: Feeds,
         private zone: NgZone,
         private events: Events,
+        private pairManager: PairManager,
+        private comManager: ComManager
     ) {
         this.localDb = new PouchDB('sleeves');
         this.syncTimestampDb = new PouchDB('syncTimestamp');
-        this.initPairedSleeves();
+        // this.initPairedSleeves();
         this.initSyncTimestamp();
     }
 
-    removeSleeve(sleeve): void {
-        console.log('remove sleeve', sleeve)
-        this.localDb.remove(sleeve)
+    async scanAndConnect(retryResolve?, retryReject?): Promise<any> {
+        // new part - not implemented yet
+        this.isPairing = true;
+        this.comManager.pair()
+            .then((pairedSleeve) => {
+                this.isPairing = false;
+                this.pairManager.storePairedSleeveId(pairedSleeve.id)
+            }).catch(() => {
+                this.isPairing = false;
+            })
+
+
+        // old part - still functional
+        this.isPairing = true;
+        await this.pairManager.disconnectAll();
+        return new Promise((resolve, reject) => {
+            if (!retryResolve) {
+                retryResolve = resolve;
+                retryReject = reject;
+            }
+            this.initScan((connectedSleeve) => {
+                console.log('Starting Forced Bonding', connectedSleeve)
+                this.forceBonding()
+                    .then(() => {
+                        this.isPairing = false;
+                        this.pairManager.storePairedSleeveId(connectedSleeve.id)
+                        // this.storeSleeve(connectedSleeve.id);
+                        retryResolve(connectedSleeve);
+                    })
+                    .catch((error) => {
+                        console.error('Forcebonding error: ', JSON.stringify(error))
+                        return this.scanAndConnect(resolve, reject);
+                    });
+            })
+        })
+
     }
 
     isBluetoothEnabled(): Promise<any> {
@@ -65,6 +83,11 @@ export class Sleeves {
                 reject();
             })
         })
+    }
+
+    removeSleeve(sleeve): void {
+        console.log('remove sleeve', sleeve)
+        this.localDb.remove(sleeve)
     }
 
     storeSyncTimestamp() {
@@ -99,38 +122,38 @@ export class Sleeves {
         });
     }
 
-    private async disconnectAll(): Promise<any> {
-        await this.ble.stopScan();
-        return new Promise((resolve, reject) => {
-            let disconnectionCounter = 0;
-            this.isSyncing = false;
+    // private async disconnectAll(): Promise<any> {
+    //     await this.ble.stopScan();
+    //     return new Promise((resolve, reject) => {
+    //         let disconnectionCounter = 0;
+    //         this.isSyncing = false;
 
-            if (this.pairedSleeves.length == 0) {
-                resolve();
-            }
+    //         if (this.pairedSleeves.length == 0) {
+    //             resolve();
+    //         }
 
-            this.pairedSleeves.forEach((sleeve) => {
-                this.ble.disconnect(sleeve._id).then(
-                    success => {
-                        this.sleeveConnected = false;
-                        console.log('disconnected', sleeve._id)
-                        disconnectionCounter++;
-                        if (disconnectionCounter == this.pairedSleeves.length) {
-                            resolve();
-                        }
-                    },
-                    error => {
-                        console.error('disconnect', error)
-                        reject();
-                    }
-                )
-            });
-            
-        })
-    }
+    //         this.pairedSleeves.forEach((sleeve) => {
+    //             this.ble.disconnect(sleeve._id).then(
+    //                 success => {
+    //                     this.sleeveConnected = false;
+    //                     console.log('disconnected', sleeve._id)
+    //                     disconnectionCounter++;
+    //                     if (disconnectionCounter == this.pairedSleeves.length) {
+    //                         resolve();
+    //                     }
+    //                 },
+    //                 error => {
+    //                     console.error('disconnect', error)
+    //                     reject();
+    //                 }
+    //             )
+    //         });
 
-    amountOfPairedSleeves():Promise<any> {
-        return new Promise((resolve)=>{
+    //     })
+    // }
+
+    amountOfPairedSleeves(): Promise<any> {
+        return new Promise((resolve) => {
             this.localDb.allDocs({
             }).then(result => {
                 resolve(result.rows.length);
@@ -138,90 +161,50 @@ export class Sleeves {
         })
     }
 
-    private initPairedSleeves(): void {
-        this.localDb.allDocs({
-            include_docs: true,
-            attachments: true
-        }).then(result => {
-            this.pairedSleeves = result.rows.map((row) => { return row.doc });
-        })
-        this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-            this.handleChange(change);
-        });
-    }
+    // private initPairedSleeves(): void {
+    //     this.localDb.allDocs({
+    //         include_docs: true,
+    //         attachments: true
+    //     }).then(result => {
+    //         this.pairedSleeves = result.rows.map((row) => { return row.doc });
+    //     })
+    //     this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
+    //         this.handleChange(change);
+    //     });
+    // }
 
-    private handleChange(change): void {
-        let changedDoc = null;
-        let changedIndex = null;
+    // private handleChange(change): void {
+    //     let changedDoc = null;
+    //     let changedIndex = null;
 
-        this.pairedSleeves.forEach((doc, index) => {
-            if (doc._id === change.id) {
-                changedDoc = doc;
-                changedIndex = index;
-            }
-        });
+    //     this.pairedSleeves.forEach((doc, index) => {
+    //         if (doc._id === change.id) {
+    //             changedDoc = doc;
+    //             changedIndex = index;
+    //         }
+    //     });
 
-        //A document was deleted
-        if (change.deleted) {
-            this.zone.run(() => {
-                this.pairedSleeves.splice(changedIndex, 1);
-            });
-        }
-        else {
-            //A document was updated
-            if (changedDoc) {
-                this.zone.run(() => {
-                    this.pairedSleeves[changedIndex] = change.doc;
-                });
-            }
-            //A document was added
-            else {
-                this.zone.run(() => {
-                    this.pairedSleeves.unshift(change.doc);
-                });
-            }
-        }
-    }
-
-    private storeSleeve(sleeveId: string): void {
-        console.log('storeSleeve', sleeveId)
-        let self = this;
-        this.localDb.get(sleeveId, function (err, doc) {
-            self.localDb.put({
-                _id: sleeveId,
-                _rev: doc ? doc._rev : null
-            }, function (err, response) {
-                if (err) { return console.error(JSON.stringify(err)); }
-            });
-        });
-    }
-
-
-    async scanAndConnect(retryResolve?, retryReject?): Promise<any> {
-        this.isPairing = true;
-        await this.disconnectAll();
-
-        return new Promise((resolve, reject) => {
-            if (!retryResolve) {
-                retryResolve = resolve;
-                retryReject = reject;
-            }
-            this.initScan((connectedSleeve) => {
-                console.log('Starting Forced Bonding', connectedSleeve)
-                this.forceBonding()
-                    .then(() => {
-                        this.isPairing = false;
-                        this.storeSleeve(connectedSleeve.id);
-                        retryResolve(connectedSleeve);
-                    })
-                    .catch((error) => {
-                        console.error('Forcebonding error: ', JSON.stringify(error))
-                        return this.scanAndConnect(resolve, reject);
-                    });
-            })
-        })
-
-    }
+    //     //A document was deleted
+    //     if (change.deleted) {
+    //         this.zone.run(() => {
+    //             this.pairedSleeves.splice(changedIndex, 1);
+    //         });
+    //     }
+    //     else {
+    //         //A document was updated
+    //         if (changedDoc) {
+    //             this.zone.run(() => {
+    //                 this.pairedSleeves[changedIndex] = change.doc;
+    //             });
+    //         }
+    //         //A document was added
+    //         else {
+    //             this.zone.run(() => {
+    //                 this.pairedSleeves.unshift(change.doc);
+    //             });
+    //         }
+    //     }
+    // }
 
     private async initScan(successCallback) {
         console.log('initScan();')
@@ -242,7 +225,7 @@ export class Sleeves {
     }
 
     angle(): Observable<any> {
-        return Observable.create((observer)=>{
+        return Observable.create((observer) => {
             console.log('subscribeToAngle', this.connectedDeviceId)
             if (!this.sleeveConnected) {
                 observer.error('no sleeve connected');
@@ -294,7 +277,7 @@ export class Sleeves {
     }
 
     async synchronizeFeeds() {
-        await this.disconnectAll();
+        await this.pairManager.disconnectAll();
 
         this.isSyncing = true;
         let self = this;
@@ -316,7 +299,7 @@ export class Sleeves {
                 setTimeout(() => {
                     if (!this.isPairing) {
                         this.isSyncing = false
-                        this.disconnectAll();
+                        this.pairManager.disconnectAll();
                         console.log('scanning timeout')
                         reject('scanTimeout');
                     }
@@ -381,12 +364,12 @@ export class Sleeves {
                     resolve(this.dataBuffer);
                     this.dataBuffer = "";
                     this.isSyncing = false;
-                    this.disconnectAll();
+                    this.pairManager.disconnectAll();
                 }
             }, error => {
                 console.error('error while receiving feedData', error)
                 reject('unable to receive feedData');
-                this.disconnectAll();
+                this.pairManager.disconnectAll();
                 this.isSyncing = false;
             })
             this.sendDownloadFeedRequest();
