@@ -24,6 +24,15 @@ ion-icon {
     &[class*="philips-baby-bottle"] {
         mask-image: url(../assets/icon/baby-bottle.svg);
     }    
+    &[class*="philips-feed-duration"] {
+        mask-image: url(../assets/icon/feed-duration.svg);
+    }    
+    &[class*="philips-feed-time"] {
+        mask-image: url(../assets/icon/feed-starttime.svg);
+    }    
+    &[class*="philips-feed-volume"] {
+        mask-image: url(../assets/icon/feed-volume.svg);
+    }    
 }
 
 .range-tick {

@@ -38,6 +38,7 @@ export class QuickStart {
     private startWeighTimeoutError: boolean = false;
     private endWeighTimeoutError: boolean = false;
     private feedTimeoutError: boolean = false;
+    private longPressError: boolean = false;
 
     constructor(
         private nav: NavController,
@@ -102,12 +103,21 @@ export class QuickStart {
                     this.afterEndWeighing();
                     break;
                 case SleeveStates.BLE_ADVERTISING:
-                    this.nav.push(Pairing, {}, { animation: 'md-transition' });
+                    this.longPressByMistake();
                     break;
             }
         }, error => {
             console.error('no states available', error)
         })
+    }
+
+    longPressByMistake() {
+        this.nav.push(Pairing, {}, { animation: 'md-transition' });
+        this.alertCtrl.create({
+            title: 'Uh oh! You did a long press.',
+            subTitle: "A long press is only used for pairing the Smart Sleeve. No problem, let's start over again.",
+            buttons: ['Discard']
+          }).present();
     }
 
     nextSlide() {
