@@ -31,6 +31,7 @@ import { Settings } from '../pages/settings/settings';
 import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-guide.module';
 import { UiSettings } from '../providers/ui-settings';
 import { Pairing } from '../pages/pairing/pairing';
+import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { Pairing } from '../pages/pairing/pairing';
     Settings,
     Qsg,
     Pairing,
+    NoSleeve,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +65,7 @@ import { Pairing } from '../pages/pairing/pairing';
     Settings,
     Qsg,
     Pairing,
+    NoSleeve,
   ],
   providers: [
     StatusBar,

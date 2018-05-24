@@ -1,6 +1,6 @@
 
 import { Component, NgZone } from '@angular/core';
-import { AlertController, NavController, Events } from 'ionic-angular';
+import { AlertController, NavController, Events, App } from 'ionic-angular';
 
 import { Sleeves } from '../../providers/sleeves';
 import { Connecting } from '../connecting/connecting';
@@ -21,7 +21,9 @@ export class Settings {
         private sleevesService: Sleeves,
         public modalCtrl: ModalController,
         private events: Events,
-        private uiSettings: UiSettings
+        private uiSettings: UiSettings,
+        private nav: NavController,
+        private app: App
     ) {        
     }
 
@@ -29,8 +31,7 @@ export class Settings {
     }
 
     pair() {
-        // this.modalCtrl.create(Connecting).present();
-        this.modalCtrl.create(Pairing).present();
+        this.app.getRootNav().push(Pairing, {}, { animation: 'md-transition' })
     }
 
     setQsg(isDefault){

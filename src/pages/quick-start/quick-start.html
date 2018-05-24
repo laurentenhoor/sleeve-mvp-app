@@ -9,9 +9,9 @@
                 <ion-icon name="arrow-back"></ion-icon>
             </button>
         </ion-buttons>
-        <ion-buttons start *ngIf="slides.getActiveIndex() == 0">
+        <ion-buttons end *ngIf="slides.getActiveIndex() == 0">
             <button ion-button icon-only (click)="closeModal()">
-                Close
+                Skip
             </button>
         </ion-buttons>
     </ion-toolbar>

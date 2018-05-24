@@ -1,0 +1,45 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>
+            Smart Feeding Kit
+        </ion-title>
+        <!-- <ion-buttons start>
+            <button ion-button (click)="closeModal()">
+                <span ion-text color="primary" showWhen="ios">Close</span>
+                <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+            </button>
+        </ion-buttons> -->
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content no-bounce class="vertical-align-content">
+
+    <div style="text-align:center;width:100%;">
+        <img (click)="demo()" class="sleeve-image" src="assets/imgs/sleeve-white-bg.png" />
+
+        <h1>
+            I have a bottle tracker.
+        </h1>
+        <button (click)="quickStart()" ion-button outline>
+            Get Started
+        </button>
+    </div>
+
+
+</ion-content>
+
+<ion-footer style="text-align:center;">
+    <ion-toolbar no-border-bottom>
+        <ion-title>
+            I want a bottle tracker.
+        </ion-title>
+    </ion-toolbar>
+
+    <ion-toolbar no-border-top no-border-bottom>
+        <button (click)="buySleeve()" ion-button small outline color="dark" style="margin-top:-20px;">
+            More Information
+        </button>
+    </ion-toolbar>
+
+</ion-footer>

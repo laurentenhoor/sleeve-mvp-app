@@ -223,13 +223,15 @@ export class Qsg {
             item.title = "Measure volume";
             item.description = "Awesome!";
         })
-        setTimeout(()=>{
+        setTimeout(() => {
             this.finishInstallation();    
-        },1000)
+        }, 1000)
     }
 
     closeModal() {
-        this.nav.pop();
+        // this.nav.pop({ animation: 'md-transition' });
+        // this.nav.popToRoot({ animation: 'md-transition' }) 
+        this.nav.setRoot(TabsPage, {}, {animate: true, direction: 'forward', animation:'md-transition'});
     }
 
     finishInstallation() {

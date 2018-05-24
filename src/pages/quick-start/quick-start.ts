@@ -1,10 +1,11 @@
 
 import { ViewChild, Component, NgZone } from '@angular/core';
-import { AlertController, NavController, Slides, App, Events, ToastController, ModalController } from 'ionic-angular';
+import { AlertController, NavController, Slides, App, Events, ToastController, ModalController, ViewController } from 'ionic-angular';
 
 import { BLE } from '@ionic-native/ble';
 import { Sleeves, SleeveStates } from '../../providers/sleeves'
 import { Connecting } from '../connecting/connecting';
+import { TabsPage } from '../tabs/tabs';
 
 enum QsgStep {
     INTRODUCTION,
@@ -46,7 +47,8 @@ export class QuickStart {
         private events: Events,
         private alertCtrl: AlertController,
         private toastCtrl: ToastController,
-        private modalCtrl: ModalController
+        private modalCtrl: ModalController,
+        private viewCtrl: ViewController
     ) {
 
     }
@@ -187,7 +189,11 @@ export class QuickStart {
     }
 
     closeModal() {
-        this.nav.pop();
+        // this.nav.pop({ animation: 'md-transition' });
+        // this.nav.popToRoot();
+        // this.app.getRootNav().popToRoot();
+        // this.nav.push(TabsPage)
+        this.nav.setRoot(TabsPage, {}, {animate: true, direction: 'forward', animation:'md-transition'});       
     }
 
     showWeighErrorHints() {

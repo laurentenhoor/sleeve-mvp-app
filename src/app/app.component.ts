@@ -11,18 +11,21 @@ import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
 import { QuickStart } from '../pages/quick-start/quick-start';
 import { Qsg } from '../pages/qsg/qsg';
 import { Pairing } from '../pages/pairing/pairing';
+import { Sleeves } from '../providers/sleeves';
+import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage: any = TabsPage;
+  rootPage: any;
 
   constructor(
     platform: Platform,
     statusBar: StatusBar,
     splashScreen: SplashScreen,
-    sessionsService: Sessions
+    sessionsService: Sessions,
+    sleevesService: Sleeves
   ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -32,6 +35,12 @@ export class MyApp {
         splashScreen.hide();
       }
       sessionsService.setSession();
+      if (sleevesService.pairedSleeves.length == 0) {
+        this.rootPage = NoSleeve;
+      } else {
+        this.rootPage = TabsPage;
+      }
+
     });
   }
 }

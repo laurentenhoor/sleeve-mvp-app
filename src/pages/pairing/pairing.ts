@@ -6,6 +6,7 @@ import { QuickStart } from '../quick-start/quick-start';
 import { Settings } from '../settings/settings';
 import { UiSettings } from '../../providers/ui-settings';
 import { Qsg } from '../qsg/qsg';
+import { TabsPage } from '../tabs/tabs';
 
 
 enum PairStep {
@@ -52,11 +53,13 @@ export class Pairing {
     }
 
     openQsg() {
-        this.closeModal();
+        // this.closeModal();
         if (this.uiSettings.defaultQsg) {
-            this.modalCtrl.create(QuickStart).present();
+            this.nav.push(QuickStart, {}, { animation: 'md-transition' })
+            // this.modalCtrl.create(QuickStart).present();
         } else {
-            this.modalCtrl.create(Qsg).present();
+            this.nav.push(Qsg, {}, { animation: 'md-transition' })
+            // this.modalCtrl.create(Qsg).present();
         }
     }
 
@@ -86,11 +89,12 @@ export class Pairing {
             })
             .catch(error => {
                 console.error('BlePairing reject', error)
-            })  
+            })
     }
 
     closeModal() {
-        this.nav.pop();
+        this.nav.pop({ animation: 'md-transition' });
+        // this.nav.setRoot(TabsPage, {}, {animate: true, direction: 'forward', animation:'md-transition'});
     }
 
     checkBluetooth() {

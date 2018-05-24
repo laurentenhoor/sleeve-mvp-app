@@ -1,5 +1,5 @@
 import { Component, NgZone, OnInit, ApplicationRef, ViewChild } from '@angular/core';
-import { NavController, Events, Content } from 'ionic-angular';
+import { NavController, Events, Content, App } from 'ionic-angular';
 import { ToastController, ModalController, LoadingController } from 'ionic-angular';
 import { Http } from '@angular/http';
 
@@ -13,6 +13,7 @@ import { Sleeves } from '../../providers/sleeves';
 import { Connecting } from '../connecting/connecting';
 import { Bluetooth } from '../bluetooth/bluetooth';
 import { Pairing } from '../pairing/pairing';
+import { NoSleeve } from '../no-sleeve/no-sleeve';
 
 @Component({
   selector: 'timeline',
@@ -38,6 +39,7 @@ export class Timeline {
     public sessionsService: Sessions,
     public sleevesService: Sleeves,
     public loadingCtrl: LoadingController,
+    private app: App
   ) {
     events.subscribe('synchronize-feeds', () => {
         this.synchronizeFeeds();
@@ -45,12 +47,13 @@ export class Timeline {
   }
 
   ionViewDidLoad() {
-    // this.synchronizeFeeds();
+    this.synchronizeFeeds();
   }
 
   synchronizeFeeds() {
     if (this.sleevesService.pairedSleeves.length == 0) {
-      this.modalCtrl.create(Pairing).present();
+      // this.modalCtrl.create(NoSleeve).present();
+      // this.app.getRootNav().setRoot(NoSleeve);
     } else {
       this.sleevesService.synchronizeFeeds().then(feedData => {
         this.presentFeedToast();
