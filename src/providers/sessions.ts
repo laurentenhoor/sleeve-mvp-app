@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Device } from '@ionic-native/device';
 import PouchDB from 'pouchdb';
 
-import { Device } from '@ionic-native/device';
 
 @Injectable()
 export class Sessions {
