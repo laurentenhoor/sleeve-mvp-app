@@ -129,6 +129,15 @@ export class Sleeves {
         })
     }
 
+    amountOfPairedSleeves():Promise<any> {
+        return new Promise((resolve)=>{
+            this.localDb.allDocs({
+            }).then(result => {
+                resolve(result.rows.length);
+            })
+        })
+    }
+
     private initPairedSleeves(): void {
         this.localDb.allDocs({
             include_docs: true,

@@ -102,7 +102,7 @@ export class QuickStart {
                     this.afterEndWeighing();
                     break;
                 case SleeveStates.BLE_ADVERTISING:
-                    this.nav.push(Pairing, {}, { animation: 'md-tranistion' });
+                    this.nav.push(Pairing, {}, { animation: 'md-transition' });
                     break;
             }
         }, error => {

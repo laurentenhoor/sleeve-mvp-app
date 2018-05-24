@@ -30,16 +30,22 @@ export class MyApp {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
+      sleevesService.amountOfPairedSleeves().then((amount) => {
+        if (amount == 0) {
+          this.rootPage = NoSleeve;
+        } else {
+          this.rootPage = TabsPage;
+        }
+      });
+
       if (platform.is('cordova')) {
         statusBar.styleDefault();
         splashScreen.hide();
       }
       sessionsService.setSession();
-      if (sleevesService.pairedSleeves.length == 0) {
-        this.rootPage = NoSleeve;
-      } else {
-        this.rootPage = TabsPage;
-      }
+      
+      
+      
 
     });
   }

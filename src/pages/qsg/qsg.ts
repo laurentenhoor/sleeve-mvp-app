@@ -3,6 +3,7 @@ import { Component, NgZone } from '@angular/core';
 import { NavController, Events } from 'ionic-angular';
 import { Sleeves, SleeveStates } from '../../providers/sleeves';
 import { TabsPage } from '../tabs/tabs';
+import { Pairing } from '../pairing/pairing';
 
 @Component({
     selector: 'qsg',
@@ -102,6 +103,9 @@ export class Qsg {
                 case SleeveStates.DEVICE_FEEDING_END:
                     this.closeFeed();
                     break;
+                case SleeveStates.BLE_ADVERTISING:
+                    this.nav.push(Pairing, {}, { animation: 'md-transition' });
+                    break;
             }
         }, error => {
             console.error('no states available', error)
@@ -132,7 +136,7 @@ export class Qsg {
             let item = this.qsgItems[1].items[0];
             item['alertMessage'] = "Retry on a flat hard surface"
             item.image = 'assets/imgs/qsg/small/QSG_Screen-5.1_5.2_B-Weight-start-volume-on-table_cropped.gif';
-            item.title ='Press the button';
+            item.title = 'Press the button';
             item.description = 'While standing on a surface';
         })
     }
@@ -141,7 +145,7 @@ export class Qsg {
         this.zone.run(() => {
             let item = this.qsgItems[3].items[0];
             item['alertMessage'] = "Retry on a flat hard surface";
-            item.image ='assets/imgs/qsg/small/QSG_Screen 4.1_4.2_Press button.gif';
+            item.image = 'assets/imgs/qsg/small/QSG_Screen 4.1_4.2_Press button.gif';
             item.title = 'Press the button';
             item.description = 'While standing on a surface';
         })
@@ -224,20 +228,20 @@ export class Qsg {
             item.description = "Awesome!";
         })
         setTimeout(() => {
-            this.finishInstallation();    
+            this.finishInstallation();
         }, 1000)
     }
 
     closeModal() {
         // this.nav.pop({ animation: 'md-transition' });
         // this.nav.popToRoot({ animation: 'md-transition' }) 
-        this.nav.setRoot(TabsPage, {}, {animate: true, direction: 'forward', animation:'md-transition'});
+        this.nav.setRoot(TabsPage, {}, { animate: true, direction: 'forward', animation: 'md-transition' });
     }
 
     finishInstallation() {
-        
+
         this.closeModal();
-        
+
         // this.nav.pop();
         // setTimeout(()=>{
         //     this.events.publish('synchronize-feeds');
