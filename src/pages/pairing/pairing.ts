@@ -128,7 +128,7 @@ export class Pairing {
 
     showDeviceActionToast() {
         let toast = this.toastCtrl.create({
-            message: 'Please Use Your Sleeve!',
+            message: 'Please use your Smart Sleeve',
             duration: 3000,
             position: 'bottom',
         });

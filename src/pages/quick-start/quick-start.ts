@@ -199,7 +199,7 @@ export class QuickStart {
     showWeighErrorHints() {
         let alert = this.alertCtrl.create({
             title: 'Extra Tip!',
-            subTitle: 'Do not touch the device during the measurement. Make sure it is on a flat and hard surface.',
+            subTitle: 'Do not touch the Smart Sleeve during the measurement. Make sure it is on a flat and hard surface.',
             buttons: ['OK']
         });
         alert.present();
@@ -216,7 +216,7 @@ export class QuickStart {
 
     showDeviceActionToast() {
         let toast = this.toastCtrl.create({
-            message: 'Please Use Your Sleeve!',
+            message: 'Please use your Smart Sleeve!',
             duration: 3000,
             position: 'bottom',
         });

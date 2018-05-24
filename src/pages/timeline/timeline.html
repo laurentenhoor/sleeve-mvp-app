@@ -7,7 +7,7 @@
       <button *ngIf="!sleevesService.isSyncing" (click)="synchronizeFeeds();" ion-button icon-left>
         Sync
       </button>
-      <button *ngIf="sleevesService.isSyncing" ion-button>
+      <button *ngIf="sleevesService.isSyncing" (click)="presentBusyToast();" ion-button>
         <ion-spinner name="dots"></ion-spinner>
       </button>
     </ion-buttons>
@@ -31,7 +31,7 @@
             <p style="display:inline;" *ngIf="feed.duration"> in {{ feed.duration | number : '1.0-0' }} sec</p>
             <p>{{ formatTimeAgo(feed.timestamp) }}</p>
             <p item-end>
-              <ion-icon name="{{ feed.type == 'smart' ? 'bluetooth' : 'hand' }}" item-left large></ion-icon>{{ feed.type == 'smart' ? 'Smart Bottle Tracker' : 'Manual' }}
+              <ion-icon name="{{ feed.type == 'smart' ? 'bluetooth' : 'hand' }}" item-left large></ion-icon>{{ feed.type == 'smart' ? 'Smart Sleeve' : 'Manual' }}
             </p>
       </ion-item>
 

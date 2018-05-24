@@ -53,7 +53,9 @@ export class Timeline {
   synchronizeFeeds() {
     if (this.sleevesService.pairedSleeves.length == 0) {
       // this.modalCtrl.create(NoSleeve).present();
-      // this.app.getRootNav().setRoot(NoSleeve);
+      // this.app.getRootNav().setRoot(Pairing);
+      this.presentNoPairedDevicesToast();
+
     } else {
       this.sleevesService.synchronizeFeeds().then(feedData => {
         this.presentFeedToast();
@@ -72,6 +74,28 @@ export class Timeline {
   presentTimeoutToast() {
     let toast = this.toastCtrl.create({
       message: 'No New Feeds Found',
+      duration: 5000,
+      showCloseButton: true,
+      closeButtonText: 'Close',
+      position: 'top',
+    });
+    toast.present();
+  }
+  
+  presentBusyToast() {
+    let toast = this.toastCtrl.create({
+      message: 'Sync in Progress',
+      duration: 5000,
+      showCloseButton: true,
+      closeButtonText: 'Close',
+      position: 'top',
+    });
+    toast.present();
+  }
+
+  presentNoPairedDevicesToast() {
+    let toast = this.toastCtrl.create({
+      message: 'No Smart Sleeve Paired',
       duration: 5000,
       showCloseButton: true,
       closeButtonText: 'Close',

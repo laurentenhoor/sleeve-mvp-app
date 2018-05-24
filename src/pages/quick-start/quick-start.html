@@ -20,25 +20,25 @@
 
 <ion-slides pager style="background:white;" class="swiper-no-swiping">
 
-    <ion-slide padding>
 
-        <img *ngIf="slides.getActiveIndex()>=QsgStep.INTRODUCTION" class="sleeve-image" src="assets/imgs/sleeve-white-bg.png"
-        />
+    <ion-slide padding>
+        <img *ngIf="slides.getActiveIndex()>=QsgStep.INTRODUCTION" class="sleeve-image" src="assets/imgs/sleeve-white-bg.png" />
         <h1 ion-text>
-            Let's track the first feed together!
+            Let's track a trial feed together!
         </h1>
         <p>
-            We will explain the steps along the way.
+            This Quick Start Guide takes you through the steps to track your baby's feedings with the Smart Sleeve. You will track a
+            trial feed using water while going through the steps in this guide.
         </p>
 
         <ion-footer class="qsg" padding>
-            <button (click)="nextSlide();" ion-button block>Next Step</button>
+            <button (click)="nextSlide();" ion-button block>Get Started</button>
         </ion-footer>
     </ion-slide>
 
 
-    <ion-slide padding>
 
+    <ion-slide padding>
 
         <img *ngIf="slides.getActiveIndex()>=QsgStep.REMOVE_CAP" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 2.0_Remove-Cap.gif"
         />
@@ -46,13 +46,16 @@
             Remove the Cap
         </h1>
         <p>
-            We will weigh to measure the amount of milk. The weight of the cap disturbs the measurement.
+            Make sure to remove the bottle cap before you start tracking a feed.
         </p>
 
         <ion-footer class="qsg" padding>
             <button (click)="nextSlide();" ion-button block>Next Step</button>
         </ion-footer>
+
     </ion-slide>
+
+
 
     <ion-slide padding>
         <img *ngIf="slides.getActiveIndex()>=QsgStep.PLACE_BOTTLE" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen-3.0_Insert-Bottle.gif"
@@ -61,13 +64,15 @@
             Insert the Bottle
         </h1>
         <p>
-            After preparing your baby’s bottle, insert the bottle in the bottle tracker.
+            Fill the bottle with some water and insert the bottle in the Smart Sleeve.
         </p>
 
         <ion-footer class="qsg" padding>
             <button (click)="nextSlide();" ion-button block>Next Step</button>
         </ion-footer>
     </ion-slide>
+
+
 
     <ion-slide padding>
         <img *ngIf="slides.getActiveIndex()>=QsgStep.WEIGH_BEFORE" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen-5.1_5.2_B-Weight-start-volume-on-table_cropped.gif"
@@ -77,17 +82,18 @@
             <br>Before Feeding
         </h1>
         <p>
-            Place the sleeve on a flat and hard surface and short press the button.
+            Place the Smart Sleeve on a flat and hard surface.
+            <b>Short-press the button</b> to measure the volume before the feeding.
         </p>
         <p>
-            The light turns green when the feed's volume measurement is successful.
+            <b>The light turns green</b> when the feed's volume measurement is successful.
         </p>
         <ion-footer class="qsg" padding>
 
             <ion-item *ngIf="startWeighTimeoutError" color="orange" style="border-radius:4px;">
                 <ion-icon item-start name="alert"></ion-icon>
                 <ion-label class="warning">
-                    Please retry on a flat and hard surface.
+                    Please try-again by short-pressing the button and placing on a flat and hard surface.
                 </ion-label>
                 <button ion-button item-end outline small color="white" (click)="showWeighErrorHints()">
                     Help
@@ -105,6 +111,8 @@
         </ion-footer>
     </ion-slide>
 
+
+
     <ion-slide padding>
         <img *ngIf="slides.getActiveIndex()>=QsgStep.FEEDING" class="qsg-gif" src="assets/imgs/qsg/small/Smartsleeve_teaser_3.gif"
         />
@@ -112,16 +120,17 @@
             Feeding
         </h1>
         <p>
-            Please hold the bottle in feeding position. The lights will be off while tracking your baby's feeding.
+            Hold the bottle with the Smart Sleeve attached in feeding position until the feed is detected.
         </p>
         <p>
+            The light on the Smart Sleeve will be off while you're tracking a feed.
         </p>
         <ion-footer class="qsg" padding>
 
             <ion-item *ngIf="feedTimeoutError" color="orange" style="border-radius:4px;">
                 <ion-icon item-start name="alert"></ion-icon>
                 <ion-label class="warning">
-                    Please hold the bottle upside down until the feed is detected.
+                    Please hold the bottle in feeding position until the feed is detected. This may take a while.
                 </ion-label>
                 <button ion-button item-end outline small color="white" (click)="showFeedErrorHints()">
                     Help
@@ -140,15 +149,20 @@
         </ion-footer>
     </ion-slide>
 
+
+
     <ion-slide padding>
         <img *ngIf="slides.getActiveIndex()>=QsgStep.WIGGLE" class="qsg-gif" src="assets/imgs/qsg/small/QSG_Screen 7.1_7.2_Wiggle and Wiggle Detected.gif"
         />
         <h1 ion-text>
-            Extra Tip: Wiggle!
+            Extra Tip: Wiggle
         </h1>
         <p>
-            If you want to be sure that the Sleeve is tracking your feed. You can wiggle the Sleeve and the light will blink white to
-            indicate it is tracking.
+            While tracking a feed the light on the Smart Sleeve will be off.
+        </p>
+        <p>
+            Wiggle the Smart Sleeve if you want to be sure it is tracking the feed.
+            <b>The light blinks white</b> to indicate the smart device is tracking the feed.
         </p>
         <ion-footer padding>
             <button color="{{ !wiggleIsDetected ? 'light' : 'secondary'}}" (click)="(wiggleIsDetected && nextSlide()) || (!wiggleIsDetected && showDeviceActionToast())"
@@ -163,6 +177,8 @@
         </ion-footer>
     </ion-slide>
 
+
+
     <ion-slide padding>
         <img *ngIf="slides.getActiveIndex()>=QsgStep.WEIGH_AFTER" class="qsg-gif" src="assets/imgs/qsg/small/QSG-Screen-8.1-8.2_Finish-Feeding-on-table_SD-10fps-cropped.gif"
         />
@@ -172,15 +188,18 @@
             <br>After Feeding
         </h1>
         <p>
-            Press the button shortly to finish the feed. The blinking white light indicates the Smart Bottle Sleeve is ready to measure
-            the feed’s end volume.
+            Place the Smart Sleeve on a flat and hard surface.
+            <b>Short-press the button</b> to measure the volume after the feeding.
+        </p>
+        <p>
+            <b>The light turns purple</b> when the feed's volume measurement is successful.
         </p>
         <ion-footer class="qsg" padding>
 
             <ion-item *ngIf="endWeighTimeoutError" color="orange" style="border-radius:4px;">
                 <ion-icon item-start name="alert"></ion-icon>
                 <ion-label class="warning">
-                    Please retry on a flat and hard surface.
+                    Please try-again by short-pessing the button, and placing on a flat and hard surface.
                 </ion-label>
                 <button ion-button item-end outline small color="white" (click)="showWeighErrorHints()">
                     Help
@@ -198,22 +217,31 @@
         </ion-footer>
     </ion-slide>
 
+
+
     <ion-slide padding>
         <img *ngIf="slides.getActiveIndex()>=QsgStep.SYNCHRHONIZE" style="width:50%;" src="assets/imgs/qsg/image_pairing screen.png"
         />
 
         <h1 ion-text>Syncing Data</h1>
         <p>
-            After you've finished the feed, the data will be synced when opening the app.
+            <b>Congratulations, you've finished your trial feed!</b>
         </p>
         <p>
-            <b>The sleeve can store up to 100 feeds. The app is not needed while tracking the feed.</b>
+            For tracking your baby's feedings in the future, follow the steps as explained. The only difference: you don't need to open
+            the app or have your phone nearby. Once you finished tracking, you open the app to sync the feeding data from
+            the Smart Sleeve.
+        </p>
+        <p>
+            The Smart Sleeve can store up to 100 feeds.
         </p>
         <ion-footer class="qsg" padding>
             <button color="primary" (click)="gotoTimeline();" ion-button block icon-start>
-                Go to Timeline
+                Go to Timeline to Sync and View Feed
             </button>
         </ion-footer>
     </ion-slide>
+
+
 
 </ion-slides>

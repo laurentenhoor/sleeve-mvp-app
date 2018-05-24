@@ -2,7 +2,7 @@
 
     <ion-toolbar>
         <ion-title>
-            Installation
+            Setup
         </ion-title>
         <ion-buttons start *ngIf="slides.getActiveIndex() > 0 && !hasPaired">
             <button ion-button icon-only (click)="slides.slidePrev()">
@@ -23,55 +23,66 @@
     <ion-slide padding>
 
         <!-- <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" src="assets/imgs/cute-baby-banner.jpg" /> -->
+
         <h1 ion-text>
-            Setup Your Smart Bottle Tracker
+            Setup your Smart Sleeve
         </h1>
-        <p>
-            With the Smart Bottle Sleeve you can track your baby’s feeds.
+        <p style="font-size:18px;">
+            With the Smart Sleeve you can track your baby’s feeds.
         </p>
 
         <ion-item>
             <ion-icon name="clock" color="primary" item-left></ion-icon>
-            <ion-label>The time you started feeding</ion-label>
+            <ion-label class="fat-font">The time you started the feed</ion-label>
         </ion-item>
         <ion-item>
-            <ion-icon name="beaker" color="primary"  item-start></ion-icon>
-            <ion-label>The volume of the feed</ion-label>
+            <ion-icon name="beaker" color="primary" item-start></ion-icon>
+            <ion-label class="fat-font">The volume of the feed</ion-label>
         </ion-item>
         <ion-item>
-            <ion-icon name="timer" color="primary"  item-start></ion-icon>
-            <ion-label>The duration of the feed</ion-label>
+            <ion-icon name="timer" color="primary" item-start></ion-icon>
+            <ion-label class="fat-font">The duration of the feed</ion-label>
         </ion-item>
-        <p>
-            <!-- The Smart Bottle Sleeve is compatible with Philips Avent 4oz/125ml Natural Plastic Bottles. -->
-        </p>
-        <ion-item>
-            <ion-label style="font-size:1.3rem;" class="multi-line">I agree with sharing anonymous data to receive feed insights and to allow Philips to improve the product experience.</ion-label>
+
+        <!-- <p>
+            The Smart Bottle Sleeve is compatible with Philips Avent 4oz/125ml Natural Plastic Bottles.
+        </p> -->
+
+        <ion-item style="margin-top:25px;">
+            <ion-label style="font-size:1.3rem;" class="multi-line">I agree to securely share my tracked feeding data. This allows us to give you tailored insights and to improve
+                the product experience.</ion-label>
             <ion-toggle [(ngModel)]="hasConsent"></ion-toggle>
         </ion-item>
 
         <ion-footer class="qsg" padding>
-            <button (click)="nextSlide();" [disabled]="!hasConsent" ion-button block>Pair Smart Bottle Sleeve</button>
+            <button (click)="nextSlide();" [disabled]="!hasConsent" ion-button block>Pair Smart Sleeve</button>
         </ion-footer>
 
     </ion-slide>
 
+
+
+
     <ion-slide padding>
 
-        <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" (click)="hasPaired=true;" src="assets/imgs/pairing/Pairing_SD-15fps.gif" />
+        <img *ngIf="slides.getActiveIndex()>=0" class="qsg-gif" (click)="hasPaired=true;" src="assets/imgs/pairing/Pairing_SD-15fps.gif"
+        />
         <h1>
-           Pair the Bottle Tracker 
+            Pair the Smart Sleeve
         </h1>
         <p>
-            Press and hold the button until the blue light starts flashing. Make sure the batteries are placed in the device.
+            Press and hold the button on the Smart Sleeve until
+            <b>the light blinks blue</b>. Make sure the batteries are placed in the smart sleeve.
         </p>
-
+        <p>
+            Once the Smart Sleeve is succesfully paired, the light turns white
+        </p>
         <ion-footer class="qsg" padding>
 
             <ion-item *ngIf="pairingTimeoutError" color="orange" style="border-radius:4px;">
                 <ion-icon item-start name="alert"></ion-icon>
                 <ion-label class="warning">
-                    Please hold the button until it starts flashing blue again.
+                    Please hold the button until it starts blinking blue again.
                 </ion-label>
                 <button ion-button item-end outline small color="white" (click)="showPairingErrorHints()">
                     Help
