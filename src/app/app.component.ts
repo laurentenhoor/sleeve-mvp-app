@@ -43,10 +43,6 @@ export class MyApp {
         splashScreen.hide();
       }
       sessionsService.setSession();
-      
-      
-      
-
     });
   }
 }
