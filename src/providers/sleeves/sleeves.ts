@@ -73,7 +73,6 @@ export class Sleeves {
                 }).catch(() => {
                     this.isPairing = false;
                     reject();
-
                 })
         })
     }
@@ -89,8 +88,6 @@ export class Sleeves {
 
         })
     }
-
-    
 
     storeSyncTimestamp() {
         console.log('storelast SyncTimeStamp');

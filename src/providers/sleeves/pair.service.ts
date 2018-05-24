@@ -16,10 +16,14 @@ export class PairService {
         private events: Events,
         private connectService: ConnectService,
     ) {
-        
+
     }
 
-    async pair(retryResolve?, retryReject?): Promise<any> {
+    pair(): Promise<any> {
+        return this.pairWithRetryMechanism();
+    }
+
+    private async pairWithRetryMechanism(retryResolve?, retryReject?): Promise<any> {
         await this.connectService.disconnectAll();
 
         return new Promise((resolve, reject) => {
@@ -35,7 +39,7 @@ export class PairService {
                     })
                     .catch((error) => {
                         console.error('Forcebonding error: ', JSON.stringify(error))
-                        return this.pair(resolve, reject);
+                        return this.pairWithRetryMechanism(resolve, reject);
                     });
             })
         })
@@ -52,7 +56,8 @@ export class PairService {
 
     private onDeviceDiscovered(device, successCallback) {
         console.log('discovered', JSON.stringify(device))
-        if (device.name == this.defaultSleeveName && device.id != '6710B20A-EE92-44C1-B9B9-684D7B6E1F5D') { //SHREYDEVICE// && device.id != 'D7832B16-8B21-4BCB-906C-0B6779BB18D8'
+        if (device.name == this.defaultSleeveName && device.id != '6710B20A-EE92-44C1-B9B9-684D7B6E1F5D') { 
+            //SHREYDEVICE// && device.id != 'D7832B16-8B21-4BCB-906C-0B6779BB18D8'
             console.log('Found a bottle sleeve', device.id)
             this.ble.stopScan();
             this.connectService.connect(device.id, successCallback);
@@ -74,7 +79,5 @@ export class PairService {
             })
         })
     }
-
-    
 
 }
