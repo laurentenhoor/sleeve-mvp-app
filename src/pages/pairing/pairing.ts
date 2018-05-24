@@ -1,7 +1,7 @@
 
 import { ViewChild, Component, NgZone } from '@angular/core';
 import { AlertController, NavController, Slides, App, Events, ToastController, ModalController } from 'ionic-angular';
-import { Sleeves } from '../../providers/sleeves';
+import { Sleeves, SleeveStates } from '../../providers/sleeves';
 import { QuickStart } from '../quick-start/quick-start';
 import { Settings } from '../settings/settings';
 import { UiSettings } from '../../providers/ui-settings';
@@ -45,7 +45,12 @@ export class Pairing {
     ionViewDidLoad() {
         this.events.subscribe('sleeve-disconnected', () => {
             if (this.slides.getActiveIndex() == PairStep.PAIRING) {
-                this.startBlePairing();
+                this.alertCtrl.create({
+                    title: 'Uh oh! Your Smart Sleeve disconnected.',
+                    subTitle: "Please try again one more time.",
+                    buttons: ['Discard']
+                  }).present();
+                this.nav.push(Pairing, {}, { animation: 'md-transition' });
             }
         });
 
@@ -57,8 +62,6 @@ export class Pairing {
     ionViewDidEnter() {
 
     }
-
-
 
     openQsg() {
         // this.closeModal();
@@ -86,11 +89,26 @@ export class Pairing {
         }
     }
 
+    listenToStates() {
+        // duplicate code with quick-start.ts
+        this.sleevesService.state().subscribe((state)=>{
+            if (state == SleeveStates.BLE_ADVERTISING) {
+                this.nav.push(Pairing, {}, { animation: 'md-transition' });
+                this.alertCtrl.create({
+                    title: 'Uh oh! You did a long press.',
+                    subTitle: "A long press is only used for pairing the Smart Sleeve. No problem, let's start over again.",
+                    buttons: ['Discard']
+                  }).present();
+            }
+        })
+    }
+
     startBlePairing() {
         console.log('Start BLE Scanning')
         this.sleevesService.scanAndConnect()
             .then(connectedSleeve => {
                 console.log('Successfully connected to a sleeve', connectedSleeve.id)
+                this.listenToStates();
                 this.zone.run(() => {
                     this.hasPaired = true;
                 })
