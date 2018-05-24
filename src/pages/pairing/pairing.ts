@@ -1,7 +1,7 @@
 
 import { ViewChild, Component, NgZone } from '@angular/core';
 import { AlertController, NavController, Slides, App, Events, ToastController, ModalController } from 'ionic-angular';
-import { Sleeves, SleeveStates } from '../../providers/sleeves';
+import { Sleeves, SleeveStates } from '../../providers/sleeves/sleeves';
 import { QuickStart } from '../quick-start/quick-start';
 import { Settings } from '../settings/settings';
 import { UiSettings } from '../../providers/ui-settings';

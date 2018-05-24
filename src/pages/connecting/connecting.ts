@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { AlertController, NavController, App, Events } from 'ionic-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
-import { Sleeves } from '../../providers/sleeves';
+import { Sleeves } from '../../providers/sleeves/sleeves';
 import { QuickStart } from '../quick-start/quick-start';
 
 import { ModalController } from 'ionic-angular';

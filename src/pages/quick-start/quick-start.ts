@@ -3,7 +3,7 @@ import { ViewChild, Component, NgZone } from '@angular/core';
 import { AlertController, NavController, Slides, App, Events, ToastController, ModalController, ViewController } from 'ionic-angular';
 
 import { BLE } from '@ionic-native/ble';
-import { Sleeves, SleeveStates } from '../../providers/sleeves'
+import { Sleeves, SleeveStates } from '../../providers/sleeves/sleeves'
 import { Connecting } from '../connecting/connecting';
 import { TabsPage } from '../tabs/tabs';
 import { Pairing } from '../pairing/pairing';

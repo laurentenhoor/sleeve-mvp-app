@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import { FeedInput } from '../feed-input/feed-input'
 import { Feeds } from '../../providers/feeds';
 import { Sessions } from '../../providers/sessions';
-import { Sleeves } from '../../providers/sleeves';
+import { Sleeves } from '../../providers/sleeves/sleeves';
 import { Connecting } from '../connecting/connecting';
 import { Bluetooth } from '../bluetooth/bluetooth';
 import { Pairing } from '../pairing/pairing';

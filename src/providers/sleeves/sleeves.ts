@@ -8,6 +8,25 @@ import { Feeds } from '../feeds';
 import { PairManager } from './pair-manager';
 import { ComManager } from './com-manager';
 
+export enum SleeveStates {
+    DEVICE_STATE_NONE = 0, //Don't add anything before this
+    BLE_ADVERTISING = 1,
+    BLE_PAIRED_AND_BONDED = 2,
+    DEVICE_FEEDING_EXPECTED = 3,
+    DEVICE_FEEDING = 4,
+    DEVICE_FEEDING_PAUSED = 5,
+    DEVICE_FEEDING_END = 6,
+    DEVICE_RESET = 7,
+    BLE_DISCONNECTED = 8,
+    DEVICE_WEIGHING_COMPLETED = 9,
+    DEVICE_VERTICAL_STABLE = 10,
+    DEVICE_WIGGLING = 11,
+    BUTTON_PRESSED = 12,
+    DEVICE_WEIGHING_TIMEOUT = 13,
+    VERTICAL_STABLE = 14,
+    DEVICE_STATE_LAST = 15 //increment this number and all states before this
+}
+
 @Injectable()
 export class Sleeves {
     isSyncing: boolean = false;
@@ -17,7 +36,7 @@ export class Sleeves {
 
     private localDb: any;
     private syncTimestampDb: any;
-    private defaultSleeveName: string = 'Philips Avent SCH820';
+    // private defaultSleeveName: string = 'Philips Avent SCH820';
     private connectedDeviceId: string;
     private sleeveConnected: boolean = false;
 
@@ -38,50 +57,34 @@ export class Sleeves {
     }
 
     async scanAndConnect(retryResolve?, retryReject?): Promise<any> {
-        // new part - not implemented yet
-        this.isPairing = true;
-        this.comManager.pair()
-            .then((pairedSleeve) => {
-                this.isPairing = false;
-                this.pairManager.storePairedSleeveId(pairedSleeve.id)
-            }).catch(() => {
-                this.isPairing = false;
-            })
-
-
-        // old part - still functional
-        this.isPairing = true;
-        await this.pairManager.disconnectAll();
         return new Promise((resolve, reject) => {
-            if (!retryResolve) {
-                retryResolve = resolve;
-                retryReject = reject;
-            }
-            this.initScan((connectedSleeve) => {
-                console.log('Starting Forced Bonding', connectedSleeve)
-                this.forceBonding()
-                    .then(() => {
-                        this.isPairing = false;
-                        this.pairManager.storePairedSleeveId(connectedSleeve.id)
-                        // this.storeSleeve(connectedSleeve.id);
-                        retryResolve(connectedSleeve);
-                    })
-                    .catch((error) => {
-                        console.error('Forcebonding error: ', JSON.stringify(error))
-                        return this.scanAndConnect(resolve, reject);
-                    });
-            })
-        })
 
+            this.isPairing = true;
+
+            this.comManager.pair()
+                .then((pairedSleeve) => {
+                    this.pairManager.storePairedSleeveId(pairedSleeve.id)
+                    this.isPairing = false;
+                    resolve(pairedSleeve);
+
+                }).catch(() => {
+                    this.isPairing = false;
+                    reject();
+
+                })
+
+        })
     }
 
     isBluetoothEnabled(): Promise<any> {
         return new Promise((resolve, reject) => {
+
             this.ble.isEnabled().then(() => {
                 resolve();
             }).catch(() => {
                 reject();
             })
+
         })
     }
 
@@ -122,36 +125,6 @@ export class Sleeves {
         });
     }
 
-    // private async disconnectAll(): Promise<any> {
-    //     await this.ble.stopScan();
-    //     return new Promise((resolve, reject) => {
-    //         let disconnectionCounter = 0;
-    //         this.isSyncing = false;
-
-    //         if (this.pairedSleeves.length == 0) {
-    //             resolve();
-    //         }
-
-    //         this.pairedSleeves.forEach((sleeve) => {
-    //             this.ble.disconnect(sleeve._id).then(
-    //                 success => {
-    //                     this.sleeveConnected = false;
-    //                     console.log('disconnected', sleeve._id)
-    //                     disconnectionCounter++;
-    //                     if (disconnectionCounter == this.pairedSleeves.length) {
-    //                         resolve();
-    //                     }
-    //                 },
-    //                 error => {
-    //                     console.error('disconnect', error)
-    //                     reject();
-    //                 }
-    //             )
-    //         });
-
-    //     })
-    // }
-
     amountOfPairedSleeves(): Promise<any> {
         return new Promise((resolve) => {
             this.localDb.allDocs({
@@ -159,69 +132,6 @@ export class Sleeves {
                 resolve(result.rows.length);
             })
         })
-    }
-
-    // private initPairedSleeves(): void {
-    //     this.localDb.allDocs({
-    //         include_docs: true,
-    //         attachments: true
-    //     }).then(result => {
-    //         this.pairedSleeves = result.rows.map((row) => { return row.doc });
-    //     })
-    //     this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-    //         this.handleChange(change);
-    //     });
-    // }
-
-    // private handleChange(change): void {
-    //     let changedDoc = null;
-    //     let changedIndex = null;
-
-    //     this.pairedSleeves.forEach((doc, index) => {
-    //         if (doc._id === change.id) {
-    //             changedDoc = doc;
-    //             changedIndex = index;
-    //         }
-    //     });
-
-    //     //A document was deleted
-    //     if (change.deleted) {
-    //         this.zone.run(() => {
-    //             this.pairedSleeves.splice(changedIndex, 1);
-    //         });
-    //     }
-    //     else {
-    //         //A document was updated
-    //         if (changedDoc) {
-    //             this.zone.run(() => {
-    //                 this.pairedSleeves[changedIndex] = change.doc;
-    //             });
-    //         }
-    //         //A document was added
-    //         else {
-    //             this.zone.run(() => {
-    //                 this.pairedSleeves.unshift(change.doc);
-    //             });
-    //         }
-    //     }
-    // }
-
-    private async initScan(successCallback) {
-        console.log('initScan();')
-        await this.ble.stopScan();
-        this.ble.startScan([]).subscribe(
-            device => this.onDeviceDiscovered(device, successCallback),
-            error => console.error('scan error', error)
-        );
-    }
-
-    private onDeviceDiscovered(device, successCallback) {
-        console.log('discovered', JSON.stringify(device))
-        if (device.name == this.defaultSleeveName && device.id != '6710B20A-EE92-44C1-B9B9-684D7B6E1F5D') { //SHREYDEVICE// && device.id != 'D7832B16-8B21-4BCB-906C-0B6779BB18D8'
-            console.log('Found a bottle sleeve', device.id)
-            this.ble.stopScan();
-            this.connect(device.id, successCallback);
-        }
     }
 
     angle(): Observable<any> {
@@ -385,23 +295,6 @@ export class Sleeves {
             console.log('successfully written the feed-download-request')
         }).catch(error => {
             console.error('error during writing the feed-download-request')
-        })
-    }
-
-
-    private forceBonding() {
-        console.log('Force bonding by reading the state characteristic')
-        return new Promise((resolve, reject) => {
-            this.ble.read(this.connectedDeviceId,
-                '000030f3-0000-1000-8000-00805f9b34fb',
-                '000063eC-0000-1000-8000-00805f9b34fb'
-            ).then(() => {
-                console.log('successful read');
-                resolve();
-            }).catch((error) => {
-                console.log('unsuccessful read');
-                reject(error);
-            })
         })
     }
 

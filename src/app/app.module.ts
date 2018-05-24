@@ -19,7 +19,7 @@ import { Qsg } from '../pages/qsg/qsg';
 
 import { Feeds } from '../providers/feeds';
 import { Sessions } from '../providers/sessions';
-import { Sleeves } from '../providers/sleeves';
+import { Sleeves } from '../providers/sleeves/sleeves';
 
 import { Device } from '@ionic-native/device';
 
@@ -32,6 +32,9 @@ import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-gu
 import { UiSettings } from '../providers/ui-settings';
 import { Pairing } from '../pages/pairing/pairing';
 import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
+import { SleevesModule } from '../providers/sleeves/sleeves.module';
+
+
 
 @NgModule({
   declarations: [
@@ -51,7 +54,8 @@ import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpModule,
-    QuickStartGuideModule
+    QuickStartGuideModule,
+    SleevesModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

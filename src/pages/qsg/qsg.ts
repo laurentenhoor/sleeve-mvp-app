@@ -1,7 +1,7 @@
 
 import { Component, NgZone } from '@angular/core';
 import { NavController, Events } from 'ionic-angular';
-import { Sleeves, SleeveStates } from '../../providers/sleeves';
+import { Sleeves, SleeveStates } from '../../providers/sleeves/sleeves';
 import { TabsPage } from '../tabs/tabs';
 import { Pairing } from '../pairing/pairing';
 

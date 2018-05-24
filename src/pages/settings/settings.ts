@@ -2,7 +2,7 @@
 import { Component, NgZone } from '@angular/core';
 import { AlertController, NavController, Events, App } from 'ionic-angular';
 
-import { Sleeves } from '../../providers/sleeves';
+import { Sleeves } from '../../providers/sleeves/sleeves';
 import { Connecting } from '../connecting/connecting';
 
 import { ModalController } from 'ionic-angular';

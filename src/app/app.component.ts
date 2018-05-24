@@ -11,7 +11,7 @@ import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
 import { QuickStart } from '../pages/quick-start/quick-start';
 import { Qsg } from '../pages/qsg/qsg';
 import { Pairing } from '../pages/pairing/pairing';
-import { Sleeves } from '../providers/sleeves';
+import { Sleeves } from '../providers/sleeves/sleeves';
 import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
 
 @Component({

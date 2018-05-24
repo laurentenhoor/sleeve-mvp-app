@@ -1,7 +1,7 @@
 
 import { Component, NgZone } from '@angular/core';
 import { AlertController, NavController, ModalController } from 'ionic-angular';
-import { Sleeves } from '../../providers/sleeves';
+import { Sleeves } from '../../providers/sleeves/sleeves';
 
 @Component({
     selector: 'angle-feedback',
