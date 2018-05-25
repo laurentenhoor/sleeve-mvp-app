@@ -43,7 +43,12 @@ export class ConnectService {
         })
     }
 
-    connect(deviceId, successCallback) {
+    async connect(deviceId, successCallback) {
+        if (this.sleeveConnected) {
+            console.log('We allow only one connected device at a time.');
+            await this.disconnectAll();
+        }
+
         this.ble.connect(deviceId).subscribe(
             peripheral => {
                 this.ble.stopScan();

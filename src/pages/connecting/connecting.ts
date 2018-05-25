@@ -32,9 +32,9 @@ export class Connecting {
 
     }
     ionViewDidEnter() {
-        this.sleevesService.scanAndConnect()
-            .then(connectedSleeve => {
-                console.log('Successfully connected to a sleeve', connectedSleeve)
+        this.sleevesService.scanAndPair()
+            .then(pairedSleeve => {
+                console.log('Successfully paired with sleeve', pairedSleeve)
                 this.openQsg();
             }, error => {
                 console.error(error);
