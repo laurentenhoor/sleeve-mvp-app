@@ -14,7 +14,7 @@ export class ConnectService {
         private events: Events,
         private pairModel: PairModel
     ) {
-    
+
     }
 
     disconnectAll(): Promise<any> {
@@ -24,7 +24,7 @@ export class ConnectService {
             }
 
             let disconnectionCounter = 0;
-            
+
             this.pairModel.pairedSleeves.forEach((sleeve) => {
                 this.ble.disconnect(sleeve._id).then(
                     success => {
@@ -43,27 +43,12 @@ export class ConnectService {
         })
     }
 
-    async connect(deviceId, successCallback) {
+    async connect(deviceId:string): Promise<any> {
         if (this.sleeveConnected) {
             console.log('We allow only one connected device at a time.');
             await this.disconnectAll();
         }
-
-        this.ble.connect(deviceId).subscribe(
-            peripheral => {
-                this.ble.stopScan();
-                this.sleeveConnected = true;
-                this.connectedDeviceId = deviceId;
-                successCallback(peripheral);
-                console.error('Successfully connected to sleeve', deviceId)
-            },
-            peripheral => {
-                this.sleeveConnected = false;
-                this.connectedDeviceId = null;
-                console.error('disconnected from sleeve', deviceId);
-                this.events.publish('sleeve-disconnected');
-            }
-        )
+        return this.ble.connect(deviceId).toPromise();
     }
 
 }
