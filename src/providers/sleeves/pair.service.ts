@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BLE } from '@ionic-native/ble';
 import { ConnectService } from './connect.service';
+import { PairModel } from './pair.model';
 
 @Injectable()
 export class PairService {
+    isPairing: boolean = false;
     private DEFAULT_SLEEVE_NAME: string = 'Philips Avent SCH820';
 
     constructor(
         private ble: BLE,
         private connectService: ConnectService,
+        private pairModel: PairModel,
     ) {
 
     }
@@ -23,6 +26,7 @@ export class PairService {
                 retryResolve = resolve;
                 retryReject = reject;
             }
+            this.isPairing = true;
 
             this.scanUntilFirstFoundSleeve().then((foundSleeve) => {
                 return this.connectService.connect(foundSleeve.id);
@@ -31,12 +35,17 @@ export class PairService {
                 return this.forceBonding(connectedSleeve.id)
 
             }).then((bondedSleeve) => {
+                this.isPairing = false;
+                this.pairModel.storePairedSleeveId(bondedSleeve.id)
                 retryResolve(bondedSleeve);
 
             }).catch((error) => {
                 this.handlePairingErrors(error).then(
                     (retry) => this.pairWithRetryMechanism(resolve, reject),
-                    (stop) => retryReject()
+                    (stop) => {
+                        retryReject()
+                        this.isPairing = false;
+                    }
                 );
             })
 
