@@ -52,15 +52,7 @@ export class Sleeves {
     }
 
     isBluetoothEnabled(): Promise<any> {
-        return new Promise((resolve, reject) => {
-
-            this.ble.isEnabled().then(() => {
-                resolve();
-            }).catch(() => {
-                reject();
-            })
-
-        })
+        return this.ble.isEnabled();
     }
 
     angle(): Observable<any> {
