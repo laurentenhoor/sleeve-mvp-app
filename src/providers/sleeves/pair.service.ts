@@ -1,19 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BLE } from '@ionic-native/ble';
-import { Events } from 'ionic-angular';
 import { ConnectService } from './connect.service';
-import { PairModel } from './pair.model';
 
 @Injectable()
 export class PairService {
     private DEFAULT_SLEEVE_NAME: string = 'Philips Avent SCH820';
-    private connectedDeviceId: string;
-    private sleeveConnected: boolean = false;
 
     constructor(
         private ble: BLE,
-        private pairModel: PairModel,
-        private events: Events,
         private connectService: ConnectService,
     ) {
 
