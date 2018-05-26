@@ -5,8 +5,8 @@ import { PairModel } from './pair.model';
 
 @Injectable()
 export class ConnectService {
+    connectedDeviceId: string;
     private defaultSleeveName: string = 'Philips Avent SCH820';
-    private connectedDeviceId: string;
     private sleeveConnected: boolean = false;
 
     constructor(

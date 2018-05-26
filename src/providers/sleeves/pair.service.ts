@@ -22,6 +22,7 @@ export class PairService {
 
     private pairWithRetryMechanism(retryResolve?, retryReject?): Promise<any> {
         return new Promise((resolve, reject) => {
+            // If you do not know 'resolve' and 'reject', please read about 'Promises'
             if (!retryResolve) {
                 retryResolve = resolve;
                 retryReject = reject;
@@ -43,8 +44,8 @@ export class PairService {
                 this.handlePairingErrors(error).then(
                     (retry) => this.pairWithRetryMechanism(resolve, reject),
                     (stop) => {
-                        retryReject()
                         this.isPairing = false;
+                        retryReject()
                     }
                 );
             })
