@@ -4,6 +4,7 @@ import { ConnectService } from './connect.service';
 import { PairModel } from './pair.model';
 import { PairService } from './pair.service';
 import { Feeds } from '../feeds';
+import { SyncModel } from './sync.model';
 
 @Injectable()
 export class SyncService {
@@ -18,10 +19,9 @@ export class SyncService {
         private pairModel: PairModel,
         private pairService: PairService,
         private feedsService: Feeds,
-        private zone: NgZone
+        private zone: NgZone,
+        private syncModel: SyncModel
     ) {
-        this.syncTimestampDb = new PouchDB('syncTimestamp');
-        this.initSyncTimestamp();
     }
 
     async syncFeeds(): Promise<any> {
@@ -91,7 +91,7 @@ export class SyncService {
                 if (this.handleData(data)) {
                     console.log('successfully consolidated a JSON:', this.dataBuffer)
                     this.feedsService.createFeedFromSleeve(this.dataBuffer);
-                    this.storeSyncTimestamp();
+                    this.syncModel.storeSyncTimestamp();
                     resolve(this.dataBuffer);
                     this.dataBuffer = "";
                     this.isSyncing = false;
@@ -137,39 +137,6 @@ export class SyncService {
     // ASCII only
     private bytesToString(buffer) {
         return String.fromCharCode.apply(null, new Uint8Array(buffer));
-    }
-
-
-    storeSyncTimestamp() {
-        console.log('storelast SyncTimeStamp');
-        let id = 'lastTimestamp';
-        let self = this;
-        this.syncTimestampDb.get(id, function (err, doc) {
-            self.syncTimestampDb.put({
-                _id: id,
-                _rev: doc ? doc._rev : null,
-                timestamp: Date.now() - 2000,
-                date: new Date()
-            }, function (err, response) {
-                if (err) { return console.log(err); }
-            });
-        });
-    }
-
-    private initSyncTimestamp(): void {
-        this.syncTimestampDb.get(
-            'lastTimestamp'
-        ).then(doc => {
-            this.lastSyncTimestamp = doc.timestamp;
-        }).catch(error => console.error(error));
-
-        this.syncTimestampDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-            if (change && change.doc && change.doc.timestamp) {
-                this.zone.run(() => {
-                    this.lastSyncTimestamp = change.doc.timestamp;
-                })
-            }
-        });
     }
 
     // ASCII only
