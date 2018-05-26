@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { PairService } from './pair.service';
 import { RealtimeService } from './realtime.service';
 import { SyncService } from './sync.service';
+import { PairModel } from './pair.model';
 
 export enum SleeveStates {
     DEVICE_STATE_NONE = 0, //Don't add anything before this
@@ -26,13 +27,14 @@ export enum SleeveStates {
 export class Sleeves {
 
     constructor(
+        private pairModel: PairModel,
         private pairService: PairService,
         private syncService: SyncService,
         private realtimeService: RealtimeService
     ) {
     }
 
-    synchronizeFeeds() {
+    syncFeeds() {
         return this.syncService.syncFeeds();
     }
 

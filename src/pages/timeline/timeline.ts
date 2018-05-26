@@ -14,6 +14,7 @@ import { Connecting } from '../connecting/connecting';
 import { Bluetooth } from '../bluetooth/bluetooth';
 import { Pairing } from '../pairing/pairing';
 import { NoSleeve } from '../no-sleeve/no-sleeve';
+import { PairModel } from '../../providers/sleeves/pair.model';
 
 @Component({
   selector: 'timeline',
@@ -39,7 +40,8 @@ export class Timeline {
     public sessionsService: Sessions,
     public sleevesService: Sleeves,
     public loadingCtrl: LoadingController,
-    private app: App
+    private app: App,
+    private pairModel: PairModel
   ) {
     // events.subscribe('synchronize-feeds', () => {
     //     this.synchronizeFeeds();
@@ -51,13 +53,11 @@ export class Timeline {
   }
 
   synchronizeFeeds() {
-    if (this.sleevesService.pairedSleeves.length == 0) {
-      // this.modalCtrl.create(NoSleeve).present();
-      // this.app.getRootNav().setRoot(Pairing);
+    if (this.pairModel.pairedSleeves.length == 0) {
       this.presentNoPairedDevicesToast();
 
     } else {
-      this.sleevesService.synchronizeFeeds().then(feedData => {
+      this.sleevesService.syncFeeds().then(feedData => {
         this.presentFeedToast();
 
       }).catch(error => {
