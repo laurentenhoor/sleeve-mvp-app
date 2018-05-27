@@ -83,9 +83,9 @@
                 <ion-label class="warning">
                     Please hold the button until it starts blinking blue again.
                 </ion-label>
-                <button ion-button item-end outline small color="white" (click)="showPairingErrorHints()">
+                <!-- <button ion-button item-end outline small color="white" (click)="showPairingErrorHints()">
                     Help
-                </button>
+                </button> -->
             </ion-item>
 
             <ion-item *ngIf="bluetoothActivatedError" color="orange" style="border-radius:4px;">
@@ -93,9 +93,9 @@
                 <ion-label class="warning">
                     Bluetooth is turned off! Please turn on Bluetooth on your smartphone.
                 </ion-label>
-                <button ion-button item-end outline small color="white" (click)="showBluetoothErrorHints()">
+                <!-- <button ion-button item-end outline small color="white" (click)="showBluetoothErrorHints()">
                     Help
-                </button>
+                </button> -->
             </ion-item>
 
             <button color="{{ hasPaired ? 'secondary' : 'light'}}" ion-button block icon-start (click)="(hasPaired && nextSlide()) || (!hasPaired && showDeviceActionToast())">
