@@ -3,6 +3,7 @@ import { PairService } from './pair.service';
 import { RealtimeService } from './realtime.service';
 import { SyncService } from './sync.service';
 import { PairModel } from './pair.model';
+import { Observable } from 'rxjs/Observable';
 
 export enum SleeveStates {
     DEVICE_STATE_NONE = 0, //Don't add anything before this
@@ -34,7 +35,7 @@ export class Sleeves {
     ) {
     }
 
-    syncFeeds() {
+    syncFeeds(): Promise<any> {
         return this.syncService.syncFeeds();
     }
 
@@ -42,11 +43,11 @@ export class Sleeves {
         return this.pairService.pair()
     }
 
-    angle() {
+    angle(): Observable<any> {
         return this.realtimeService.angle();
     }
 
-    state() {
+    state(): Observable<any> {
         return this.realtimeService.state();
     }
 
