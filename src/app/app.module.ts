@@ -1,40 +1,30 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { HttpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { BLE } from '@ionic-native/ble';
+import { Device } from '@ionic-native/device';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-
-import { BLE } from '@ionic-native/ble';
-import { HttpModule } from '@angular/http';
-
-import { MyApp } from './app.component';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service';
+import { Bluetooth } from '../pages/bluetooth/bluetooth';
+import { Connecting } from '../pages/connecting/connecting';
+import { FeedInput } from '../pages/feed-input/feed-input';
+import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
+import { Pairing } from '../pages/pairing/pairing';
+import { Qsg } from '../pages/qsg/qsg';
+import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-guide.module';
+import { QuickStart } from '../pages/quick-start/quick-start';
+import { Settings } from '../pages/settings/settings';
 import { TabsPage } from '../pages/tabs/tabs';
 import { Timeline } from '../pages/timeline/timeline';
-import { Bluetooth } from '../pages/bluetooth/bluetooth';
-import { FeedInput } from '../pages/feed-input/feed-input';
-
-import { Connecting } from '../pages/connecting/connecting';
-import { QuickStart } from '../pages/quick-start/quick-start';
-import { Qsg } from '../pages/qsg/qsg';
-
 import { Feeds } from '../providers/feeds';
 import { Sessions } from '../providers/sessions';
 import { Sleeves } from '../providers/sleeves/sleeves';
-
-import { Device } from '@ionic-native/device';
-
-import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service'
-
-import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { Settings } from '../pages/settings/settings';
-
-import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-guide.module';
-import { UiSettings } from '../providers/ui-settings';
-import { Pairing } from '../pages/pairing/pairing';
-import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
 import { SleevesModule } from '../providers/sleeves/sleeves.module';
-
-
+import { UiSettings } from '../providers/ui-settings';
+import { MyApp } from './app.component';
 
 @NgModule({
   declarations: [
