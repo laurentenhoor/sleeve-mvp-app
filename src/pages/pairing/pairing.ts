@@ -7,6 +7,7 @@ import { Settings } from '../settings/settings';
 import { UiSettings } from '../../providers/ui-settings';
 import { Qsg } from '../qsg/qsg';
 import { TabsPage } from '../tabs/tabs';
+import { BLE } from '@ionic-native/ble';
 
 
 enum PairStep {
@@ -36,7 +37,8 @@ export class Pairing {
         private toastCtrl: ToastController,
         private modalCtrl: ModalController,
         private sleevesService: Sleeves,
-        private uiSettings: UiSettings
+        private uiSettings: UiSettings,
+        private ble: BLE
     ) {
 
 
@@ -49,7 +51,7 @@ export class Pairing {
                     title: 'Uh oh! Your Smart Sleeve disconnected.',
                     subTitle: "Please try again one more time.",
                     buttons: ['Discard']
-                  }).present();
+                }).present();
                 this.nav.push(Pairing, {}, { animation: 'md-transition' });
             }
         });
@@ -91,14 +93,14 @@ export class Pairing {
 
     listenToStates() {
         // duplicate code with quick-start.ts
-        this.sleevesService.state().subscribe((state)=>{
+        this.sleevesService.state().subscribe((state) => {
             if (state == SleeveStates.BLE_ADVERTISING) {
                 this.nav.push(Pairing, {}, { animation: 'md-transition' });
                 this.alertCtrl.create({
                     title: 'Uh oh! You did a long press.',
                     subTitle: "A long press is only used for pairing the Smart Sleeve. No problem, let's start over again.",
                     buttons: ['Discard']
-                  }).present();
+                }).present();
             }
         })
     }
@@ -124,16 +126,15 @@ export class Pairing {
     }
 
     checkBluetooth() {
-        this.sleevesService.isBluetoothEnabled()
-            .then(() => {
-                if (this.bluetoothActivatedError) {
-                    console.log('Bluetooth has been turned ON.')
-                    this.startBlePairing();
-                    this.bluetoothActivatedError = false;
-                }
-            }).catch(() => {
-                this.bluetoothActivatedError = true;
-            })
+        this.ble.isEnabled().then(() => {
+            if (this.bluetoothActivatedError) {
+                console.log('Bluetooth has been turned ON.')
+                this.startBlePairing();
+                this.bluetoothActivatedError = false;
+            }
+        }).catch(() => {
+            this.bluetoothActivatedError = true;
+        })
     }
 
     showPairingErrorHints() {

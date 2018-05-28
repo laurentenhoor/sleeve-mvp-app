@@ -7,6 +7,7 @@ import { PairModel } from './pair.model';
 import { ConnectService } from './connect.service';
 import { SyncService } from './sync.service';
 import { SyncModel } from './sync.model';
+import { RealtimeService } from './realtime.service';
 
 @NgModule({
     declarations: [
@@ -23,7 +24,8 @@ import { SyncModel } from './sync.model';
         ConnectService,
         Sleeves,
         SyncService,
-        SyncModel
+        SyncModel,
+        RealtimeService
     ]
 })
 export class SleevesModule {}

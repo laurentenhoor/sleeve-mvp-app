@@ -54,23 +54,6 @@ export class Connecting {
         // this.openQsg();
     }
 
-    checkBluetooth() {
-        this.sleevesService.isBluetoothEnabled()
-            .then(() => {
-                this.alertCtrl.create({
-                    title: 'Bluetooth is ON',
-                    subTitle: 'Please go ahead',
-                    buttons: ['Dismiss']
-                }).present()
-            }).catch(() => {
-                this.alertCtrl.create({
-                    title: 'Please turn on Bluetooth',
-                    subTitle: 'You need it in the next steps',
-                    buttons: ['Dismiss']
-                }).present()
-            })
-    }
-
     learnMore() {
         let url = 'https://www.youtube.com/watch?v=0l-gAVKMQ5c&feature=youtu.be';
         this.inAppBrowser.create(url, '_system')

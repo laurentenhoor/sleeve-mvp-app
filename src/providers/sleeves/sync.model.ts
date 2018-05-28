@@ -1,4 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
+import PouchDB from 'pouchdb';
 
 @Injectable()
 export class SyncModel {

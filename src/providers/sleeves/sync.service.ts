@@ -8,9 +8,10 @@ import { SyncModel } from './sync.model';
 
 @Injectable()
 export class SyncService {
-    private isSyncing = false;
-    private dataBuffer: string = "";
+    isSyncing: boolean = false;
     lastSyncTimestamp: number = 0;
+
+    private dataBuffer: string = "";
     private syncTimestampDb: any;
 
     constructor(
@@ -107,7 +108,7 @@ export class SyncService {
         })
     }
 
-    private sendDownloadFeedRequest(deviceId:string) {
+    private sendDownloadFeedRequest(deviceId: string) {
         this.ble.write(deviceId,
             '000030F0-0000-1000-8000-00805F9B34FB',
             '000063E7-0000-1000-8000-00805F9B34FB',
