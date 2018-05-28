@@ -27,7 +27,7 @@ export class MyApp {
       pairedSleeves.amountOfPairedSleeves().then((amount) => {
         console.log('initial amount', amount)
         if (amount == 0) {
-          this.rootPage = TabsPage;
+          this.rootPage = NoSleeve;
         } else {
           this.rootPage = TabsPage;
         }

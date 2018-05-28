@@ -34,15 +34,15 @@ export class Sleeves {
     ) {
     }
 
-    get isSyncing():boolean {
+    get isSyncing(): boolean {
         return this.syncService.isSyncing;
     }
 
-    get isPairing():boolean {
+    get isPairing(): boolean {
         return this.pairService.isPairing;
     }
 
-    get lastSyncTimestamp():number {
+    get lastSyncTimestamp(): number {
         return this.syncService.lastSyncTimestamp;
     }
 
