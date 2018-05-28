@@ -27,7 +27,6 @@ export class SyncService {
 
     async syncFeeds(): Promise<any> {
         await this.connectService.disconnectAll();
-
         this.isSyncing = true;
         let self = this;
 
@@ -38,14 +37,17 @@ export class SyncService {
             let uuids = this.pairModel.pairedSleeves.map(item => { return item._id })
             // console.log('paired uuids to scan', uuids)
             if (!uuids || uuids.length == 0) {
+                this.isSyncing = false;
                 return reject('no paired devices')
             }
             console.log('scanning for following ids', uuids)
 
-            let timeout = 10;
+            let timeout = 1;
             setTimeout(() => {
                 if (!this.pairService.isPairing) {
+
                     this.isSyncing = false
+
                     this.connectService.disconnectAll();
                     console.log('scanning timeout')
                     reject('scanTimeout');

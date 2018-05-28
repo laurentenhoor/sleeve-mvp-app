@@ -22,26 +22,26 @@ import { PairModel } from '../../providers/sleeves/pair.model';
 })
 export class Timeline {
   @ViewChild(Content) content: Content;
-  fakeScan: any;
-  public amountOfAvailableFeeds;
+  
+  amountOfAvailableFeeds;
   private feeds: any;
   private synchronizing: boolean = false;
   private lastSyncTimestamp: Promise<number>;
 
   constructor(
-    public navCtrl: NavController,
+    private navCtrl: NavController,
     private toastCtrl: ToastController,
     private ngZone: NgZone,
     private applicationRef: ApplicationRef,
     private http: Http,
-    public modalCtrl: ModalController,
+    private modalCtrl: ModalController,
     private events: Events,
-    public feedsService: Feeds,
-    public sessionsService: Sessions,
-    public sleevesService: Sleeves,
-    public loadingCtrl: LoadingController,
+    private feedsService: Feeds,
+    private sessionsService: Sessions,
+    private sleevesService: Sleeves,
+    private loadingCtrl: LoadingController,
     private app: App,
-    private pairModel: PairModel
+
   ) {
     // events.subscribe('synchronize-feeds', () => {
     //     this.synchronizeFeeds();
@@ -53,22 +53,21 @@ export class Timeline {
   }
 
   synchronizeFeeds() {
-    if (this.pairModel.pairedSleeves.length == 0) {
-      this.presentNoPairedDevicesToast();
+    this.sleevesService.syncFeeds().then(feedData => {
+      this.presentFeedToast();
 
-    } else {
-      this.sleevesService.syncFeeds().then(feedData => {
-        this.presentFeedToast();
+    }).catch(error => {
+      if (error === 'scanTimeout') {
+        this.presentTimeoutToast();
 
-      }).catch(error => {
-        if (error === 'scanTimeout') {
-          this.presentTimeoutToast();
-        } else {
-          console.error(error);
-        }
+      } else if (error === 'no paired devices') {
+        this.presentNoPairedDevicesToast();
 
-      })
-    }
+      } else {
+        console.error(error);
+      }
+
+    })
   }
 
   presentTimeoutToast() {
@@ -81,7 +80,7 @@ export class Timeline {
     });
     toast.present();
   }
-  
+
   presentBusyToast() {
     let toast = this.toastCtrl.create({
       message: 'Sync in Progress',

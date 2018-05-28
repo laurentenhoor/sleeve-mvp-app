@@ -26,19 +26,24 @@ export enum SleeveStates {
 
 @Injectable()
 export class Sleeves {
-    isSyncing:boolean;
-    isPairing:boolean;
-    lastSyncTimestamp: number;
-
     constructor(
         private pairModel: PairModel,
         private pairService: PairService,
         private syncService: SyncService,
         private realtimeService: RealtimeService
     ) {
-        this.isSyncing = this.syncService.isSyncing;
-        this.lastSyncTimestamp = this.syncService.lastSyncTimestamp;
-        this.isPairing = this.pairService.isPairing;
+    }
+
+    get isSyncing():boolean {
+        return this.syncService.isSyncing;
+    }
+
+    get isPairing():boolean {
+        return this.pairService.isPairing;
+    }
+
+    get lastSyncTimestamp():number {
+        return this.syncService.lastSyncTimestamp;
     }
 
     syncFeeds(): Promise<any> {
