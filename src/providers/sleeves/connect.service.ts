@@ -14,7 +14,7 @@ export class ConnectService {
         private events: Events,
         private pairModel: PairModel
     ) {
-
+        
     }
 
     disconnectAll(): Promise<any> {

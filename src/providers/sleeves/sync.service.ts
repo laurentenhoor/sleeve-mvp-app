@@ -11,7 +11,7 @@ export class SyncService {
     isSyncing: boolean = false;
     lastSyncTimestamp: number = 0;
 
-    private dataBuffer: string = "";
+    private dataBuffer: string = '';
     private syncTimestampDb: any;
 
     constructor(
@@ -118,7 +118,7 @@ export class SyncService {
         this.feedsService.createFeedFromSleeve(this.dataBuffer);
         this.syncModel.storeSyncTimestamp();
 
-        this.dataBuffer = "";
+        this.dataBuffer = '';
         this.isSyncing = false;
         this.connectService.disconnectAll();
     }
