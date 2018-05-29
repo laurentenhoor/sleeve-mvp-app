@@ -25,8 +25,7 @@ export class SyncService {
     ) {
     }
 
-
-    async syncFeeds(): Promise<any> {
+    syncFeeds(): Promise<any> {
         return new Promise((resolve, reject) => {
 
             this.pairModel.noPairedSleeves().then(() => {
@@ -51,11 +50,12 @@ export class SyncService {
         })
     }
 
-    scanUntilPairedSleeveInRange(): Promise<any> {
+    private scanUntilPairedSleeveInRange(): Promise<any> {
         return new Promise((resolve, reject) => {
 
-            let timeoutInSec = 10;
-            this.setSyncTimeout(timeoutInSec, reject);
+            this.setSyncTimeout(() => {
+                reject('scanTimeout');
+            });
 
             this.ble.startScan([]).subscribe(foundSleeve => {
                 this.pairModel.isPairedSleeve(foundSleeve.id).then(() => {
@@ -69,46 +69,76 @@ export class SyncService {
         })
     }
 
-    private setSyncTimeout(timeoutInSec, rejectCallback) {
+    private setSyncTimeout(timeoutCallback) {
+        let timeoutInSec = 10;
         setTimeout(() => {
             if (!this.pairService.isPairing) {
                 this.isSyncing = false
                 this.ble.stopScan();
                 this.connectService.disconnectAll();
-                console.log('scanning timeout')
-                rejectCallback('scanTimeout');
+                timeoutCallback();
             }
         }, timeoutInSec * 1000)
     }
 
     private fetchFeedDataFromSleeve(deviceId: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            console.log('subscribeToFeedData', deviceId)
-
-            this.ble.startNotification(deviceId,
-                '000030F0-0000-1000-8000-00805F9B34FB',
-                '000063E7-0000-1000-8000-00805F9B34FB'
-            ).subscribe(data => {
-                if (this.handleData(data)) {
-                    console.log('successfully consolidated a JSON:', this.dataBuffer)
-                    this.feedsService.createFeedFromSleeve(this.dataBuffer);
-                    this.syncModel.storeSyncTimestamp();
-                    resolve(this.dataBuffer);
-                    this.dataBuffer = "";
-                    this.isSyncing = false;
-                    this.connectService.disconnectAll();
-                }
-            }, error => {
-                console.error('error while receiving feedData', error)
-                reject('unable to receive feedData');
-                this.connectService.disconnectAll();
-                this.isSyncing = false;
-            })
-            this.sendDownloadFeedRequest(deviceId);
+            this.listenToDataStreamUntilFullPayloadReceived(deviceId).then((feedData) => {
+                resolve(feedData);
+            });
+            this.requestStartOfDataStreamFromSleeve(deviceId);
         })
     }
 
-    private sendDownloadFeedRequest(deviceId: string) {
+    private listenToDataStreamUntilFullPayloadReceived(deviceId: string) {
+        return new Promise((resolve, reject) => {
+            this.ble.startNotification(deviceId,
+                '000030F0-0000-1000-8000-00805F9B34FB',
+                '000063E7-0000-1000-8000-00805F9B34FB'
+            ).subscribe(dataPackage => {
+                this.combineDataPackages(dataPackage).then((fullPayload) => {
+                    resolve(fullPayload);
+                });
+            }, error => {
+                console.error('error while receiving feedData', error)
+            })
+        })
+    }
+
+    private isValidJson(data: string): boolean {
+        try {
+            JSON.parse(this.dataBuffer);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    private addToBuffer(data: ArrayBuffer) {
+        let part: string = this.bytesToString(data);
+        this.dataBuffer = this.dataBuffer + part;
+    }
+
+    private combineDataPackages(data): Promise<any> {
+        this.addToBuffer(data);
+
+        return new Promise((resolve, reject) => {
+            if (this.isValidJson(this.dataBuffer)) {
+                console.log('successfully consolidated a JSON:', this.dataBuffer)
+                this.feedsService.createFeedFromSleeve(this.dataBuffer);
+                this.syncModel.storeSyncTimestamp();
+                resolve(this.dataBuffer);
+                this.dataBuffer = "";
+                this.isSyncing = false;
+                this.connectService.disconnectAll();
+            } else {
+                reject();
+            }
+
+        })
+    }
+
+    private requestStartOfDataStreamFromSleeve(deviceId: string) {
         this.ble.write(deviceId,
             '000030F0-0000-1000-8000-00805F9B34FB',
             '000063E7-0000-1000-8000-00805F9B34FB',
@@ -121,22 +151,8 @@ export class SyncService {
     }
 
 
-    private handleData(data: ArrayBuffer) {
-        let part: string = this.bytesToString(data);
-        console.log('new data chunk', part)
-        try {
-            this.dataBuffer = this.dataBuffer + part;
-            console.log('new databuffer', this.dataBuffer)
-            JSON.parse(this.dataBuffer);
-            return true;
-        } catch (error) {
-            console.error(error)
-            return false;
-        }
-    }
-
     // ASCII only
-    private bytesToString(buffer) {
+    private bytesToString(buffer: ArrayBuffer) {
         return String.fromCharCode.apply(null, new Uint8Array(buffer));
     }
 
