@@ -25,13 +25,12 @@ export class MyApp {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      sleevesService.amountOfPairedSleeves().then((amount) => {
-        if (amount) {
-          this.rootPage = TabsPage;
-        } else {
+      sleevesService.noPairedSleevesYet()
+        .then(() => {
           this.rootPage = NoSleeve;
-        }
-      });
+        }).catch(() => {
+          this.rootPage = TabsPage;
+        })
 
       if (platform.is('cordova')) {
         statusBar.styleDefault();

@@ -14,8 +14,35 @@ export class PairModel {
         this.init();
     }
 
+    isPairedSleeve(deviceId: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.pairedUuids.forEach((pairedId) => {
+                if (deviceId == pairedId) {
+                    resolve();
+                }
+            });
+            reject();
+        })
+    }
+
+    private get pairedUuids(): string[] {
+        return this.pairedSleeves.map(item => { return item._id })
+    }
+
     async amountOfPairedSleeves(): Promise<number> {
         return (await this.getPairedSleeves()).length;
+    }
+
+    noPairedSleevesYet(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.amountOfPairedSleeves().then((amount) => {
+                if (amount == 0) {
+                    resolve();
+                } else {
+                    reject();
+                }
+            })
+        });
     }
 
     removeSleeve(sleeve): void {

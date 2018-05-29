@@ -25,59 +25,55 @@ export class SyncService {
     ) {
     }
 
+    private setSyncTimeout(timoutInSec, rejectCallback) {
+        setTimeout(() => {
+            if (!this.pairService.isPairing) {
+
+                this.isSyncing = false
+
+                this.connectService.disconnectAll();
+                console.log('scanning timeout')
+                rejectCallback('scanTimeout');
+            }
+        }, timoutInSec * 1000)
+    }
+
     async syncFeeds(): Promise<any> {
         await this.connectService.disconnectAll();
         this.isSyncing = true;
-        let self = this;
 
-        // removed a check if a device is already connected: to be tested if this is ok
-
+        // removed a check if a device is already connected: to be tested if this is o
         console.log('trying to connect and sync')
+
         return new Promise((resolve, reject) => {
-            let uuids = this.pairModel.pairedSleeves.map(item => { return item._id })
-            // console.log('paired uuids to scan', uuids)
-            if (!uuids || uuids.length == 0) {
+            this.pairModel.noPairedSleevesYet().then(() => {
                 this.isSyncing = false;
                 return reject('no paired devices')
-            }
-            console.log('scanning for following ids', uuids)
+            })
 
-            let timeout = 10;
-            setTimeout(() => {
-                if (!this.pairService.isPairing) {
+            let timeoutInSec = 10;
+            this.setSyncTimeout(timeoutInSec, reject);
 
-                    this.isSyncing = false
-
-                    this.connectService.disconnectAll();
-                    console.log('scanning timeout')
-                    reject('scanTimeout');
-                }
-            }, timeout * 1000)
-            self.ble.startScan([])
+            this.ble.scan([], timeoutInSec)
                 .subscribe(peripheral => {
-                    // console.log('found a sleeve to synchronize feeds from!', peripheral._id)
-                    uuids.forEach((uuid) => {
-                        // console.log('Found device:', peripheral.name)
-                        // console.log('compare', uuid, peripheral.id)
-                        if (peripheral.id == uuid) {
-                            // console.log('found a paired sleeve');
-                            this.connectService.connect(peripheral.id)
-                                .then((device) => {
-                                    // console.log('connected to a sleeve')
-                                    self.feedData(device.id).then(feedData => {
-                                        this.isSyncing = false;
-                                        resolve(feedData)
-                                    })
-                                }).catch(error => {
-                                    console.error(error)
-                                })
-                        }
-                    })
+                    this.handleFoundSleeve(peripheral, resolve)
                 }, scanError => {
                     this.isSyncing = false;
                     reject('unable to scan: ' + scanError)
-                })
+                });
+        })
 
+    }
+
+    handleFoundSleeve(sleeve, resolveCallback) {
+        this.pairModel.isPairedSleeve(sleeve.id).then(() => {
+            this.ble.stopScan();
+            return this.connectService.connect(sleeve.id)
+        }).then((sleeve) => {
+            return this.feedData(sleeve.id)
+        }).then((feedData) => {
+            this.isSyncing = false;
+            resolveCallback(feedData)
         })
 
     }
