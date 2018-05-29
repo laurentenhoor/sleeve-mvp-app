@@ -14,7 +14,7 @@ export class PairModel {
         this.init();
     }
 
-    isPairedSleeve(deviceId: string): Promise<boolean> {
+    isPairedSleeve(deviceId: string): Promise<any> {
         return new Promise((resolve, reject) => {
             this.pairedUuids.forEach((pairedId) => {
                 if (deviceId == pairedId) {
