@@ -42,7 +42,7 @@ export class SyncService {
             }
             console.log('scanning for following ids', uuids)
 
-            let timeout = 1;
+            let timeout = 10;
             setTimeout(() => {
                 if (!this.pairService.isPairing) {
 

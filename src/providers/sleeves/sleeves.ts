@@ -46,6 +46,10 @@ export class Sleeves {
         return this.syncService.lastSyncTimestamp;
     }
 
+    amountOfPairedSleeves(): Promise<number> {
+        return this.pairModel.amountOfPairedSleeves();
+    }
+
     syncFeeds(): Promise<any> {
         return this.syncService.syncFeeds();
     }
