@@ -25,12 +25,55 @@ export class SyncService {
     ) {
     }
 
+
+    async syncFeeds(): Promise<any> {
+        return new Promise((resolve, reject) => {
+
+            this.pairModel.noPairedSleeves().then(() => {
+                return reject('no paired devices')
+            });
+            this.isSyncing = true;
+
+            this.scanUntilPairedSleeveInRange().then((pairedSleeveInRange) => {
+                return this.connectService.connect(pairedSleeveInRange.id);
+
+            }).then((connectedSleeve) => {
+                return this.fetchFeedDataFromSleeve(connectedSleeve.id);
+
+            }).then((feedData) => {
+                this.isSyncing = false;
+                resolve(feedData);
+
+            }).catch((error) => {
+                reject(error);
+            });
+
+        })
+    }
+
+    scanUntilPairedSleeveInRange(): Promise<any> {
+        return new Promise((resolve, reject) => {
+
+            let timeoutInSec = 10;
+            this.setSyncTimeout(timeoutInSec, reject);
+
+            this.ble.startScan([]).subscribe(foundSleeve => {
+                this.pairModel.isPairedSleeve(foundSleeve.id).then(() => {
+                    this.ble.stopScan();
+                    resolve(foundSleeve);
+                })
+            }, scanError => {
+                this.isSyncing = false;
+                reject('unable to scan: ' + scanError)
+            });
+        })
+    }
+
     private setSyncTimeout(timeoutInSec, rejectCallback) {
         setTimeout(() => {
             if (!this.pairService.isPairing) {
-
                 this.isSyncing = false
-
+                this.ble.stopScan();
                 this.connectService.disconnectAll();
                 console.log('scanning timeout')
                 rejectCallback('scanTimeout');
@@ -38,48 +81,7 @@ export class SyncService {
         }, timeoutInSec * 1000)
     }
 
-    async syncFeeds(): Promise<any> {
-        await this.connectService.disconnectAll();
-        this.isSyncing = true;
-
-        // removed a check if a device is already connected: to be tested if this is o
-        console.log('trying to connect and sync')
-
-        return new Promise((resolve, reject) => {
-            this.pairModel.noPairedSleeves().then(() => {
-                this.isSyncing = false;
-                return reject('no paired devices')
-            })
-
-            let timeoutInSec = 10;
-            this.setSyncTimeout(timeoutInSec, reject);
-
-            this.ble.scan([], timeoutInSec)
-                .subscribe(peripheral => {
-                    this.handleFoundSleeve(peripheral, resolve)
-                }, scanError => {
-                    this.isSyncing = false;
-                    reject('unable to scan: ' + scanError)
-                });
-        })
-        
-    }
-
-    handleFoundSleeve(sleeve, resolveCallback) {
-        this.pairModel.isPairedSleeve(sleeve.id).then(() => {
-            this.ble.stopScan();
-            return this.connectService.connect(sleeve.id)
-        }).then((sleeve) => {
-            return this.feedData(sleeve.id)
-        }).then((feedData) => {
-            this.isSyncing = false;
-            resolveCallback(feedData)
-        })
-
-    }
-
-
-    private feedData(deviceId: string): Promise<any> {
+    private fetchFeedDataFromSleeve(deviceId: string): Promise<any> {
         return new Promise((resolve, reject) => {
             console.log('subscribeToFeedData', deviceId)
 
