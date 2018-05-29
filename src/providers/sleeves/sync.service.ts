@@ -86,7 +86,7 @@ export class SyncService {
             this.listenToDataStreamUntilFullPayloadReceived(deviceId).then((feedData) => {
                 resolve(feedData);
             });
-            this.requestStartOfDataStreamFromSleeve(deviceId);
+            this.requestStartOfDataStreamingFromSleeve(deviceId);
         })
     }
 
@@ -114,23 +114,23 @@ export class SyncService {
         }
     }
 
-    private addToBuffer(data: ArrayBuffer) {
-        let part: string = this.bytesToString(data);
-        this.dataBuffer = this.dataBuffer + part;
+    private createNewFeed() {
+        this.feedsService.createFeedFromSleeve(this.dataBuffer);
+        this.syncModel.storeSyncTimestamp();
+
+        this.dataBuffer = "";
+        this.isSyncing = false;
+        this.connectService.disconnectAll();
     }
 
-    private combineDataPackages(data): Promise<any> {
-        this.addToBuffer(data);
+    private combineDataPackages(dataPackage: ArrayBuffer): Promise<any> {
+        let dataPart: string = this.bytesToString(dataPackage);
+        this.dataBuffer = this.dataBuffer + dataPart;
 
         return new Promise((resolve, reject) => {
             if (this.isValidJson(this.dataBuffer)) {
-                console.log('successfully consolidated a JSON:', this.dataBuffer)
-                this.feedsService.createFeedFromSleeve(this.dataBuffer);
-                this.syncModel.storeSyncTimestamp();
+                this.createNewFeed();
                 resolve(this.dataBuffer);
-                this.dataBuffer = "";
-                this.isSyncing = false;
-                this.connectService.disconnectAll();
             } else {
                 reject();
             }
@@ -138,7 +138,7 @@ export class SyncService {
         })
     }
 
-    private requestStartOfDataStreamFromSleeve(deviceId: string) {
+    private requestStartOfDataStreamingFromSleeve(deviceId: string) {
         this.ble.write(deviceId,
             '000030F0-0000-1000-8000-00805F9B34FB',
             '000063E7-0000-1000-8000-00805F9B34FB',
