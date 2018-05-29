@@ -46,8 +46,8 @@ export class Sleeves {
         return this.syncService.lastSyncTimestamp;
     }
 
-    noPairedSleevesYet(): Promise<number> {
-        return this.pairModel.noPairedSleevesYet();
+    noPairedSleeves(): Promise<number> {
+        return this.pairModel.noPairedSleeves();
     }
 
     syncFeeds(): Promise<any> {

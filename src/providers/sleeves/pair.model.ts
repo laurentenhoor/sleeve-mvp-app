@@ -33,7 +33,7 @@ export class PairModel {
         return (await this.getPairedSleeves()).length;
     }
 
-    noPairedSleevesYet(): Promise<any> {
+    noPairedSleeves(): Promise<any> {
         return new Promise((resolve, reject) => {
             this.amountOfPairedSleeves().then((amount) => {
                 if (amount == 0) {

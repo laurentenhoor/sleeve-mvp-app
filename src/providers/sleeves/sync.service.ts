@@ -25,7 +25,7 @@ export class SyncService {
     ) {
     }
 
-    private setSyncTimeout(timoutInSec, rejectCallback) {
+    private setSyncTimeout(timeoutInSec, rejectCallback) {
         setTimeout(() => {
             if (!this.pairService.isPairing) {
 
@@ -35,7 +35,7 @@ export class SyncService {
                 console.log('scanning timeout')
                 rejectCallback('scanTimeout');
             }
-        }, timoutInSec * 1000)
+        }, timeoutInSec * 1000)
     }
 
     async syncFeeds(): Promise<any> {
@@ -46,7 +46,7 @@ export class SyncService {
         console.log('trying to connect and sync')
 
         return new Promise((resolve, reject) => {
-            this.pairModel.noPairedSleevesYet().then(() => {
+            this.pairModel.noPairedSleeves().then(() => {
                 this.isSyncing = false;
                 return reject('no paired devices')
             })
@@ -62,7 +62,7 @@ export class SyncService {
                     reject('unable to scan: ' + scanError)
                 });
         })
-
+        
     }
 
     handleFoundSleeve(sleeve, resolveCallback) {
