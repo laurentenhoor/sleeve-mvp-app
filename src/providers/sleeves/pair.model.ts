@@ -14,31 +14,8 @@ export class PairModel {
         this.init();
     }
 
-    private async init() {
-        this.initLocalDb();
-        this.pairedSleeves = await this.getPairedSleeves();
-    }
-
-    private getPairedSleeves(): Promise<any[]> {
-        return new Promise((resolve, reject) => {
-            this.localDb.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(result => {
-                resolve(result.rows.map((row) => { return row.doc }));
-            })
-        })
-    }
-
-    async amountOfPairedSleeves(): Promise<any> {
-        return (await this.getPairedSleeves()).length;        
-    }
-
-    initLocalDb() {
-        this.localDb = new PouchDB('sleeves');
-        this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-            this.mimicLocalDbChangeInLocalVariable(change);
-        });
+    async amountOfPairedSleeves(): Promise<number> {
+        return (await this.getPairedSleeves()).length;
     }
 
     removeSleeve(sleeve): void {
@@ -59,6 +36,29 @@ export class PairModel {
                 if (err) { return console.error(JSON.stringify(err)); }
             });
         });
+    }
+
+    private async init() {
+        this.initLocalDb();
+        this.pairedSleeves = await this.getPairedSleeves();
+    }
+
+    private initLocalDb() {
+        this.localDb = new PouchDB('sleeves');
+        this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
+            this.mimicLocalDbChangeInLocalVariable(change);
+        });
+    }
+
+    private getPairedSleeves(): Promise<any[]> {
+        return new Promise((resolve, reject) => {
+            this.localDb.allDocs({
+                include_docs: true,
+                attachments: true
+            }).then(result => {
+                resolve(result.rows.map((row) => { return row.doc }));
+            })
+        })
     }
 
     private mimicLocalDbChangeInLocalVariable(change): void {
