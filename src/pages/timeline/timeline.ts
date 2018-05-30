@@ -6,11 +6,11 @@ import { Http } from '@angular/http';
 import * as _ from "lodash";
 import * as moment from 'moment';
 
-import { FeedInput } from '../feed-input/feed-input'
 import { Feeds } from '../../providers/feeds';
 import { Sessions } from '../../providers/sessions';
 import { SleeveService } from '../../providers/sleeve/sleeve.service';
-import { Connecting } from '../connecting/connecting';
+
+import { FeedInput } from '../feed-input/feed-input'
 import { Bluetooth } from '../bluetooth/bluetooth';
 import { Pairing } from '../pairing/pairing';
 import { NoSleeve } from '../no-sleeve/no-sleeve';

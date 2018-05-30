@@ -108,7 +108,7 @@ export class Pairing {
 
     startBlePairing() {
         console.log('Start BLE Scanning')
-        this.sleeveService.scanAndPair()
+        this.sleeveService.pair()
             .then(pairedSleeve => {
                 console.log('Successfully paired with sleeve', pairedSleeve.id)
                 this.listenToStates();

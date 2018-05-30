@@ -36,6 +36,10 @@ export class SleeveService {
     ) {
     }
 
+    get pairedSleeves() {
+        return this.pairModel.pairedSleeves;
+    }
+
     get isSyncing(): boolean {
         return this.syncService.isSyncing;
     }
@@ -56,7 +60,7 @@ export class SleeveService {
         return this.syncService.syncFeeds();
     }
 
-    scanAndPair(): Promise<any> {
+    pair(): Promise<any> {
         return this.pairService.pair()
     }
 

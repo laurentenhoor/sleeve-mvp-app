@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { AlertController, NavController, Events, App } from 'ionic-angular';
 
 import { SleeveService } from '../../providers/sleeve/sleeve.service';
-import { Connecting } from '../connecting/connecting';
 
 import { UiSettings } from '../../providers/ui-settings';
 import { Pairing } from '../pairing/pairing';
