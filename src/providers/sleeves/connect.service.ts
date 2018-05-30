@@ -2,53 +2,45 @@ import { Injectable } from '@angular/core';
 import { Events } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
 import { PairModel } from './pair.model';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ConnectService {
     connectedDeviceId: string;
     private defaultSleeveName: string = 'Philips Avent SCH820';
-    private sleeveConnected: boolean = false;
 
     constructor(
         private ble: BLE,
         private events: Events,
         private pairModel: PairModel
     ) {
-        
+
     }
 
-    disconnectAll(): Promise<any> {
+    async connect(device): Promise<any> {
+        await this.disconnect();
+
         return new Promise((resolve, reject) => {
-            if (this.pairModel.pairedSleeves.length == 0) {
-                resolve();
-            }
-
-            let disconnectionCounter = 0;
-
-            this.pairModel.pairedSleeves.forEach((sleeve) => {
-                this.ble.disconnect(sleeve._id).then(
-                    success => {
-                        console.log('disconnected', sleeve._id)
-                        disconnectionCounter++;
-                        if (disconnectionCounter == this.pairModel.pairedSleeves.length) {
-                            resolve();
-                        }
-                    },
-                    error => {
-                        console.error('disconnect', error)
-                        reject();
-                    }
-                )
-            });
+            this.ble.connect(device.id).subscribe(
+                connectedDevice => {
+                    this.connectedDeviceId = connectedDevice.id;
+                    resolve(connectedDevice);
+                },
+                disconnectedDevice => {
+                    console.error('sleeve disconnected:', disconnectedDevice.id);;
+                    this.events.publish('sleeve-disconnected', disconnectedDevice);
+                }
+            );
         })
     }
 
-    async connect(deviceId:string): Promise<any> {
-        if (this.sleeveConnected) {
-            console.log('We allow only one connected device at a time.');
-            await this.disconnectAll();
+    disconnect() {
+        if (!this.connectedDeviceId) {
+            return;
         }
-        return this.ble.connect(deviceId).toPromise();
+        return this.ble.disconnect(this.connectedDeviceId).then(() => {
+            this.connectedDeviceId = null;
+        })
     }
 
 }

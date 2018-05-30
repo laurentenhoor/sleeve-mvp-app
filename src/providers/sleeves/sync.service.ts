@@ -50,13 +50,15 @@ export class SyncService {
         })
     }
 
-    private scanUntilPairedSleeveInRange(): Promise<any> {
-        return new Promise((resolve, reject) => {
+    private async scanUntilPairedSleeveInRange(): Promise<any> {
+        await this.ble.stopScan();
+        await this.connectService.disconnect();
 
+        return new Promise((resolve, reject) => {    
             this.setSyncTimeout(() => {
                 reject('scanTimeout');
             });
-
+   
             this.ble.startScan([]).subscribe(foundSleeve => {
                 this.pairModel.isPairedSleeve(foundSleeve.id).then(() => {
                     this.ble.stopScan();
@@ -75,7 +77,6 @@ export class SyncService {
             if (!this.pairService.isPairing) {
                 this.isSyncing = false
                 this.ble.stopScan();
-                this.connectService.disconnectAll();
                 timeoutCallback();
             }
         }, timeoutInSec * 1000)
@@ -117,10 +118,9 @@ export class SyncService {
     private createNewFeed() {
         this.feedsService.createFeedFromSleeve(this.dataBuffer);
         this.syncModel.storeSyncTimestamp();
-
+        
         this.dataBuffer = '';
         this.isSyncing = false;
-        this.connectService.disconnectAll();
     }
 
     private combineDataPackages(dataPackage: ArrayBuffer): Promise<any> {

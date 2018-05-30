@@ -30,10 +30,10 @@ export class PairService {
             this.isPairing = true;
 
             this.scanUntilFirstFoundSleeve().then((foundSleeve) => {
-                return this.connectService.connect(foundSleeve.id);
+                return this.connectService.connect(foundSleeve);
 
             }).then((connectedSleeve) => {
-                return this.forceBonding(connectedSleeve.id)
+                return this.forceBonding(connectedSleeve)
 
             }).then((bondedSleeve) => {
                 this.isPairing = false;
@@ -54,7 +54,7 @@ export class PairService {
     }
 
     private handlePairingErrors(error: string) {
-        console.log('Pairing error:', error)
+        console.log('Pairing error:', JSON.stringify(error))
         return new Promise((resolve, reject) => {
             switch (error) {
                 case 'cordova_not_available':
@@ -68,8 +68,8 @@ export class PairService {
     }
 
     private async scanUntilFirstFoundSleeve(): Promise<any> {
-        await this.connectService.disconnectAll();
         await this.ble.stopScan();
+        await this.connectService.disconnect();
 
         return new Promise((resolve, reject) => {
             this.ble.startScan([]).subscribe(
@@ -91,15 +91,15 @@ export class PairService {
         return deviceName == this.DEFAULT_SLEEVE_NAME;
     }
 
-    private forceBonding(deviceId: string): Promise<any> {
+    private forceBonding(device): Promise<any> {
         console.log('Force bonding by reading the state characteristic')
         return new Promise((resolve, reject) => {
-            this.ble.read(deviceId,
+            this.ble.read(device.id,
                 '000030f3-0000-1000-8000-00805f9b34fb',
                 '000063eC-0000-1000-8000-00805f9b34fb'
             ).then(() => {
                 console.log('successful read');
-                resolve();
+                resolve(device);
             }).catch((error) => {
                 console.log('unsuccessful read');
                 reject(error);
