@@ -1,18 +1,13 @@
 import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+import { Platform } from 'ionic-angular';
 
-import { Sessions } from '../providers/sessions';
-
-import { TabsPage } from '../pages/tabs/tabs';
-
-import { QuickStartGuide } from '../pages/quick-start-guide/quick-start-guide';
-import { QuickStart } from '../pages/quick-start/quick-start';
-import { Qsg } from '../pages/qsg/qsg';
-import { Pairing } from '../pages/pairing/pairing';
-import { Sleeves } from '../providers/sleeves';
 import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
+import { TabsPage } from '../pages/tabs/tabs';
+import { Sessions } from '../providers/sessions';
+import { PairModel } from '../providers/sleeves/pair.model';
+import { Sleeves } from '../providers/sleeves/sleeves';
 
 @Component({
   templateUrl: 'app.html'
@@ -36,7 +31,7 @@ export class MyApp {
         } else {
           this.rootPage = TabsPage;
         }
-      });
+      })
 
       if (platform.is('cordova')) {
         statusBar.styleDefault();

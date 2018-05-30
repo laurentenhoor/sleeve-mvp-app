@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
+import { orderBy } from 'lodash';
 import PouchDB from 'pouchdb';
 import { Sessions } from './sessions';
-import { orderBy } from 'lodash';
 
 @Injectable()
 export class Feeds {
@@ -13,60 +13,43 @@ export class Feeds {
         private zone: NgZone,
         private sessionsService: Sessions
     ) {
-        this.initFeedsDb();
+        this.initLocalDb()
+        this.setupRemoteDbSynchronization()
     }
 
-    private initFeedsDb(): void {
-        this.localDb = new PouchDB('feeds');
-        this.remoteDb = 'http://ec2-34-239-163-2.compute-1.amazonaws.com:5984/feeds';
+    private async initLocalDb() {
 
-        this.localDb.replicate.to(this.remoteDb, {
+        this.localDb = new PouchDB('feeds');
+
+        this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
+            this.mimicLocalDbChangeInLocalVariable(change);
+        });
+
+        let feeds = await this.getAllFeedsFromLocalDb();
+        this.feeds = this.sortData(feeds);
+    }
+
+    private setupRemoteDbSynchronization() {
+        const remoteDb = 'http://ec2-34-239-163-2.compute-1.amazonaws.com:5984/feeds';
+        this.localDb.replicate.to(remoteDb, {
             live: true,
             retry: true,
             continuous: true,
         });
+    }
 
-        this.localDb.allDocs({
-            include_docs: true
-        }).then((result) => {
-            let docs = result.rows.map((row) => {
-                this.feeds.push(row.doc);
-            });
-            this.sortData();
+    private getAllFeedsFromLocalDb(): Promise<any[]> {
+        return new Promise((resolve) => {
+            this.localDb.allDocs({
+                include_docs: true
+            }).then((result) => {
+                let feeds = [];
+                let docs = result.rows.map((row) => {
+                    feeds.push(row.doc);
+                });
+                resolve(feeds)
+            })
         })
-
-        this.localDb.changes({ live: true, since: 'now', include_docs: true }).on('change', (change) => {
-            this.handleChange(change);
-        });
-    }
-
-    createFeed(feed) {
-        this.localDb.post(feed).then((result) => {
-            console.log('createFeed', JSON.stringify(result));
-        }).catch((err) => {
-            console.error(JSON.stringify(err));
-        });
-    }
-
-    createFeedFromSleeve(sleeveFeed) {
-        sleeveFeed = JSON.parse(sleeveFeed);
-        let amount = 0;
-        let duration = 0;
-        if (sleeveFeed.m && sleeveFeed.m.w) {
-            amount = sleeveFeed.m.w[0][1] - sleeveFeed.m.w[1][1]
-        }
-        if (sleeveFeed.m && sleeveFeed.m.i) {
-            duration = sleeveFeed.m.i.reduce(function (acc, val) { return acc + val; });
-        }
-        let feed = {
-            type: 'smart',
-            timestamp: Date.now(),
-            date: new Date(),
-            amount: amount,
-            duration: duration,
-            sessionId: this.sessionsService.getSessionId()
-        }
-        this.createFeed(feed);
     }
 
     updateFeed(feed) {
@@ -82,11 +65,47 @@ export class Feeds {
         });
     }
 
-    sortData() {
-        this.feeds = orderBy(this.feeds, ['timestamp'], ['desc']);
+    createFeed(feed) {
+        this.localDb.post(feed).then((result) => {
+            console.log('createFeed', JSON.stringify(result));
+        }).catch((err) => {
+            console.error(JSON.stringify(err));
+        });
     }
 
-    private handleChange(change) {
+    createFeedFromSleeve(sleeveFeedData) {
+        this.createFeed(this.parseSleeveData(sleeveFeedData));
+    }
+
+    private parseSleeveData(rawSleeveFeedData) {
+        let sleeveFeedData = JSON.parse(rawSleeveFeedData);
+
+        let amount = 0;
+        if (sleeveFeedData.m && sleeveFeedData.m.w) {
+            amount = sleeveFeedData.m.w[0][1] - sleeveFeedData.m.w[1][1]
+        }
+
+        let duration = 0;
+        if (sleeveFeedData.m && sleeveFeedData.m.i) {
+            duration = sleeveFeedData.m.i.reduce(function (acc, val) { return acc + val; });
+        }
+
+        return {
+            type: 'smart',
+            timestamp: Date.now(),
+            date: new Date(),
+            amount: amount,
+            duration: duration,
+            sessionId: this.sessionsService.getSessionId()
+        }
+    }
+
+
+    private sortData(feedArray): Array<any> {
+        return orderBy(feedArray, ['timestamp'], ['desc']);
+    }
+
+    private mimicLocalDbChangeInLocalVariable(change) {
 
         let changedDoc = null;
         let changedIndex = null;
@@ -97,6 +116,7 @@ export class Feeds {
                 changedIndex = index;
             }
         });
+
         //A document was deleted
         if (change.deleted) {
             this.zone.run(() => {
@@ -118,6 +138,6 @@ export class Feeds {
             }
 
         }
-        this.sortData()
+        this.feeds = this.sortData(this.feeds)
     }
 }

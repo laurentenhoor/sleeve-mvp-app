@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { AlertController, NavController, App, Events } from 'ionic-angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
-import { Sleeves } from '../../providers/sleeves';
+import { Sleeves } from '../../providers/sleeves/sleeves';
 import { QuickStart } from '../quick-start/quick-start';
 
 import { ModalController } from 'ionic-angular';
@@ -32,9 +32,9 @@ export class Connecting {
 
     }
     ionViewDidEnter() {
-        this.sleevesService.scanAndConnect()
-            .then(connectedSleeve => {
-                console.log('Successfully connected to a sleeve', connectedSleeve)
+        this.sleevesService.scanAndPair()
+            .then(pairedSleeve => {
+                console.log('Successfully paired with sleeve', pairedSleeve)
                 this.openQsg();
             }, error => {
                 console.error(error);
@@ -52,23 +52,6 @@ export class Connecting {
 
     demo() {
         // this.openQsg();
-    }
-
-    checkBluetooth() {
-        this.sleevesService.isBluetoothEnabled()
-            .then(() => {
-                this.alertCtrl.create({
-                    title: 'Bluetooth is ON',
-                    subTitle: 'Please go ahead',
-                    buttons: ['Dismiss']
-                }).present()
-            }).catch(() => {
-                this.alertCtrl.create({
-                    title: 'Please turn on Bluetooth',
-                    subTitle: 'You need it in the next steps',
-                    buttons: ['Dismiss']
-                }).present()
-            })
     }
 
     learnMore() {

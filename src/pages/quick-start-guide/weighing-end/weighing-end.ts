@@ -1,6 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { Sleeves, SleeveStates } from '../../../providers/sleeves';
+import { Sleeves, SleeveStates } from '../../../providers/sleeves/sleeves';
 import { Synchronize } from '../synchronize/synchronize';
 
 @Component({
