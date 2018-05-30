@@ -23,7 +23,7 @@ export class SyncService {
     ) {
     }
 
-    async syncFeeds(): Promise<any> {
+    syncFeeds(): Promise<any> {
         return new Promise((resolve, reject) => {
             this.pairModel.amountOfPairedSleeves().then(amount => {
                 if (amount == 0) {

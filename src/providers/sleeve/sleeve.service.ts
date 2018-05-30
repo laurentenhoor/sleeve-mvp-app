@@ -36,8 +36,12 @@ export class SleeveService {
     ) {
     }
 
-    get pairedSleeves() {
-        return this.pairModel.pairedSleeves;
+    pair(): Promise<any> {
+        return this.pairService.pair();
+    }
+
+    syncFeeds(): Promise<any> {
+        return this.syncService.syncFeeds();
     }
 
     get isSyncing(): boolean {
@@ -52,16 +56,12 @@ export class SleeveService {
         return this.syncModel.lastSyncTimestamp;
     }
 
+    get pairedSleeves() {
+        return this.pairModel.pairedSleeves;
+    }
+
     amountOfPairedSleeves(): Promise<number> {
         return this.pairModel.amountOfPairedSleeves();
-    }
-
-    syncFeeds(): Promise<any> {
-        return this.syncService.syncFeeds();
-    }
-
-    pair(): Promise<any> {
-        return this.pairService.pair()
     }
 
     unpair(sleeve): void {
