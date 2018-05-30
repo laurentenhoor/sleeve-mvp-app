@@ -1,14 +1,12 @@
 
-import { Component, NgZone } from '@angular/core';
+import { Component } from '@angular/core';
 import { AlertController, NavController, Events, App } from 'ionic-angular';
 
-import { Sleeves } from '../../providers/sleeves/sleeves';
+import { SleeveService } from '../../providers/sleeve/sleeve.service';
 import { Connecting } from '../connecting/connecting';
 
-import { ModalController } from 'ionic-angular';
 import { UiSettings } from '../../providers/ui-settings';
 import { Pairing } from '../pairing/pairing';
-import { PairModel } from '../../providers/sleeves/pair.model';
 
 @Component({
     selector: 'settings',
@@ -19,13 +17,12 @@ export class Settings {
 
     constructor(
         private alertCtrl: AlertController,
-        private sleevesService: PairModel,
-        public modalCtrl: ModalController,
+        private sleeveService: SleeveService,
         private events: Events,
         private uiSettings: UiSettings,
         private nav: NavController,
         private app: App
-    ) {        
+    ) {
     }
 
     ionViewDidLoad() {
@@ -35,7 +32,7 @@ export class Settings {
         this.app.getRootNav().push(Pairing, {}, { animation: 'md-transition' })
     }
 
-    setQsg(isDefault){
+    setQsg(isDefault) {
         this.uiSettings.defaultQsg = isDefault;
     }
 
@@ -55,7 +52,7 @@ export class Settings {
                     text: 'Unpair',
                     handler: () => {
                         console.log('Unpair clicked');
-                        this.sleevesService.removeSleeve(sleeve)
+                        this.sleeveService.unpair(sleeve)
                     }
                 }
             ]

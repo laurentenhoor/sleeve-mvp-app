@@ -1,14 +1,15 @@
 
 import { ViewChild, Component, NgZone } from '@angular/core';
 import { AlertController, NavController, Slides, App, Events, ToastController, ModalController } from 'ionic-angular';
-import { Sleeves, SleeveStates } from '../../providers/sleeves/sleeves';
-import { QuickStart } from '../quick-start/quick-start';
-import { Settings } from '../settings/settings';
-import { UiSettings } from '../../providers/ui-settings';
-import { Qsg } from '../qsg/qsg';
-import { TabsPage } from '../tabs/tabs';
 import { BLE } from '@ionic-native/ble';
 
+import { SleeveService, SleeveStates } from '../../providers/sleeve/sleeve.service';
+import { UiSettings } from '../../providers/ui-settings';
+
+import { QuickStartSlides } from '../quick-start-slides/quick-start-slides';
+import { QuickStartList } from '../quick-start-list/quick-start-list';
+import { Settings } from '../settings/settings';
+import { TabsPage } from '../tabs/tabs';
 
 enum PairStep {
     CONSENT,
@@ -36,7 +37,7 @@ export class Pairing {
         private alertCtrl: AlertController,
         private toastCtrl: ToastController,
         private modalCtrl: ModalController,
-        private sleevesService: Sleeves,
+        private sleeveService: SleeveService,
         private uiSettings: UiSettings,
         private ble: BLE
     ) {
@@ -68,10 +69,10 @@ export class Pairing {
     openQsg() {
         // this.closeModal();
         if (this.uiSettings.defaultQsg) {
-            this.nav.push(QuickStart, {}, { animation: 'md-transition' })
+            this.nav.push(QuickStartSlides, {}, { animation: 'md-transition' })
             // this.modalCtrl.create(QuickStart).present();
         } else {
-            this.nav.push(Qsg, {}, { animation: 'md-transition' })
+            this.nav.push(QuickStartList, {}, { animation: 'md-transition' })
             // this.modalCtrl.create(Qsg).present();
         }
     }
@@ -93,7 +94,7 @@ export class Pairing {
 
     listenToStates() {
         // duplicate code with quick-start.ts
-        this.sleevesService.state().subscribe((state) => {
+        this.sleeveService.state().subscribe((state) => {
             if (state == SleeveStates.BLE_ADVERTISING) {
                 this.nav.push(Pairing, {}, { animation: 'md-transition' });
                 this.alertCtrl.create({
@@ -107,7 +108,7 @@ export class Pairing {
 
     startBlePairing() {
         console.log('Start BLE Scanning')
-        this.sleevesService.scanAndPair()
+        this.sleeveService.scanAndPair()
             .then(pairedSleeve => {
                 console.log('Successfully paired with sleeve', pairedSleeve.id)
                 this.listenToStates();

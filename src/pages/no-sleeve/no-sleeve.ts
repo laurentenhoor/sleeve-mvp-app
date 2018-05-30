@@ -1,9 +1,7 @@
-
-import { Component, NgZone } from '@angular/core';
-import { AlertController, NavController, ModalController } from 'ionic-angular';
-import { Sleeves } from '../../providers/sleeves/sleeves';
+import { Component } from '@angular/core';
+import { NavController } from 'ionic-angular';
 import { Pairing } from '../pairing/pairing';
-import { Connecting } from '../connecting/connecting';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 @Component({
     selector: 'no-sleeve',
@@ -13,27 +11,18 @@ export class NoSleeve {
 
     constructor(
         private nav: NavController,
-        public modalCtrl: ModalController,
-        private alertCtrl: AlertController,
-        private zone: NgZone
+        private inAppBrowser: InAppBrowser,
     ) {
-    }
 
-    ionViewDidLoad() {
-    }
-
-    ionViewDidEnter() {
     }
 
     quickStart() {
-        console.log('quickStart()')
-        // this.nav.pop();
-        // this.modalCtrl.create(Pairing).present();
         this.nav.push(Pairing, {}, { animation: 'md-transition' });
     }
 
-    buySleeve() {
-
+    learnMore() {
+        let url = 'https://www.youtube.com/watch?v=0l-gAVKMQ5c&feature=youtu.be';
+        this.inAppBrowser.create(url, '_system')
     }
 
     closeModal() {

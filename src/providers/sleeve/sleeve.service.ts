@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { PairService } from './pair.service';
-import { RealtimeService } from './realtime.service';
-import { SyncService } from './sync.service';
-import { PairModel } from './pair.model';
+import { PairService } from './providers/pair.service';
+import { RealtimeService } from './providers/realtime.service';
+import { SyncService } from './providers/sync.service';
+import { PairModel } from './providers/pair.model';
+import { SyncModel } from './providers/sync.model';
 import { Observable } from 'rxjs/Observable';
-import { SyncModel } from './sync.model';
 
 export enum SleeveStates {
     DEVICE_STATE_NONE = 0, //Don't add anything before this
@@ -26,7 +26,7 @@ export enum SleeveStates {
 }
 
 @Injectable()
-export class Sleeves {
+export class SleeveService {
     constructor(
         private pairModel: PairModel,
         private pairService: PairService,
@@ -58,6 +58,10 @@ export class Sleeves {
 
     scanAndPair(): Promise<any> {
         return this.pairService.pair()
+    }
+
+    unpair(sleeve): void {
+        return this.pairModel.removeSleeve(sleeve);
     }
 
     angle(): Observable<any> {

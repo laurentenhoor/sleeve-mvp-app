@@ -9,12 +9,12 @@ import * as moment from 'moment';
 import { FeedInput } from '../feed-input/feed-input'
 import { Feeds } from '../../providers/feeds';
 import { Sessions } from '../../providers/sessions';
-import { Sleeves } from '../../providers/sleeves/sleeves';
+import { SleeveService } from '../../providers/sleeve/sleeve.service';
 import { Connecting } from '../connecting/connecting';
 import { Bluetooth } from '../bluetooth/bluetooth';
 import { Pairing } from '../pairing/pairing';
 import { NoSleeve } from '../no-sleeve/no-sleeve';
-import { PairModel } from '../../providers/sleeves/pair.model';
+
 
 @Component({
   selector: 'timeline',
@@ -38,14 +38,12 @@ export class Timeline {
     private events: Events,
     private feedsService: Feeds,
     private sessionsService: Sessions,
-    private sleevesService: Sleeves,
+    private sleeveService: SleeveService,
     private loadingCtrl: LoadingController,
     private app: App,
 
   ) {
-    // events.subscribe('synchronize-feeds', () => {
-    //     this.synchronizeFeeds();
-    // });
+    
   }
 
   ionViewDidLoad() {
@@ -53,7 +51,7 @@ export class Timeline {
   }
 
   synchronizeFeeds() {
-    this.sleevesService.syncFeeds().then(feedData => {
+    this.sleeveService.syncFeeds().then(feedData => {
       this.presentFeedToast();
 
     }).catch(error => {

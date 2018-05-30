@@ -3,8 +3,9 @@ import { BLE } from '@ionic-native/ble';
 import { ConnectService } from './connect.service';
 import { PairModel } from './pair.model';
 import { PairService } from './pair.service';
-import { Feeds } from '../feeds';
 import { SyncModel } from './sync.model';
+
+import { Feeds } from '../../feeds';
 
 @Injectable()
 export class SyncService {

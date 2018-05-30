@@ -3,7 +3,7 @@ import { Bluetooth } from '../bluetooth/bluetooth'
 
 import { Component, Input } from '@angular/core';
 import { Events, NavController, Tabs, App } from 'ionic-angular';
-import { QuickStart } from '../quick-start/quick-start';
+
 import { Settings } from '../settings/settings';
 
 @Component({

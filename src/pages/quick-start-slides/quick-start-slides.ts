@@ -3,8 +3,8 @@ import { ViewChild, Component, NgZone } from '@angular/core';
 import { AlertController, NavController, Slides, App, Events, ToastController, ModalController, ViewController } from 'ionic-angular';
 
 import { BLE } from '@ionic-native/ble';
-import { Sleeves, SleeveStates } from '../../providers/sleeves/sleeves'
-import { Connecting } from '../connecting/connecting';
+import { SleeveService, SleeveStates } from '../../providers/sleeve/sleeve.service'
+
 import { TabsPage } from '../tabs/tabs';
 import { Pairing } from '../pairing/pairing';
 
@@ -20,10 +20,10 @@ enum QsgStep {
 }
 
 @Component({
-    selector: 'quick-start',
-    templateUrl: 'quick-start.html'
+    selector: 'quick-start-slides',
+    templateUrl: 'quick-start-slides.html'
 })
-export class QuickStart {
+export class QuickStartSlides {
 
     @ViewChild(Slides) slides: Slides;
 
@@ -43,7 +43,7 @@ export class QuickStart {
     constructor(
         private nav: NavController,
         private ble: BLE,
-        private sleevesService: Sleeves,
+        private sleeveService: SleeveService,
         private zone: NgZone,
         private app: App,
         private events: Events,
@@ -60,7 +60,7 @@ export class QuickStart {
 
         });
 
-        this.sleevesService.state().subscribe(state => {
+        this.sleeveService.state().subscribe(state => {
             switch (state) {
                 case SleeveStates.DEVICE_FEEDING_EXPECTED:
                     if (!this.feedIsDetected && this.slides.getActiveIndex() != QsgStep.WEIGH_BEFORE) {

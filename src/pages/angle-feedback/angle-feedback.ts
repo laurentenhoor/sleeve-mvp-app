@@ -1,7 +1,7 @@
 
 import { Component, NgZone } from '@angular/core';
 import { AlertController, NavController, ModalController } from 'ionic-angular';
-import { Sleeves } from '../../providers/sleeves/sleeves';
+import { SleeveService } from '../../providers/sleeve/sleeve.service';
 
 @Component({
     selector: 'angle-feedback',
@@ -15,7 +15,7 @@ export class AngleFeedback {
     constructor(
         private nav: NavController,
         public modalCtrl: ModalController,
-        private sleevesService: Sleeves,
+        private sleeveService: SleeveService,
         private alertCtrl: AlertController,
         private zone: NgZone
     ) {
@@ -24,7 +24,7 @@ export class AngleFeedback {
     }
 
     ionViewDidLoad() {
-        this.sleevesService.angle().subscribe((angle) => {
+        this.sleeveService.angle().subscribe((angle) => {
             
             this.zone.run(() => {
                 this.angle = angle;

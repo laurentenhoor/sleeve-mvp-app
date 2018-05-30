@@ -1,15 +1,15 @@
 
 import { Component, NgZone } from '@angular/core';
 import { NavController, Events } from 'ionic-angular';
-import { Sleeves, SleeveStates } from '../../providers/sleeves/sleeves';
+import { SleeveService, SleeveStates } from '../../providers/sleeve/sleeve.service';
 import { TabsPage } from '../tabs/tabs';
 import { Pairing } from '../pairing/pairing';
 
 @Component({
-    selector: 'qsg',
-    templateUrl: 'qsg.html'
+    selector: 'quick-start-list',
+    templateUrl: 'quick-start-list.html'
 })
-export class Qsg {
+export class QuickStartList {
     qsgStep = 0;
     qsgItems = [{
         category: 'Preparation',
@@ -59,7 +59,7 @@ export class Qsg {
 
     constructor(
         private nav: NavController,
-        private sleevesService: Sleeves,
+        private sleeveService: SleeveService,
         private zone: NgZone,
         private events: Events
     ) {
@@ -71,7 +71,7 @@ export class Qsg {
     }
 
     ionViewDidLoad() {
-        this.sleevesService.state().subscribe(state => {
+        this.sleeveService.state().subscribe(state => {
             this.hideErrors();
             switch (state) {
                 case SleeveStates.DEVICE_FEEDING_EXPECTED:
@@ -110,7 +110,7 @@ export class Qsg {
         }, error => {
             console.error('no states available', error)
         })
-        // this.sleevesService.feedData().then(feedData => {
+        // this.sleeveService.feedData().then(feedData => {
         //     console.log('feeddata from QSG')
         // }, error => {
         //     console.error(error)

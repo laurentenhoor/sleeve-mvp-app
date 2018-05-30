@@ -13,13 +13,13 @@
             <button (click)="pair();" ion-button item-end outline color="primary">
                 <ion-icon name="bluetooth" item-end></ion-icon>Pair</button>
         </ion-item-divider>
-        <ion-item (click)="pair()" *ngIf="sleevesService.pairedSleeves?.length == 0">
+        <ion-item (click)="pair()" *ngIf="sleeveService.pairedSleeves?.length == 0">
             <ion-icon color="primary" name="alert" item-left large></ion-icon>
             <h2>No devices paired yet</h2>
             <p>Tap to start pairing</p>
         </ion-item>
 
-        <ion-item *ngFor="let sleeve of sleevesService.pairedSleeves" (click)="removeSleeve(sleeve)">
+        <ion-item *ngFor="let sleeve of sleeveService.pairedSleeves" (click)="removeSleeve(sleeve)">
             <ion-icon color="primary" name="bluetooth" item-left large></ion-icon>
             <h2>Smart Sleeve</h2>
             <p style="font-size:1rem">{{ sleeve._id }}</p>

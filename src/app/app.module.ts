@@ -9,22 +9,25 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { BlePacketParser } from '../pages/bluetooth/ble-packet-parser.service';
 import { Bluetooth } from '../pages/bluetooth/bluetooth';
-import { Connecting } from '../pages/connecting/connecting';
+
 import { FeedInput } from '../pages/feed-input/feed-input';
 import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
 import { Pairing } from '../pages/pairing/pairing';
-import { Qsg } from '../pages/qsg/qsg';
-import { QuickStartGuideModule } from '../pages/quick-start-guide/quick-start-guide.module';
-import { QuickStart } from '../pages/quick-start/quick-start';
+
 import { Settings } from '../pages/settings/settings';
 import { TabsPage } from '../pages/tabs/tabs';
 import { Timeline } from '../pages/timeline/timeline';
 import { Feeds } from '../providers/feeds';
 import { Sessions } from '../providers/sessions';
-import { Sleeves } from '../providers/sleeves/sleeves';
-import { SleevesModule } from '../providers/sleeves/sleeves.module';
+
+
+import { QuickStartList } from '../pages/quick-start-list/quick-start-list';
+import { QuickStartSlides } from '../pages/quick-start-slides/quick-start-slides';
+
 import { UiSettings } from '../providers/ui-settings';
 import { MyApp } from './app.component';
+
+import { SleeveModule } from '../providers/sleeve/sleeve.module';
 
 @NgModule({
   declarations: [
@@ -33,10 +36,9 @@ import { MyApp } from './app.component';
     Timeline,
     Bluetooth,
     FeedInput,
-    Connecting,
-    QuickStart,
+    QuickStartSlides,
+    QuickStartList,
     Settings,
-    Qsg,
     Pairing,
     NoSleeve,
   ],
@@ -44,8 +46,7 @@ import { MyApp } from './app.component';
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpModule,
-    QuickStartGuideModule,
-    SleevesModule
+    SleeveModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -54,10 +55,9 @@ import { MyApp } from './app.component';
     Timeline,
     Bluetooth,
     FeedInput,
-    Connecting,
-    QuickStart,
+    QuickStartSlides,
+    QuickStartList,
     Settings,
-    Qsg,
     Pairing,
     NoSleeve,
   ],
@@ -69,7 +69,6 @@ import { MyApp } from './app.component';
     BlePacketParser,
     Feeds,
     Sessions,
-    Sleeves,
     Device,
     InAppBrowser,
     UiSettings,

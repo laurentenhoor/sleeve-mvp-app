@@ -6,8 +6,7 @@ import { Platform } from 'ionic-angular';
 import { NoSleeve } from '../pages/no-sleeve/no-sleeve';
 import { TabsPage } from '../pages/tabs/tabs';
 import { Sessions } from '../providers/sessions';
-import { PairModel } from '../providers/sleeves/pair.model';
-import { Sleeves } from '../providers/sleeves/sleeves';
+import { SleeveService } from '../providers/sleeve/sleeve.service';
 
 @Component({
   templateUrl: 'app.html'
@@ -20,12 +19,12 @@ export class MyApp {
     statusBar: StatusBar,
     splashScreen: SplashScreen,
     sessionsService: Sessions,
-    sleevesService: Sleeves
+    sleeveService: SleeveService
   ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      sleevesService.amountOfPairedSleeves().then((amount) => {
+      sleeveService.amountOfPairedSleeves().then((amount) => {
         if (amount == 0) {
           this.rootPage = NoSleeve;
         } else {
