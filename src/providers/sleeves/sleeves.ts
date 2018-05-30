@@ -4,6 +4,7 @@ import { RealtimeService } from './realtime.service';
 import { SyncService } from './sync.service';
 import { PairModel } from './pair.model';
 import { Observable } from 'rxjs/Observable';
+import { SyncModel } from './sync.model';
 
 export enum SleeveStates {
     DEVICE_STATE_NONE = 0, //Don't add anything before this
@@ -30,7 +31,8 @@ export class Sleeves {
         private pairModel: PairModel,
         private pairService: PairService,
         private syncService: SyncService,
-        private realtimeService: RealtimeService
+        private realtimeService: RealtimeService,
+        private syncModel: SyncModel
     ) {
     }
 
@@ -43,11 +45,11 @@ export class Sleeves {
     }
 
     get lastSyncTimestamp(): number {
-        return this.syncService.lastSyncTimestamp;
+        return this.syncModel.lastSyncTimestamp;
     }
 
-    noPairedSleeves(): Promise<number> {
-        return this.pairModel.noPairedSleeves();
+    amountOfPairedSleeves(): Promise<number> {
+        return this.pairModel.amountOfPairedSleeves();
     }
 
     syncFeeds(): Promise<any> {

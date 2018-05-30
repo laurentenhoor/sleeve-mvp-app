@@ -9,10 +9,7 @@ import { SyncModel } from './sync.model';
 @Injectable()
 export class SyncService {
     isSyncing: boolean = false;
-    lastSyncTimestamp: number = 0;
-
     private dataBuffer: string = '';
-    private syncTimestampDb: any;
 
     constructor(
         private ble: BLE,
@@ -25,16 +22,17 @@ export class SyncService {
     ) {
     }
 
-    syncFeeds(): Promise<any> {
+    async syncFeeds(): Promise<any> {
         return new Promise((resolve, reject) => {
-
-            this.pairModel.noPairedSleeves().then(() => {
-                return reject('no paired devices')
+            this.pairModel.amountOfPairedSleeves().then(amount => {
+                if (amount == 0) {
+                    reject('no paired devices')
+                }
             });
             this.isSyncing = true;
 
             this.scanUntilPairedSleeveInRange().then((pairedSleeveInRange) => {
-                return this.connectService.connect(pairedSleeveInRange.id);
+                return this.connectService.connect(pairedSleeveInRange);
 
             }).then((connectedSleeve) => {
                 return this.fetchFeedDataFromSleeve(connectedSleeve.id);
@@ -54,11 +52,11 @@ export class SyncService {
         await this.ble.stopScan();
         await this.connectService.disconnect();
 
-        return new Promise((resolve, reject) => {    
+        return new Promise((resolve, reject) => {
             this.setSyncTimeout(() => {
                 reject('scanTimeout');
             });
-   
+
             this.ble.startScan([]).subscribe(foundSleeve => {
                 this.pairModel.isPairedSleeve(foundSleeve.id).then(() => {
                     this.ble.stopScan();
@@ -118,7 +116,7 @@ export class SyncService {
     private createNewFeed() {
         this.feedsService.createFeedFromSleeve(this.dataBuffer);
         this.syncModel.storeSyncTimestamp();
-        
+
         this.dataBuffer = '';
         this.isSyncing = false;
     }

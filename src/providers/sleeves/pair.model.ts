@@ -29,20 +29,12 @@ export class PairModel {
         return this.pairedSleeves.map(item => { return item._id })
     }
 
-    async amountOfPairedSleeves(): Promise<number> {
-        return (await this.getPairedSleeves()).length;
-    }
-
-    noPairedSleeves(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.amountOfPairedSleeves().then((amount) => {
-                if (amount == 0) {
-                    resolve();
-                } else {
-                    reject();
-                }
+    amountOfPairedSleeves(): Promise<number> {
+        return new Promise(resolve => {
+            this.getPairedSleeves().then(pairedSleeves => {
+                resolve(pairedSleeves.length)
             })
-        });
+        })
     }
 
     removeSleeve(sleeve): void {
