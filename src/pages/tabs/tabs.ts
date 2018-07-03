@@ -1,5 +1,4 @@
 import { Timeline } from '../timeline/timeline'
-import { Bluetooth } from '../bluetooth/bluetooth'
 
 import { Component, Input } from '@angular/core';
 import { Events, NavController, Tabs, App } from 'ionic-angular';
@@ -20,7 +19,7 @@ export class TabsPage {
     private app: App
   ) {
     this.tab1 = Timeline;
-    this.tab2 = Bluetooth;
+    // this.tab2 = Bluetooth;
     this.tab3 = Settings;
 
     events.subscribe('synchronize-feeds', () => {

@@ -11,7 +11,6 @@ import { Sessions } from '../../providers/sessions';
 import { SleeveService } from '../../providers/sleeve/sleeve.service';
 
 import { FeedInput } from '../feed-input/feed-input'
-import { Bluetooth } from '../bluetooth/bluetooth';
 import { Pairing } from '../pairing/pairing';
 import { NoSleeve } from '../no-sleeve/no-sleeve';
 
