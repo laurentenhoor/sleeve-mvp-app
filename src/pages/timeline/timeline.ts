@@ -112,7 +112,7 @@ export class Timeline {
   }
 
   openSettings() {
-    this.navCtrl.push(Bluetooth)
+    // this.navCtrl.push(Bluetooth)
   }
 
   formatTimeAgo(timestamp) {

@@ -20,7 +20,7 @@ export class NoSleeve {
         this.nav.push(Pairing, {}, { animation: 'md-transition' });
     }
 
-    learnMore() {
+    buySleeve() {
         let url = 'https://www.youtube.com/watch?v=0l-gAVKMQ5c&feature=youtu.be';
         this.inAppBrowser.create(url, '_system')
     }
@@ -28,5 +28,5 @@ export class NoSleeve {
     closeModal() {
         this.nav.pop();
     }
-
+    
 }
